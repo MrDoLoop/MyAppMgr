@@ -72,7 +72,7 @@ public class UserAppListAdapter extends ArrayAdapter<AppInfo>{
 			holder.expandableLinearLayout = (LinearLayout) convertView.findViewById(R.id.expandable); 
 			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) 
 			{
-				holder.expandableLinearLayout.setPadding(1, 5, 1, 1);
+				holder.expandableLinearLayout.setPadding(1, 7, 1, 1);
 			}
 			convertView.setTag(holder);
   		}
@@ -84,7 +84,6 @@ public class UserAppListAdapter extends ArrayAdapter<AppInfo>{
 		holder.AppNameTextView.setText(appInfo.appName);
 		holder.AppVersionTextView.setText("v" + appInfo.versionName+" | "+appInfo.appSize);
 		holder.AppIconImageView.setImageDrawable(appInfo.appIcon);
-		
 		
 		return convertView;
 	}
