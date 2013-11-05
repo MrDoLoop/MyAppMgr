@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="4dp"
+        android:paddingTop="5dp">
+
+        <ImageView
+            android:id="@+id/app_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/imageview_border"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_launcher" />
+
+        <TextView
+            android:id="@+id/app_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/app_icon"
+            android:layout_marginLeft="5dp"
+            
+            android:layout_toLeftOf="@+id/expandable_toggle_button"
+            android:layout_toRightOf="@+id/app_icon"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="App Name" />
+
+        <TextView
+            android:id="@+id/app_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/app_icon"
+            android:layout_alignLeft="@+id/app_name"
+            android:layout_alignRight="@+id/app_name"
+            
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="App Version" />
+        
+            <ImageButton
+                android:id="@+id/expandable_toggle_button"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_alignBottom="@+id/app_version"
+                android:layout_alignTop="@+id/app_name"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/more_btn_bg"
+                android:focusable="false"
+                android:src="@drawable/arrow_down_right" />
+        
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/expandable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#000000"
+        android:orientation="horizontal"
+        android:padding="1dp" >
+
+        <Button
+            android:id="@+id/openBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:singleLine="true"
+            android:text="Open"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/GPBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:singleLine="true"
+            android:text="Google Play"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/UninstallBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:singleLine="true"
+            android:text="Uninstall"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+
+
+</LinearLayout>
