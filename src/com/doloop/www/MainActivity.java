@@ -46,6 +46,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 	private final static int USR_APPS_TAB_POS = 0;
 	private final static int SYS_APPS_TAB_POS = 1;
 	private final static int ALL_APPS_TAB_POS = 2;
+	
+	private final static int ALL_APPS_TAB_POS111 = 2;
 
 	private ActionBar actionBar;
 	private ViewPager viewPager;
