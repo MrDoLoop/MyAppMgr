@@ -52,6 +52,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 	private static long back_pressed = 0;
 	private Toast toast;
 	private Context thisActivityCtx;
+	
+	private boolean te = false;
 
 	private ArrayList<Fragment> Fragmentlist;
 
@@ -415,8 +417,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 		case R.id.GPBtn:
 			if (isPlayStoreInstalled) {
 				startActivity(new Intent(Intent.ACTION_VIEW,
-						Uri.parse("market://details?id="
-								+ UserAppList.get(position).packageName)));
+						Uri.parse("market://details?id="+ UserAppList.get(position).packageName)));
 			} else {
 				startActivity(new Intent(
 						Intent.ACTION_VIEW,
