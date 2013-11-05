@@ -47,8 +47,6 @@ public class MainActivity extends SlidingFragmentActivity implements
 	private final static int SYS_APPS_TAB_POS = 1;
 	private final static int ALL_APPS_TAB_POS = 2;
 	
-
-
 	private ActionBar actionBar;
 	private ViewPager viewPager;
 	private static long back_pressed = 0;
@@ -97,8 +95,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		viewPager.setOnPageChangeListener(onPageChangeListener);
-		viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager(),
-				Fragmentlist));
+		viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager(),Fragmentlist));
 
 		addActionBarTabs();
 		new GetApps().execute();
@@ -150,12 +147,11 @@ public class MainActivity extends SlidingFragmentActivity implements
 	}
 
 	private ActionBar.TabListener tabListener = new ActionBar.TabListener() {
-		private boolean directlyReselected = false;
-
+		
 		@Override
 		public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
 			int tabPos = tab.getPosition();
-			directlyReselected = false;
+			
 			viewPager.setCurrentItem(tabPos);
 			if (mSlidingMenu.isShown()) {
 				mSlidingMenu.showContent();
@@ -169,6 +165,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 
 		@Override
 		public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+			
 		}
 
 		@Override
@@ -176,22 +173,18 @@ public class MainActivity extends SlidingFragmentActivity implements
 			if (mSlidingMenu.isShown()) {
 				mSlidingMenu.showContent();
 			}
-
-			if (directlyReselected) {
-				switch (tab.getPosition()) {
-				case USR_APPS_TAB_POS:
-					// usrAppsFrg.getListView().smoothScrollToPosition(0);
-					break;
-				case SYS_APPS_TAB_POS:
-					sysAppsFrg.getListView().smoothScrollToPosition(0);
-					break;
-				case ALL_APPS_TAB_POS:
-
-					break;
-				}
-			} else {
-				directlyReselected = true;
-			}
+			
+//			switch (tab.getPosition()) {
+//				case USR_APPS_TAB_POS:
+//					usrAppsFrg.getListView().smoothScrollToPosition(0);
+//					break;
+//				case SYS_APPS_TAB_POS:
+//					sysAppsFrg.getListView().smoothScrollToPosition(0);
+//					break;
+//				case ALL_APPS_TAB_POS:
+//
+//					break;
+//			}
 		}
 	};
 
