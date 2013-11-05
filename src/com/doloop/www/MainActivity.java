@@ -147,13 +147,11 @@ public class MainActivity extends SlidingFragmentActivity implements
 	}
 
 	private ActionBar.TabListener tabListener = new ActionBar.TabListener() {
-		
 		@Override
 		public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
 			int tabPos = tab.getPosition();
-			
 			viewPager.setCurrentItem(tabPos);
-			if (mSlidingMenu.isShown()) {
+			if (mSlidingMenu.isMenuShowing()) {
 				mSlidingMenu.showContent();
 			}
 			if (tabPos == 0) {
@@ -170,21 +168,22 @@ public class MainActivity extends SlidingFragmentActivity implements
 
 		@Override
 		public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-			if (mSlidingMenu.isShown()) {
+			if (mSlidingMenu.isMenuShowing()) {
 				mSlidingMenu.showContent();
 			}
 			
-//			switch (tab.getPosition()) {
-//				case USR_APPS_TAB_POS:
-//					usrAppsFrg.getListView().smoothScrollToPosition(0);
-//					break;
-//				case SYS_APPS_TAB_POS:
-//					sysAppsFrg.getListView().smoothScrollToPosition(0);
-//					break;
-//				case ALL_APPS_TAB_POS:
-//
-//					break;
-//			}
+//				switch (tab.getPosition()) 
+//				{
+//					case USR_APPS_TAB_POS:
+//						usrAppsFrg.getListView().smoothScrollToPosition(0);
+//						break;
+//					case SYS_APPS_TAB_POS:
+//						sysAppsFrg.getListView().smoothScrollToPosition(0);
+//						break;
+//					case ALL_APPS_TAB_POS:
+//	
+//						break;
+//				}
 		}
 	};
 
@@ -425,8 +424,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 				uninstallIntent = new Intent(Intent.ACTION_DELETE, packageUri);
 			} else {
-				uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE,
-						packageUri);
+				uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE,packageUri);
 			}
 			startActivity(uninstallIntent);
 			break;
