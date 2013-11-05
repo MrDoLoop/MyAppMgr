@@ -52,8 +52,6 @@ public class MainActivity extends SlidingFragmentActivity implements
 	private static long back_pressed = 0;
 	private Toast toast;
 	private Context thisActivityCtx;
-	
-	private boolean te = false;
 
 	private ArrayList<Fragment> Fragmentlist;
 
