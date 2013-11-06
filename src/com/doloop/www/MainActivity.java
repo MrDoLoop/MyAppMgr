@@ -38,6 +38,7 @@ import com.doloop.www.util.Utilities;
 import com.doloop.www.util.ViewPagerAdapter;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
+import com.tjerkw.slideexpandable.library.ActionSlideExpandableListView;
 
 public class MainActivity extends SlidingFragmentActivity implements
 		OnSysAppListItemSelectedListener, OnUserAppListItemSelectedListener,
@@ -408,9 +409,12 @@ public class MainActivity extends SlidingFragmentActivity implements
 	@Override
 	public void onUserAppItemClick(View v, int position) {
 		// TODO Auto-generated method stub
-
+		
+		((ActionSlideExpandableListView)usrAppsFrg.getListView()).collapse();
+		
 		toast.setText("user AppList " + position);
 		toast.show();
+		
 	}
 
 	// 用户App列表中的action点击事件
