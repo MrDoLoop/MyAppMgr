@@ -8,7 +8,7 @@ package com.tjerkw.slideexpandable.library;
 
 public final class R {
 	public static final class id {
-		public static final int expandable_toggle_button = 0x7f040000;
-		public static final int expandable = 0x7f040001;
+		public static final int expandable = 0x7f040016;
+		public static final int expandable_toggle_button = 0x7f040015;
 	}
 }

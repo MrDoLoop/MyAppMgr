@@ -192,7 +192,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 			if (mSlidingMenu.isMenuShowing()) {
 				mSlidingMenu.showContent();
 			}
-			
+			else
+			{
 				switch (tab.getPosition()) 
 				{
 					case USR_APPS_TAB_POS:
@@ -205,6 +206,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 	
 						break;
 				}
+			}
 		}
 	};
 
