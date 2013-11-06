@@ -70,6 +70,9 @@ public class MainActivity extends SlidingFragmentActivity implements
 	private SlidingMenu mSlidingMenu;
 
 	private boolean isPlayStoreInstalled = false;
+	
+	private String switchCaseStr = "initDummy";
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -105,6 +108,13 @@ public class MainActivity extends SlidingFragmentActivity implements
 		@Override
 		public void onPageSelected(int position) {
 			super.onPageSelected(position);
+			switchCaseStr += "P";
+			if(switchCaseStr.equals("TP"))//点击tab标签
+			{
+				switchCaseStr = "";
+				return;
+			}
+			
 			actionBar.setSelectedNavigationItem(position);
 		}
 	};
@@ -149,6 +159,17 @@ public class MainActivity extends SlidingFragmentActivity implements
 	private ActionBar.TabListener tabListener = new ActionBar.TabListener() {
 		@Override
 		public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+			if(switchCaseStr.equals("initDummy"))
+			{
+				switchCaseStr = "";
+				return;
+			}
+			switchCaseStr += "T";
+			if(switchCaseStr.equals("PT"))//滑动page
+			{
+				switchCaseStr = "";
+			}
+			
 			int tabPos = tab.getPosition();
 			viewPager.setCurrentItem(tabPos);
 			if (mSlidingMenu.isMenuShowing()) {
@@ -172,18 +193,18 @@ public class MainActivity extends SlidingFragmentActivity implements
 				mSlidingMenu.showContent();
 			}
 			
-//				switch (tab.getPosition()) 
-//				{
-//					case USR_APPS_TAB_POS:
-//						usrAppsFrg.getListView().smoothScrollToPosition(0);
-//						break;
-//					case SYS_APPS_TAB_POS:
-//						sysAppsFrg.getListView().smoothScrollToPosition(0);
-//						break;
-//					case ALL_APPS_TAB_POS:
-//	
-//						break;
-//				}
+				switch (tab.getPosition()) 
+				{
+					case USR_APPS_TAB_POS:
+						usrAppsFrg.getListView().smoothScrollToPosition(0);
+						break;
+					case SYS_APPS_TAB_POS:
+						sysAppsFrg.getListView().smoothScrollToPosition(0);
+						break;
+					case ALL_APPS_TAB_POS:
+	
+						break;
+				}
 		}
 	};
 
@@ -276,8 +297,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 				tmpInfo.packageName = packageInfo.packageName;
 				tmpInfo.versionName = packageInfo.versionName;
 				tmpInfo.versionCode = packageInfo.versionCode;
-				tmpInfo.appIcon = packageInfo.applicationInfo
-						.loadIcon(pManager);
+				tmpInfo.appIcon = packageInfo.applicationInfo.loadIcon(pManager);
 				// tmpInfo.firstTimeInstallDate =
 				// dateformat.format(packageInfo.firstInstallTime);
 				tmpInfo.appSize = Utilities.formatFileSize(
@@ -351,6 +371,11 @@ public class MainActivity extends SlidingFragmentActivity implements
 			// list设置数据
 			sysAppsFrg.setData(sectionTextList, sectionItemsMap);
 			usrAppsFrg.setData(UserAppList);
+			
+//			if(!firstTimeLoadFinish)
+//			{
+//				firstTimeLoadFinish = true;
+//			}
 		}
 	}
 
@@ -442,3 +467,4 @@ public class MainActivity extends SlidingFragmentActivity implements
 	}
 
 }
+
