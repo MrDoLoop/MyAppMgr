@@ -15,8 +15,8 @@
 
         <ImageView
             android:id="@+id/app_icon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_centerVertical="true"
@@ -78,6 +78,7 @@
             android:layout_weight="0.5"
             android:singleLine="true"
             android:text="Open"
+            android:focusable="false"
             android:textSize="12sp" />
 
         <Button
@@ -86,6 +87,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.5"
             android:singleLine="true"
+            android:focusable="false"
             android:text="Google Play"
             android:textSize="12sp" />
 
@@ -95,6 +97,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.5"
             android:singleLine="true"
+            android:focusable="false"
             android:text="Uninstall"
             android:textSize="12sp" />
     </LinearLayout>
