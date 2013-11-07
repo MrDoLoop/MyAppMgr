@@ -25,8 +25,7 @@
         android:singleLine="true"
         android:text="App Name"
         android:textSize="15sp"
-        android:textStyle="bold"
-        android:typeface="normal" />
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/app_version"
