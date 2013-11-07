@@ -19,14 +19,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/app_icon"
-        android:layout_marginLeft="1dp"
+        android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/app_icon"
         android:ellipsize="end"
         android:singleLine="true"
         android:text="App Name"
         android:textSize="15sp"
-        android:textStyle="bold"
-        android:typeface="normal" />
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/app_version"
