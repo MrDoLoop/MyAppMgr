@@ -45,6 +45,7 @@ import com.doloop.www.util.ViewPagerAdapter;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.tjerkw.slideexpandable.library.ActionSlideExpandableListView;
+import com.tjerkw.slideexpandable.library.SlideExpandableListAdapter;
 
 public class MainActivity extends SlidingFragmentActivity implements
 		OnSysAppListItemSelectedListener, OnUserAppListItemSelectedListener,
@@ -461,10 +462,10 @@ public class MainActivity extends SlidingFragmentActivity implements
 	public void onUserAppItemActionClick(View listView, View buttonview,
 			int position) {
 		// TODO Auto-generated method stub
+		String targetpackageName = ((AppInfo)((SlideExpandableListAdapter)(usrAppsFrg.getListView().getAdapter())).getItem(position)).packageName;
 		switch (buttonview.getId()) {
 		case R.id.openBtn:
-			Intent intent = getPackageManager().getLaunchIntentForPackage(
-					UserAppList.get(position).packageName);
+			Intent intent = getPackageManager().getLaunchIntentForPackage(targetpackageName);
 			if (intent != null) {
 				startActivity(intent);
 			} else {
@@ -475,17 +476,17 @@ public class MainActivity extends SlidingFragmentActivity implements
 		case R.id.GPBtn:
 			if (isPlayStoreInstalled) {
 				startActivity(new Intent(Intent.ACTION_VIEW,
-						Uri.parse("market://details?id="+ UserAppList.get(position).packageName)));
+						Uri.parse("market://details?id="+ targetpackageName)));
 			} else {
 				startActivity(new Intent(
 						Intent.ACTION_VIEW,
 						Uri.parse("http://play.google.com/store/apps/details?id="
-								+ UserAppList.get(position).packageName)));
+								+ targetpackageName)));
 			}
 			break;
 		case R.id.UninstallBtn:
 			Uri packageUri = Uri.parse("package:"
-					+ UserAppList.get(position).packageName);
+					+ targetpackageName);
 			Intent uninstallIntent;
 			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 				uninstallIntent = new Intent(Intent.ACTION_DELETE, packageUri);
