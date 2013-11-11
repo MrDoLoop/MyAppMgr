@@ -462,7 +462,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 	public void onUserAppItemActionClick(View listView, View buttonview,
 			int position) {
 		// TODO Auto-generated method stub
-		String targetpackageName = ((AppInfo)((SlideExpandableListAdapter)(usrAppsFrg.getListView().getAdapter())).getItem(position)).packageName;
+		String targetpackageName = ((UserAppListAdapter)usrAppsFrg.getListAdapter()).getItem(position).packageName;
 		switch (buttonview.getId()) {
 		case R.id.openBtn:
 			Intent intent = getPackageManager().getLaunchIntentForPackage(targetpackageName);
@@ -502,6 +502,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 	@Override
 	public void onUserAppListFilterResultPublish(ArrayList<AppInfo> resultsList) {
 		// TODO Auto-generated method stub
+		((ActionSlideExpandableListView)usrAppsFrg.getListView()).collapse();
 		String newTitle = "USER APPS (" + resultsList.size() + ")";
 		actionBar.getTabAt(USR_APPS_TAB_POS).setText(newTitle);
 	}
