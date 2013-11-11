@@ -10,6 +10,7 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.doloop.www.util.AppInfo;
 import com.doloop.www.util.UserAppListAdapter;
+import com.doloop.www.util.UserAppListAdapter.UserAppListFilterResultListener;
 import com.tjerkw.slideexpandable.library.ActionSlideExpandableListView;
 
 public class UserAppsTabFragment extends SherlockListFragment {
@@ -151,6 +152,7 @@ public class UserAppsTabFragment extends SherlockListFragment {
 
 	public void setData(ArrayList<AppInfo> userAppList) {
 		mAdapter = new UserAppListAdapter(getActivity(),R.layout.user_app_expandable_list_item,0,userAppList);
+		mAdapter.setUserAppListFilterResultListener((UserAppListFilterResultListener)getActivity());
 		setListAdapter(mAdapter);
 	}
 
