@@ -45,7 +45,6 @@ import com.doloop.www.util.ViewPagerAdapter;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.tjerkw.slideexpandable.library.ActionSlideExpandableListView;
-import com.tjerkw.slideexpandable.library.SlideExpandableListAdapter;
 
 public class MainActivity extends SlidingFragmentActivity implements
 		OnSysAppListItemSelectedListener, OnUserAppListItemSelectedListener,
