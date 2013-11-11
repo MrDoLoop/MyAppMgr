@@ -1,27 +1,47 @@
 package com.doloop.www.util;
 
 import java.util.ArrayList;
+import java.util.Locale;
+
 import com.doloop.www.R;
 
 import android.content.Context;
 import android.os.Build;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class UserAppListAdapter extends ArrayAdapter<AppInfo>{
+public class UserAppListAdapter extends ArrayAdapter<AppInfo> implements Filterable {
 	
 	private int ItemResourceLayout = 0;
 	//private int textViewID = 0;
 	private ArrayList<AppInfo> AppList;
+	private ArrayList<AppInfo> AppListDisplay;
 	//private Context mContext;
 	private LayoutInflater mInflater;
+	private UserAppFilter filter;
 	
+	public UserAppListFilterResultListener mFilterResultListener;
+
+	// Container Activity must implement this interface
+	public interface UserAppListFilterResultListener {
+		public void onUserAppListFilterResultPublish(ArrayList<AppInfo> resultsList);
+	}
+	
+	public void setUserAppListFilterResultListener(UserAppListFilterResultListener userAppListFilterResultListener)
+	{
+		this.mFilterResultListener = userAppListFilterResultListener;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public UserAppListAdapter(Context context, int resource,
 			int textViewResourceId, ArrayList<AppInfo> appList) {
 		super(context, resource, textViewResourceId, appList);
@@ -29,6 +49,7 @@ public class UserAppListAdapter extends ArrayAdapter<AppInfo>{
 		this.ItemResourceLayout = resource;
 		//this.textViewID = textViewResourceId;
 		this.AppList = appList;
+		this.AppListDisplay = (ArrayList<AppInfo>) AppList.clone();
 		//this.mContext = context;
 		this.mInflater = LayoutInflater.from(context);
 	}
@@ -37,13 +58,13 @@ public class UserAppListAdapter extends ArrayAdapter<AppInfo>{
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
-		return AppList.size();
+		return AppListDisplay.size();
 	}
 
 	@Override
 	public AppInfo getItem(int position) {
 		// TODO Auto-generated method stub
-		return AppList.get(position);
+		return AppListDisplay.get(position);
 	}
 
 	@Override
@@ -55,7 +76,7 @@ public class UserAppListAdapter extends ArrayAdapter<AppInfo>{
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
-		AppInfo appInfo = AppList.get(position);
+		AppInfo appInfo = AppListDisplay.get(position);
 		
 		ViewHolder holder;
 		if(convertView==null)
@@ -88,8 +109,79 @@ public class UserAppListAdapter extends ArrayAdapter<AppInfo>{
 		return convertView;
 	}
 	
+	@Override
+	public boolean isEnabled(int position) {
+		// TODO Auto-generated method stub
+		return super.isEnabled(position);
+	}
 	
+    @Override  
+    public Filter getFilter() {  
+        // TODO Auto-generated method stub  
+        if (filter == null) {    
+            filter = new UserAppFilter();    
+        }    
+        return filter;  
+    } 
 	
+    
+    private class UserAppFilter extends Filter 
+    {
+
+		@Override
+		protected FilterResults performFiltering(CharSequence constraint) {
+			// TODO Auto-generated method stub
+			//´æ´¢¹ýÂËµÄÖµ
+	        
+			FilterResults retval = new FilterResults(); 
+			retval.values = AppList;
+	        retval.count = AppList.size();
+	        
+	        if(!TextUtils.isEmpty(constraint))
+	        {
+	        	
+	        	ArrayList<AppInfo> filteredAppList = new ArrayList<AppInfo>();
+	        	for(AppInfo appInfo: AppList)
+	        	{
+	        		if(appInfo.appName.toLowerCase(Locale.getDefault()).contains(constraint))
+	        		{
+	        			filteredAppList.add(appInfo);
+	        		}
+	        	}
+	        	
+		        retval.values = filteredAppList;
+		        retval.count = filteredAppList.size();
+	        }
+	        
+	        return retval;
+			
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		protected void publishResults(CharSequence constraint,
+				FilterResults results) {
+			// TODO Auto-generated method stub
+			AppListDisplay.clear();
+			AppListDisplay.addAll((ArrayList<AppInfo>)results.values);
+			if(mFilterResultListener != null)
+			{
+				mFilterResultListener.onUserAppListFilterResultPublish(AppListDisplay);
+			}	
+			notifyDataSetChanged();
+		}
+    	
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 	private class ViewHolder
   	{
   		TextView AppNameTextView;
