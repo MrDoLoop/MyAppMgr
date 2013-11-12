@@ -23,7 +23,7 @@ public class UserAppListAdapter extends ArrayAdapter<AppInfo> implements Filtera
 	
 	private int ItemResourceLayout = 0;
 	//private int textViewID = 0;
-	private ArrayList<AppInfo> AppList;
+	private ArrayList<AppInfo> full_AppList;
 	private ArrayList<AppInfo> AppListDisplay;
 	//private Context mContext;
 	private LayoutInflater mInflater;
@@ -48,8 +48,8 @@ public class UserAppListAdapter extends ArrayAdapter<AppInfo> implements Filtera
 		// TODO Auto-generated constructor stub
 		this.ItemResourceLayout = resource;
 		//this.textViewID = textViewResourceId;
-		this.AppList = appList;
-		this.AppListDisplay = (ArrayList<AppInfo>) AppList.clone();
+		this.full_AppList = appList;
+		this.AppListDisplay = (ArrayList<AppInfo>) full_AppList.clone();
 		//this.mContext = context;
 		this.mInflater = LayoutInflater.from(context);
 	}
@@ -134,14 +134,14 @@ public class UserAppListAdapter extends ArrayAdapter<AppInfo> implements Filtera
 			//´æ´¢¹ýÂËµÄÖµ
 	        
 			FilterResults retval = new FilterResults(); 
-			retval.values = AppList;
-	        retval.count = AppList.size();
+			retval.values = full_AppList;
+	        retval.count = full_AppList.size();
 	        
 	        if(!TextUtils.isEmpty(constraint))
 	        {
 	        	
 	        	ArrayList<AppInfo> filteredAppList = new ArrayList<AppInfo>();
-	        	for(AppInfo appInfo: AppList)
+	        	for(AppInfo appInfo: full_AppList)
 	        	{
 	        		if(appInfo.appName.toLowerCase(Locale.getDefault()).contains(constraint))
 	        		{

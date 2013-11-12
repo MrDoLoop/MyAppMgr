@@ -12,6 +12,7 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.doloop.www.util.AppInfo;
 import com.doloop.www.util.SysAppListAdapter;
+import com.doloop.www.util.SysAppListAdapter.SysAppListFilterResultListener;
 
 public class SysAppsTabFragment extends SherlockListFragment {
 	private SysAppListAdapter mAdapter;
@@ -124,6 +125,7 @@ public class SysAppsTabFragment extends SherlockListFragment {
 	public void setData(ArrayList<String> sectionTextList, HashMap<String , ArrayList<AppInfo>> sectionItemsMap)
 	{
 		mAdapter = new SysAppListAdapter(getActivity(),sectionTextList,sectionItemsMap);
+		mAdapter.setSysAppListFilterResultListener((SysAppListFilterResultListener)getActivity());
 		setListAdapter(mAdapter);
 	}
 

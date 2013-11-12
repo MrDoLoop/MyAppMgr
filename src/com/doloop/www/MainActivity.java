@@ -24,8 +24,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SearchViewCompat;
-import android.support.v4.widget.SearchViewCompat.OnQueryTextListenerCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
@@ -33,11 +31,15 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
+import com.actionbarsherlock.widget.SearchView;
 import com.doloop.www.SysAppsTabFragment.OnSysAppListItemSelectedListener;
 import com.doloop.www.UserAppsTabFragment.OnUserAppListItemActionClickListener;
 import com.doloop.www.UserAppsTabFragment.OnUserAppListItemSelectedListener;
 import com.doloop.www.util.AppInfo;
 import com.doloop.www.util.AppNameComparator;
+import com.doloop.www.util.SysAppListAdapter;
+import com.doloop.www.util.SysAppListAdapter.SysAppListFilterResultListener;
 import com.doloop.www.util.UserAppListAdapter;
 import com.doloop.www.util.UserAppListAdapter.UserAppListFilterResultListener;
 import com.doloop.www.util.Utilities;
@@ -48,7 +50,8 @@ import com.tjerkw.slideexpandable.library.ActionSlideExpandableListView;
 
 public class MainActivity extends SlidingFragmentActivity implements
 		OnSysAppListItemSelectedListener, OnUserAppListItemSelectedListener,
-		OnUserAppListItemActionClickListener,UserAppListFilterResultListener {
+		OnUserAppListItemActionClickListener,UserAppListFilterResultListener,
+		SysAppListFilterResultListener{
 
 	private final static int USR_APPS_TAB_POS = 0;
 	private final static int SYS_APPS_TAB_POS = 1;
@@ -219,39 +222,102 @@ public class MainActivity extends SlidingFragmentActivity implements
 
 	 @Override
 	 public boolean onCreateOptionsMenu(Menu menu) {
-		 MenuItem item = menu.add("Search");
-         item.setIcon(android.R.drawable.ic_menu_search);
-         item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-         View searchView = SearchViewCompat.newSearchView(thisActivityCtx);
-         if (searchView != null) {
-        	 SearchViewCompat.setSubmitButtonEnabled(searchView, false);
-        	 SearchViewCompat.setQueryHint(searchView, "key words");
-             SearchViewCompat.setOnQueryTextListener(searchView,
-                     new OnQueryTextListenerCompat() {
-                 @Override
-                 public boolean onQueryTextChange(String newText) {
-                     // Called when the action bar search text has changed.  Since this
-                     // is a simple array adapter, we can just have it do the filtering.
-                     String mCurFilter = !TextUtils.isEmpty(newText) ? newText : null;
-                     //mAdapter.getFilter().filter(mCurFilter);
-                     switch (actionBar.getSelectedTab().getPosition()) 
-      				 {
-      				 	case USR_APPS_TAB_POS:
-      				 		((UserAppListAdapter)usrAppsFrg.getListAdapter()).getFilter().filter(mCurFilter);
-      						break;
-      					case SYS_APPS_TAB_POS:
-      						
-      						break;
-      					case ALL_APPS_TAB_POS:
-      	
-      						break;
-      				 }
-                     
-                     return true;
-                 }
-             });
-             item.setActionView(searchView);
-         }
+//		 MenuItem item = menu.add("Search");
+//         item.setIcon(android.R.drawable.ic_menu_search);
+//         item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+//         View searchView = SearchViewCompat.newSearchView(thisActivityCtx);
+//         if (searchView != null) {
+//        	 SearchViewCompat.setSubmitButtonEnabled(searchView, false);
+//        	 SearchViewCompat.setQueryHint(searchView, "key words");
+//             SearchViewCompat.setOnQueryTextListener(searchView,
+//                     new OnQueryTextListenerCompat() {
+//                 @Override
+//                 public boolean onQueryTextChange(String newText) {
+//                     // Called when the action bar search text has changed.  Since this
+//                     // is a simple array adapter, we can just have it do the filtering.
+//                     String mCurFilter = !TextUtils.isEmpty(newText) ? newText : null;
+//                     //mAdapter.getFilter().filter(mCurFilter);
+//                     switch (actionBar.getSelectedTab().getPosition()) 
+//      				 {
+//      				 	case USR_APPS_TAB_POS:
+//      				 		((UserAppListAdapter)usrAppsFrg.getListAdapter()).getFilter().filter(mCurFilter);
+//      						break;
+//      					case SYS_APPS_TAB_POS:
+//      						((SysAppListAdapter)sysAppsFrg.getListAdapter()).getFilter().filter(mCurFilter);
+//      						break;
+//      					case ALL_APPS_TAB_POS:
+//      	
+//      						break;
+//      				 }
+//                     
+//                     return true;
+//                 }
+//             });
+//             item.setActionView(searchView);
+//         }
+		 
+		 
+		 SearchView searchView = new SearchView(actionBar.getThemedContext());
+		 searchView.setQueryHint("key words");
+		 searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+				// TODO Auto-generated method stub
+				switch (actionBar.getSelectedTab().getPosition()) 
+				{
+	            	case USR_APPS_TAB_POS:
+	              		((UserAppListAdapter)usrAppsFrg.getListAdapter()).getFilter().filter(query);
+						break;
+					case SYS_APPS_TAB_POS:
+						((SysAppListAdapter)sysAppsFrg.getListAdapter()).getFilter().filter(query);
+						break;
+					case ALL_APPS_TAB_POS:
+		
+						break;
+				}
+				return true;
+			}
+
+			@Override
+			public boolean onQueryTextChange(String newText) {
+				// TODO Auto-generated method stub
+              String mCurFilter = !TextUtils.isEmpty(newText) ? newText : null;
+              //mAdapter.getFilter().filter(mCurFilter);
+              switch (actionBar.getSelectedTab().getPosition()) 
+              {
+              	case USR_APPS_TAB_POS:
+              		((UserAppListAdapter)usrAppsFrg.getListAdapter()).getFilter().filter(mCurFilter);
+					break;
+				case SYS_APPS_TAB_POS:
+					((SysAppListAdapter)sysAppsFrg.getListAdapter()).getFilter().filter(mCurFilter);
+					break;
+				case ALL_APPS_TAB_POS:
+	
+					break;
+				}
+				return true;
+			}});
+		
+		 MenuItem searchMenuItem = menu.add("Search");
+		 searchMenuItem.setIcon(R.drawable.abs__ic_search);
+		 searchMenuItem.setActionView(searchView);
+		 searchMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+		 searchMenuItem.setOnActionExpandListener(new OnActionExpandListener(){
+
+			@Override
+			public boolean onMenuItemActionExpand(MenuItem item) {
+				// TODO Auto-generated method stub
+				return true;
+			}
+
+			@Override
+			public boolean onMenuItemActionCollapse(MenuItem item) {
+				// TODO Auto-generated method stub
+				((UserAppListAdapter)usrAppsFrg.getListAdapter()).getFilter().filter(null);
+				((SysAppListAdapter)sysAppsFrg.getListAdapter()).getFilter().filter(null);
+				return true;
+			}});
 		 return true;
 	 }
 	//
@@ -434,13 +500,10 @@ public class MainActivity extends SlidingFragmentActivity implements
 							.get(pos).appName;
 			toast.setText(toastMsg);
 			toast.show();
-		} else// section
+		} 
+		else// section
 		{
-			// sysAppsFrg.getListView().smoothScrollToPosition(0);
 			sysAppsFrg.getListView().setSelection(position);
-
-			// toast.setText("SYS appList section click "+sectionTextList.get(Integer.parseInt(viewContentDesStr)));
-			// toast.show();
 		}
 	}
 
@@ -506,6 +569,18 @@ public class MainActivity extends SlidingFragmentActivity implements
 		actionBar.getTabAt(USR_APPS_TAB_POS).setText(newTitle);
 	}
 	
+	@Override
+	public void onSysAppListFilterResultPublish(
+			ArrayList<String> ResultSectionTextList,
+			HashMap<String, ArrayList<AppInfo>> ResultSectionItemsMap) {
+		// TODO Auto-generated method stub
+		sectionTextList = ResultSectionTextList;
+		sectionItemsMap = ResultSectionItemsMap;
+		
+		String newTitle = "SYS APPS (" + ((SysAppListAdapter)sysAppsFrg.getListAdapter()).getItemsCount() + ")";
+		actionBar.getTabAt(SYS_APPS_TAB_POS).setText(newTitle);
+	}
+	
 	
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -516,6 +591,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 
 		}
 	}
+
+	
 
 
 
