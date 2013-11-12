@@ -11,7 +11,7 @@ public class AppNameComparator implements Comparator<AppInfo>{
 		// TODO Auto-generated method stub
 		//return lhs.appName.toLowerCase().compareTo(rhs.appName.toLowerCase());
 		
-		return sCollator.compare(lhs.appName, rhs.appName.toLowerCase(Locale.getDefault()));
+		return sCollator.compare(lhs.appName.toLowerCase(Locale.getDefault()), rhs.appName.toLowerCase(Locale.getDefault()));
 	}
 
 }
