@@ -15,13 +15,15 @@
 
         <ImageView
             android:id="@+id/app_icon"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_centerVertical="true"
             android:background="@drawable/imageview_border"
             android:scaleType="centerInside"
+            android:padding="3dp"
+            android:contentDescription="appIcon"
             android:src="@drawable/ic_launcher" />
 
         <TextView
