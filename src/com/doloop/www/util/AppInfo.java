@@ -9,9 +9,9 @@ public class AppInfo {
 	public String versionName = "";
 	public int versionCode = 0;
 	public Drawable appIcon = null;
-	public boolean checked = false;
 	public String appSize = "";
 	public String firstTimeInstallDate = "";
+	public String lastModifiedTime = "";
 	
 	public void print() {
 		Log.v("app", "Name:" + appName + " Package:" + packageName);
