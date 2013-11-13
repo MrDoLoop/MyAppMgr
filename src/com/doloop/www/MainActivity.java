@@ -1,17 +1,21 @@
 package com.doloop.www;
 
 import java.io.File;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -84,6 +88,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 	
 	private String switchCaseStr = "initDummy";
 	
+	private AppUpdateReceiver mAppUpdateReceiver;
+	private IntentFilter AppIntentFilter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -112,6 +118,15 @@ public class MainActivity extends SlidingFragmentActivity implements
 		viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager(),Fragmentlist));
 
 		addActionBarTabs();
+		
+		mAppUpdateReceiver = new AppUpdateReceiver();
+		AppIntentFilter = new IntentFilter(); 
+		AppIntentFilter.addAction(Intent.ACTION_PACKAGE_ADDED); 
+		AppIntentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED); 
+		AppIntentFilter.addAction(Intent.ACTION_PACKAGE_CHANGED);
+		AppIntentFilter.addDataScheme("package");
+		registerReceiver(mAppUpdateReceiver, AppIntentFilter); 
+		
 		new GetApps().execute();
 	}
 
@@ -377,6 +392,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 
 		@Override
 		protected void onPreExecute() {
+			unregisterReceiver(mAppUpdateReceiver);
 			progDialog = new ProgressDialog(MainActivity.this);
 			progDialog.setCancelable(false);
 			progDialog.setMessage("Loading Apps");
@@ -397,13 +413,20 @@ public class MainActivity extends SlidingFragmentActivity implements
 			// getAppList();
 			SysAppList.clear();
 			UserAppList.clear();
+			sectionTextList.clear();
+			sectionItemsMap.clear();
+			
 			PackageManager pManager = getPackageManager();
 			List<PackageInfo> packages = pManager.getInstalledPackages(0);
-
+			
+//			List<ApplicationInfo> apps = pManager.getInstalledApplications(
+//                    PackageManager.GET_UNINSTALLED_PACKAGES |
+//                    PackageManager.GET_DISABLED_COMPONENTS);
+			
 			PackageInfo packageInfo;
 			AppInfo tmpInfo;
-			// SimpleDateFormat dateformat = new
-			// SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			File tmpAPKfile;
+			DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
 			for (int i = 0; i < packages.size(); i++) {
 
 				publishProgress((i + 1) + " / " + packages.size());
@@ -416,14 +439,11 @@ public class MainActivity extends SlidingFragmentActivity implements
 				tmpInfo.packageName = packageInfo.packageName;
 				tmpInfo.versionName = packageInfo.versionName;
 				tmpInfo.versionCode = packageInfo.versionCode;
-				tmpInfo.appIcon = packageInfo.applicationInfo
-						.loadIcon(pManager);
+				tmpInfo.appIcon = packageInfo.applicationInfo.loadIcon(pManager);
 				// tmpInfo.firstTimeInstallDate =
 				// dateformat.format(packageInfo.firstInstallTime);
-				tmpInfo.appSize = Utilities.formatFileSize(
-						new File(packageInfo.applicationInfo.publicSourceDir)
-								.length()).toString();
-
+				tmpAPKfile = new File(packageInfo.applicationInfo.publicSourceDir);
+				tmpInfo.lastModifiedTime = dateFormatter.format(new Date(tmpAPKfile.lastModified()));
 				if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
 					UserAppList.add(tmpInfo);// user app
 				} else// sys app
@@ -491,6 +511,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 			// listÉèÖÃÊý¾Ý
 			sysAppsFrg.setData(sectionTextList, sectionItemsMap);
 			usrAppsFrg.setData(UserAppList);
+			
+			registerReceiver(mAppUpdateReceiver, AppIntentFilter);
 		}
 	}
 
@@ -602,9 +624,36 @@ public class MainActivity extends SlidingFragmentActivity implements
 
 		}
 	}
-
 	
-
-
-
+	@Override
+	protected void onDestroy() {
+	  super.onDestroy();
+	  unregisterReceiver(mAppUpdateReceiver);
+	}
+	
+	private class AppUpdateReceiver extends BroadcastReceiver 
+	{
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			 if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) 
+			 {
+				 String NewPkgName = intent.getDataString().substring(8);
+				 toast.setText("app new install: "+NewPkgName);
+				 toast.show();
+				 new GetApps().execute();
+			 }
+			 else if(intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) 
+			 {
+				 String RemovedPkgName = intent.getDataString().substring(8); 
+				 toast.setText("app removed: "+RemovedPkgName);
+				 toast.show();
+				 new GetApps().execute();
+			 }
+			 else if(intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)) 
+			 {
+				 new GetApps().execute();
+			 }
+		} 
+	}
 }
