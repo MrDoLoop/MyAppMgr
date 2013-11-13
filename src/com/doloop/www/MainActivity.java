@@ -443,6 +443,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 				// tmpInfo.firstTimeInstallDate =
 				// dateformat.format(packageInfo.firstInstallTime);
 				tmpAPKfile = new File(packageInfo.applicationInfo.publicSourceDir);
+				tmpInfo.appSize = Utilities.formatFileSize(tmpAPKfile.length()).toString();
 				tmpInfo.lastModifiedTime = dateFormatter.format(new Date(tmpAPKfile.lastModified()));
 				if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
 					UserAppList.add(tmpInfo);// user app
