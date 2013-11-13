@@ -651,7 +651,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 				     ai = null;
 				 }
 				 String NewAppName = (String) (ai != null ? pm.getApplicationLabel(ai) : "(unknown)");
-				 toast.setText("app new install: "+ NewAppName);
+				 toast.setText("New App Installed: "+ NewAppName);
 				 toast.show();
 				 new GetApps().execute();
 			 }
