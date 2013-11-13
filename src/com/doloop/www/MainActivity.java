@@ -25,6 +25,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
@@ -220,6 +221,16 @@ public class MainActivity extends SlidingFragmentActivity implements
 		}
 	};
 
+    @Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+    	 if(keyCode == KeyEvent.KEYCODE_MENU && event.getRepeatCount() == 0){  
+             toggle();
+             return true;
+         }
+		return super.onKeyDown(keyCode, event);
+	}
+	
 	 @Override
 	 public boolean onCreateOptionsMenu(Menu menu) {
 //		 MenuItem item = menu.add("Search");
