@@ -1,7 +1,7 @@
 package com.doloop.www;
 
 import java.io.File;
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -426,7 +426,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			PackageInfo packageInfo;
 			AppInfo tmpInfo;
 			File tmpAPKfile;
-			DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
+			SimpleDateFormat simpleDateFormat = Utilities.getLocalDataDigitalDisplayFormat();
 			for (int i = 0; i < packages.size(); i++) {
 
 				publishProgress((i + 1) + " / " + packages.size());
@@ -444,7 +444,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 				// dateformat.format(packageInfo.firstInstallTime);
 				tmpAPKfile = new File(packageInfo.applicationInfo.publicSourceDir);
 				tmpInfo.appSize = Utilities.formatFileSize(tmpAPKfile.length()).toString();
-				tmpInfo.lastModifiedTime = dateFormatter.format(new Date(tmpAPKfile.lastModified()));
+				tmpInfo.lastModifiedTime = simpleDateFormat.format(new Date(tmpAPKfile.lastModified()));
+				
 				if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
 					UserAppList.add(tmpInfo);// user app
 				} else// sys app
