@@ -19,6 +19,7 @@ import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -641,14 +642,23 @@ public class MainActivity extends SlidingFragmentActivity implements
 			 if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) 
 			 {
 				 String NewPkgName = intent.getDataString().substring(8);
-				 toast.setText("app new install: "+NewPkgName);
+				
+				 PackageManager pm = getApplicationContext().getPackageManager();
+				 ApplicationInfo ai = null;
+				 try {
+				     ai = pm.getApplicationInfo(NewPkgName, 0);
+				 } catch (final NameNotFoundException e) {
+				     ai = null;
+				 }
+				 String NewAppName = (String) (ai != null ? pm.getApplicationLabel(ai) : "(unknown)");
+				 toast.setText("app new install: "+ NewAppName);
 				 toast.show();
 				 new GetApps().execute();
 			 }
 			 else if(intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) 
 			 {
-				 String RemovedPkgName = intent.getDataString().substring(8); 
-				 toast.setText("app removed: "+RemovedPkgName);
+				 //String RemovedPkgName = intent.getDataString().substring(8); 
+				 toast.setText("App Removed.");
 				 toast.show();
 				 new GetApps().execute();
 			 }
