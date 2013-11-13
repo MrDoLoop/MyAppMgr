@@ -41,15 +41,14 @@ public class UserAppListAdapter extends ArrayAdapter<AppInfo> implements Filtera
 		this.mFilterResultListener = userAppListFilterResultListener;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public UserAppListAdapter(Context context, int resource,
 			int textViewResourceId, ArrayList<AppInfo> appList) {
 		super(context, resource, textViewResourceId, appList);
 		// TODO Auto-generated constructor stub
 		this.ItemResourceLayout = resource;
 		//this.textViewID = textViewResourceId;
-		this.full_AppList = appList;
-		this.AppListDisplay = (ArrayList<AppInfo>) full_AppList.clone();
+		this.AppListDisplay = this.full_AppList = appList;
+		//this.AppListDisplay = (ArrayList<AppInfo>) full_AppList.clone();
 		//this.mContext = context;
 		this.mInflater = LayoutInflater.from(context);
 	}
@@ -162,8 +161,7 @@ public class UserAppListAdapter extends ArrayAdapter<AppInfo> implements Filtera
 		protected void publishResults(CharSequence constraint,
 				FilterResults results) {
 			// TODO Auto-generated method stub
-			AppListDisplay.clear();
-			AppListDisplay.addAll((ArrayList<AppInfo>)results.values);
+			AppListDisplay = (ArrayList<AppInfo>)results.values;
 			if(mFilterResultListener != null)
 			{
 				mFilterResultListener.onUserAppListFilterResultPublish(AppListDisplay);
