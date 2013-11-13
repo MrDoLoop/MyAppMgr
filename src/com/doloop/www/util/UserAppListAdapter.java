@@ -102,7 +102,7 @@ public class UserAppListAdapter extends ArrayAdapter<AppInfo> implements Filtera
   		}
 		
 		holder.AppNameTextView.setText(appInfo.appName);
-		holder.AppVersionTextView.setText("v" + appInfo.versionName+" | "+appInfo.appSize);
+		holder.AppVersionTextView.setText("v" + appInfo.versionName+" | "+appInfo.appSize+" | "+appInfo.lastModifiedTime);
 		holder.AppIconImageView.setImageDrawable(appInfo.appIcon);
 		
 		return convertView;
