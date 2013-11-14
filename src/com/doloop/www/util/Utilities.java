@@ -6,11 +6,26 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 
 public class Utilities {
+	
+	public static ApplicationInfo getSelfAppInfo(Context ctx)
+	{
+		 PackageManager pm = ctx.getPackageManager();
+		 ApplicationInfo appInfo = null;
+		 try {
+			 appInfo = pm.getApplicationInfo(ctx.getPackageName(), 0);
+		 } catch (final NameNotFoundException e) {
+			 appInfo = null;
+		 }
+		 
+		 return appInfo;
+	}
 	
 	public static boolean isPlayStoreInstalled(Context ctx) {
         Intent market = new Intent(Intent.ACTION_VIEW, Uri.parse("market://search?q=dummy"));
