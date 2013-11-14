@@ -91,6 +91,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 	
 	private AppUpdateReceiver mAppUpdateReceiver;
 	private IntentFilter AppIntentFilter;
+	
+	private String thisAppPackageName = "";//避免点击自己，启动自己
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -99,6 +101,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 
 		thisActivityCtx = MainActivity.this;
 		isPlayStoreInstalled = Utilities.isPlayStoreInstalled(thisActivityCtx);
+		thisAppPackageName = Utilities.getSelfAppInfo(thisActivityCtx).packageName;
 		actionBar = getSupportActionBar();
 		actionBar.setSubtitle("NAN MADE");
 		toast = Toast.makeText(thisActivityCtx, "", Toast.LENGTH_SHORT);
@@ -548,7 +551,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 	public void onUserAppItemClick(View v, int position) {
 		// TODO Auto-generated method stub
 		
-		((ActionSlideExpandableListView)usrAppsFrg.getListView()).collapse();
+		((ActionSlideExpandableListView)usrAppsFrg.getListView()).collapse(true);
 		
 		toast.setText("user AppList " + position);
 		toast.show();
@@ -563,12 +566,20 @@ public class MainActivity extends SlidingFragmentActivity implements
 		String targetpackageName = ((UserAppListAdapter)usrAppsFrg.getListAdapter()).getItem(position).packageName;
 		switch (buttonview.getId()) {
 		case R.id.openBtn:
-			Intent intent = getPackageManager().getLaunchIntentForPackage(targetpackageName);
-			if (intent != null) {
-				startActivity(intent);
-			} else {
-				toast.setText("error");
+			if(thisAppPackageName.equals(targetpackageName))//避免再次启动自己app
+			{
+				toast.setText("You catch me!!NAN Made app");
 				toast.show();
+			} 
+			else
+			{
+				Intent intent = getPackageManager().getLaunchIntentForPackage(targetpackageName);
+				if (intent != null) {
+					startActivity(intent);
+				} else {
+					toast.setText("error");
+					toast.show();
+				}
 			}
 			break;
 		case R.id.GPBtn:
@@ -600,7 +611,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 	@Override
 	public void onUserAppListFilterResultPublish(ArrayList<AppInfo> resultsList) {
 		// TODO Auto-generated method stub
-		((ActionSlideExpandableListView)usrAppsFrg.getListView()).collapse();
+		((ActionSlideExpandableListView)usrAppsFrg.getListView()).collapse(false);
 		String newTitle = "USER APPS (" + resultsList.size() + ")";
 		actionBar.getTabAt(USR_APPS_TAB_POS).setText(newTitle);
 	}
