@@ -16,6 +16,7 @@ import com.tjerkw.slideexpandable.library.ActionSlideExpandableListView;
 public class UserAppsTabFragment extends SherlockListFragment {
 	// private SysAppListAdapter mAdapter;
 	private UserAppListAdapter mAdapter;
+	private ActionSlideExpandableListView mActionSlideExpandableListView;
 	
 	public OnUserAppListItemSelectedListener mItemClickListener;
 
@@ -32,6 +33,12 @@ public class UserAppsTabFragment extends SherlockListFragment {
 	}
 
 	@Override
+	public ListView getListView() {
+		// TODO Auto-generated method stub
+		return mActionSlideExpandableListView;
+	}
+
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
@@ -43,7 +50,7 @@ public class UserAppsTabFragment extends SherlockListFragment {
 		
 		View contentView = inflater.inflate(R.layout.user_app_slide_expandable_list,
 				container, false);
-		
+		mActionSlideExpandableListView = (ActionSlideExpandableListView) contentView;
 		ActionSlideExpandableListView mActionSlideExpandableListView=(ActionSlideExpandableListView)contentView.findViewById(android.R.id.list);
 		mActionSlideExpandableListView.setItemActionListener(
 				new ActionSlideExpandableListView.OnActionClickListener() {
