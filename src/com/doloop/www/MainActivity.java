@@ -593,6 +593,9 @@ public class MainActivity extends SlidingFragmentActivity implements
 								+ targetpackageName)));
 			}
 			break;
+		case R.id.AppDetailsBtn:
+			Utilities.showInstalledAppDetails(thisActivityCtx, targetpackageName);
+			break;
 		case R.id.UninstallBtn:
 			Uri packageUri = Uri.parse("package:"
 					+ targetpackageName);

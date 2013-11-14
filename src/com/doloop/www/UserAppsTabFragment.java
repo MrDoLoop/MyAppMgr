@@ -63,7 +63,7 @@ public class UserAppsTabFragment extends SherlockListFragment {
 			// setItemActionListener
 			// this is needed in order for the listview to discover the
 			// buttons
-		}, R.id.openBtn, R.id.GPBtn, R.id.UninstallBtn);
+		}, R.id.openBtn, R.id.GPBtn, R.id.AppDetailsBtn, R.id.UninstallBtn);
 		
 		return contentView;
 	}
