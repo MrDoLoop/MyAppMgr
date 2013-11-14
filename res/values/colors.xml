@@ -4,6 +4,7 @@
     <color name="green_light">#ff99cc00</color>
     <color name="orange_light">#ffffbb33</color>
     <color name="blue_light">#ff33b5e5</color>
+    <color name="grey">#ff888888</color>
     
     <!-- Went to: $android-sdk > Android:v14 > res > values > colors.xml and copied the colors-->
     

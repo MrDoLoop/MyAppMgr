@@ -3,6 +3,7 @@
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:padding="5dp"
+    android:background="@drawable/list_row_item_bg"
     android:layout_height="wrap_content" >
 
     <ImageView
@@ -36,6 +37,7 @@
         android:layout_alignRight="@+id/app_name"
         android:ellipsize="end"
         android:singleLine="true"
+        android:textColor="@color/grey"
         android:text="App Version" />
 
 </RelativeLayout>

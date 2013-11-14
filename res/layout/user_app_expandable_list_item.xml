@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/list_row_item_bg"
     android:orientation="vertical" >
 
     <RelativeLayout
@@ -47,6 +48,7 @@
             android:layout_alignBottom="@+id/app_icon"
             android:layout_alignLeft="@+id/app_name"
             android:layout_alignRight="@+id/app_name"
+            android:textColor="@color/grey"
             android:ellipsize="end"
             android:singleLine="true"
             android:text="App Version" />
