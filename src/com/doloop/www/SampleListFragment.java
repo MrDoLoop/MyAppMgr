@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 public class SampleListFragment extends ListFragment {
 
-	public OnMenuListItemClickListener mListener;
+	private OnMenuListItemClickListener mListener;
 	
 	// Container Activity must implement this interface
     public interface OnMenuListItemClickListener {
