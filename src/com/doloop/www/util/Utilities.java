@@ -73,7 +73,7 @@ public class Utilities {
 		 return appInfo;
 	}
 	
-	public static boolean isPlayStoreInstalled(Context ctx) {
+	public static boolean isAnyStoreInstalled(Context ctx) {
         Intent market = new Intent(Intent.ACTION_VIEW, Uri.parse("market://search?q=dummy"));
         PackageManager manager = ctx.getPackageManager();
         List<ResolveInfo> list = manager.queryIntentActivities(market, 0);
