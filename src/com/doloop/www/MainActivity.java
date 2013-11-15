@@ -27,11 +27,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.ListFragment;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -39,6 +39,8 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
 import com.actionbarsherlock.widget.SearchView;
+import com.doloop.www.SampleListFragment.OnMenuListItemClickListener;
+import com.doloop.www.SampleListFragment.SampleItem;
 import com.doloop.www.SysAppsTabFragment.OnSysAppListItemSelectedListener;
 import com.doloop.www.UserAppsTabFragment.OnUserAppListItemActionClickListener;
 import com.doloop.www.UserAppsTabFragment.OnUserAppListItemSelectedListener;
@@ -57,7 +59,7 @@ import com.tjerkw.slideexpandable.library.ActionSlideExpandableListView;
 public class MainActivity extends SlidingFragmentActivity implements
 		OnSysAppListItemSelectedListener, OnUserAppListItemSelectedListener,
 		OnUserAppListItemActionClickListener,UserAppListFilterResultListener,
-		SysAppListFilterResultListener{
+		SysAppListFilterResultListener,OnMenuListItemClickListener{
 
 	private final static int USR_APPS_TAB_POS = 0;
 	private final static int SYS_APPS_TAB_POS = 1;
@@ -85,7 +87,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 	private ProgressDialog progDialog;
 	private SlidingMenu mSlidingMenu;
 
-	private boolean isPlayStoreInstalled = false;
+	private boolean isAnyStoreInstalled = false;
 	
 	private String switchCaseStr = "initDummy";
 	
@@ -100,7 +102,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 		setContentView(R.layout.activity_main);
 
 		thisActivityCtx = MainActivity.this;
-		isPlayStoreInstalled = Utilities.isPlayStoreInstalled(thisActivityCtx);
+		isAnyStoreInstalled = Utilities.isAnyStoreInstalled(thisActivityCtx);
 		thisAppPackageName = Utilities.getSelfAppInfo(thisActivityCtx).packageName;
 		actionBar = getSupportActionBar();
 		actionBar.setSubtitle("NAN MADE");
@@ -150,16 +152,17 @@ public class MainActivity extends SlidingFragmentActivity implements
 	};
 
 	private void InitSlidingMenu(Bundle savedInstanceState) {
-		ListFragment mFrag;
+		SampleListFragment mFrag;
 		setBehindContentView(R.layout.menu_frame);
 		if (savedInstanceState == null) {
 			FragmentTransaction t = this.getSupportFragmentManager()
 					.beginTransaction();
 			mFrag = new SampleListFragment();
+			mFrag.setOnMenuListItemClickListener(this);
 			t.replace(R.id.menu_frame, mFrag);
 			t.commit();
 		} else {
-			mFrag = (ListFragment) this.getSupportFragmentManager()
+			mFrag = (SampleListFragment) this.getSupportFragmentManager()
 					.findFragmentById(R.id.menu_frame);
 		}
 
@@ -413,7 +416,6 @@ public class MainActivity extends SlidingFragmentActivity implements
 
 		@Override
 		protected Void doInBackground(Void... params) {
-
 			// getAppList();
 			SysAppList.clear();
 			UserAppList.clear();
@@ -583,7 +585,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			}
 			break;
 		case R.id.GPBtn:
-			if (isPlayStoreInstalled) {
+			if (isAnyStoreInstalled) {
 				startActivity(new Intent(Intent.ACTION_VIEW,
 						Uri.parse("market://details?id="+ targetpackageName)));
 			} else {
@@ -629,6 +631,16 @@ public class MainActivity extends SlidingFragmentActivity implements
 		
 		String newTitle = "SYS APPS (" + ((SysAppListAdapter)sysAppsFrg.getListAdapter()).getItemsCount() + ")";
 		actionBar.getTabAt(SYS_APPS_TAB_POS).setText(newTitle);
+	}
+	
+	//菜单点击事件
+	@Override
+	public void OnMenuListItemClick(ListView l, View v, int position, long id) {
+		// TODO Auto-generated method stub
+		SampleItem MenuItem = (SampleItem)l.getAdapter().getItem(position);
+		mSlidingMenu.showContent();
+		toast.setText(MenuItem.tag);
+		toast.show();
 	}
 	
 	
