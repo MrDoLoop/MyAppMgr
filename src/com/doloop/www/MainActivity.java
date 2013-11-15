@@ -39,6 +39,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
 import com.actionbarsherlock.widget.SearchView;
+import com.doloop.slideexpandable.library.ActionSlideExpandableListView;
 import com.doloop.www.SampleListFragment.OnMenuListItemClickListener;
 import com.doloop.www.SampleListFragment.SampleItem;
 import com.doloop.www.SysAppsTabFragment.OnSysAppListItemSelectedListener;
@@ -54,7 +55,6 @@ import com.doloop.www.util.Utilities;
 import com.doloop.www.util.ViewPagerAdapter;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
-import com.tjerkw.slideexpandable.library.ActionSlideExpandableListView;
 
 public class MainActivity extends SlidingFragmentActivity implements
 		OnSysAppListItemSelectedListener, OnUserAppListItemSelectedListener,

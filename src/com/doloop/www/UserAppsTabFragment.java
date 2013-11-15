@@ -8,10 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.doloop.slideexpandable.library.ActionSlideExpandableListView;
 import com.doloop.www.util.AppInfo;
 import com.doloop.www.util.UserAppListAdapter;
 import com.doloop.www.util.UserAppListAdapter.UserAppListFilterResultListener;
-import com.tjerkw.slideexpandable.library.ActionSlideExpandableListView;
 
 public class UserAppsTabFragment extends SherlockListFragment {
 	// private SysAppListAdapter mAdapter;
