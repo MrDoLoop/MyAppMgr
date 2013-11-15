@@ -635,9 +635,9 @@ public class MainActivity extends SlidingFragmentActivity implements
 	
 	//菜单点击事件
 	@Override
-	public void OnMenuListItemClick(ListView l, View v, int position, long id) {
+	public void OnMenuListItemClick(ListView MenulistView, View v, int position, long id) {
 		// TODO Auto-generated method stub
-		SampleItem MenuItem = (SampleItem)l.getAdapter().getItem(position);
+		SampleItem MenuItem = (SampleItem)MenulistView.getAdapter().getItem(position);
 		mSlidingMenu.showContent();
 		toast.setText(MenuItem.tag);
 		toast.show();

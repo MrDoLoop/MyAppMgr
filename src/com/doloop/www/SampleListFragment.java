@@ -17,7 +17,7 @@ public class SampleListFragment extends ListFragment {
 	
 	// Container Activity must implement this interface
     public interface OnMenuListItemClickListener {
-        public void OnMenuListItemClick(ListView l, View v, int position, long id);
+        public void OnMenuListItemClick(ListView MenulistView, View v, int position, long id);
     }
 	
     public void setOnMenuListItemClickListener(OnMenuListItemClickListener ItemClickListener)
