@@ -100,7 +100,7 @@ public class Utilities {
 				if(java.lang.Character.toString(input[i]).matches("[\\u4E00-\\u9FA5]+")) //为汉字
 				{
 					String[] temp = PinyinHelper.toHanyuPinyinStringArray(input[i],format);
-					output += temp[0]+"z ";//说明英文字符是汉字转换的拼音，例如 英文a和啊计较
+					output += "z"+temp[0]+" ";//说明英文字符是汉字转换的拼音，例如 英文a和啊计较
 				}else
 					output += java.lang.Character.toString(input[i])+" ";
 			}
