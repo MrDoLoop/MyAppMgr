@@ -98,6 +98,9 @@ public class MainActivity extends SlidingFragmentActivity implements
 	private AppUpdateReceiver mAppUpdateReceiver;
 	private IntentFilter AppIntentFilter;
 	
+	private LangUpdateReceiver LangUpdateReceiver;
+	private IntentFilter LangIntentFilter;
+	
 	private String thisAppPackageName = "";//避免点击自己，启动自己
 
 	@Override
@@ -133,9 +136,14 @@ public class MainActivity extends SlidingFragmentActivity implements
 		AppIntentFilter.addAction(Intent.ACTION_PACKAGE_ADDED); 
 		AppIntentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED); 
 		AppIntentFilter.addAction(Intent.ACTION_PACKAGE_CHANGED);
-		AppIntentFilter.addAction(Intent.ACTION_LOCALE_CHANGED);
 		AppIntentFilter.addDataScheme("package");
 		registerReceiver(mAppUpdateReceiver, AppIntentFilter); 
+		
+		LangIntentFilter = new IntentFilter(); 
+		LangIntentFilter.addAction(Intent.ACTION_LOCALE_CHANGED);
+		
+		LangUpdateReceiver = new LangUpdateReceiver();
+		registerReceiver(LangUpdateReceiver , LangIntentFilter);
 		
 		new GetApps().execute();
 	}
@@ -404,6 +412,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 		@Override
 		protected void onPreExecute() {
 			unregisterReceiver(mAppUpdateReceiver);
+			unregisterReceiver(LangUpdateReceiver);
 			progDialog = new ProgressDialog(MainActivity.this);
 			progDialog.setCancelable(false);
 			progDialog.setMessage("Loading Apps");
@@ -538,6 +547,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			usrAppsFrg.setData(UserAppList);
 			
 			registerReceiver(mAppUpdateReceiver, AppIntentFilter);
+			registerReceiver(LangUpdateReceiver , LangIntentFilter);
 		}
 	}
 
@@ -675,6 +685,21 @@ public class MainActivity extends SlidingFragmentActivity implements
 	protected void onDestroy() {
 	  super.onDestroy();
 	  unregisterReceiver(mAppUpdateReceiver);
+	  unregisterReceiver(LangUpdateReceiver);
+	}
+	
+	private class LangUpdateReceiver extends BroadcastReceiver 
+	{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			if(intent.getAction().compareTo(Intent.ACTION_LOCALE_CHANGED) == 0)
+			{
+				finish();
+			}
+		}
+		
 	}
 	
 	private class AppUpdateReceiver extends BroadcastReceiver 
