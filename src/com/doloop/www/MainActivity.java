@@ -48,7 +48,6 @@ import com.doloop.www.SysAppsTabFragment.OnSysAppListItemSelectedListener;
 import com.doloop.www.UserAppsTabFragment.OnUserAppListItemActionClickListener;
 import com.doloop.www.UserAppsTabFragment.OnUserAppListItemSelectedListener;
 import com.doloop.www.util.AppInfo;
-import com.doloop.www.util.AppNameComparator;
 import com.doloop.www.util.AppPinYinComparator;
 import com.doloop.www.util.StringComparator;
 import com.doloop.www.util.SysAppListAdapter;
@@ -465,26 +464,27 @@ public class MainActivity extends SlidingFragmentActivity implements
 				tmpAPKfile = new File(packageInfo.applicationInfo.publicSourceDir);
 				tmpInfo.appSize = Utilities.formatFileSize(tmpAPKfile.length()).toString();
 				tmpInfo.lastModifiedTime = simpleDateFormat.format(new Date(tmpAPKfile.lastModified()));
+				//排序做处理
+				if(Utilities.ContainsChinese(tmpInfo.appName))
+				{
+					tmpInfo.appNamePinyin = Utilities.GetPingYin(tmpInfo.appName);
+				}
+				else
+				{
+					tmpInfo.appNamePinyin = "";
+				}
 				
-				if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+				if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {	
 					UserAppList.add(tmpInfo);// user app
 				} 
 				else// sys app
 				{
-					if(Utilities.ContainsChinese(tmpInfo.appName))
-					{
-						tmpInfo.appNamePinyin = Utilities.GetPingYin(tmpInfo.appName);
-					}
-					else
-					{
-						tmpInfo.appNamePinyin = "";
-					}
-					
 					SysAppList.add(tmpInfo);
 				}
 			}
-
-			Collections.sort(UserAppList, new AppNameComparator());
+			
+			Collections.sort(UserAppList, new AppPinYinComparator());
+			//Collections.sort(UserAppList, new AppNameComparator());//系统自带，默认的string排序
 			// build 系统applist
 			AppInfo curAppInfo;
 			String curSectionStr = "";
