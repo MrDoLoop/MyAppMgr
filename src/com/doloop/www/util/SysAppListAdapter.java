@@ -168,7 +168,7 @@ public class SysAppListAdapter extends SectionedBaseAdapter implements Filterabl
 		TextView sectionTextView;
 	}
 	
-	private class AppViewHolder {
+	private static class AppViewHolder {
 		TextView AppNameTextView;
 		TextView AppVersionTextView;
 		ImageView AppIconImageView;

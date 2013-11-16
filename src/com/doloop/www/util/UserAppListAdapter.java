@@ -171,7 +171,7 @@ public class UserAppListAdapter extends ArrayAdapter<AppInfo> implements Filtera
     	
     }
 
-	private class ViewHolder
+    private static class ViewHolder
   	{
   		TextView AppNameTextView;
   		TextView AppVersionTextView;
