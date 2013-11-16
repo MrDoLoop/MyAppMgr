@@ -3,16 +3,17 @@
     <color name="red_light">#ffff4444</color>
     <color name="green_light">#ff99cc00</color>
     <color name="orange_light">#ffffbb33</color>
-    <color name="blue_light">#ff33b5e5</color>
-    <color name="grey">#ff888888</color>
+    <color name="theme_blue_light">#ff33b5e5</color>
+    <color name="gray">#ff888888</color>
+    <color name="lt_gray">#ffc9c3c3</color>
     
     <!-- Went to: $android-sdk > Android:v14 > res > values > colors.xml and copied the colors-->
     
-    <drawable name="red_light">#ffff4444</drawable>
+<!--     <drawable name="red_light">#ffff4444</drawable>
     <drawable name="green_light">#ff99cc00</drawable>
     <drawable name="orange_light">#ffffbb33</drawable>
     <drawable name="blue_light">#ff33b5e5</drawable>
-    <drawable name="grey">#c9c3c3</drawable>
+    <drawable name="grey">#c9c3c3</drawable> -->
    
     
 </resources>

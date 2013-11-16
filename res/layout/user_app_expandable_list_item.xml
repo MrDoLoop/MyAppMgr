@@ -48,7 +48,7 @@
             android:layout_alignBottom="@+id/app_icon"
             android:layout_alignLeft="@+id/app_name"
             android:layout_alignRight="@+id/app_name"
-            android:textColor="@color/grey"
+            android:textColor="@color/gray"
             android:ellipsize="end"
             android:singleLine="true"
             android:text="App Version" />
