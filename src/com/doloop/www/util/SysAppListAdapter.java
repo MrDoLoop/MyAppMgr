@@ -45,9 +45,7 @@ public class SysAppListAdapter extends SectionedBaseAdapter implements Filterabl
 			HashMap<String, ArrayList<AppInfo>> secItemsMap) {
 		this.mInflater = LayoutInflater.from(context);
 		this.sectionTextListDisplay = this.full_sectionTextList = sectionTxtList;
-		//this.sectionTextListDisplay = (ArrayList<String>)full_sectionTextList.clone();
 		this.sectionItemsMapDisplay = this.full_sectionItemsMap = secItemsMap;
-		//this.sectionItemsMapDisplay = (HashMap<String, ArrayList<AppInfo>>)full_sectionItemsMap.clone();
 	}
 
 	@Override

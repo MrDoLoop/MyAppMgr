@@ -2,6 +2,14 @@ package com.doloop.www.util;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
+
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -15,6 +23,94 @@ import android.os.Build;
 import android.provider.Settings;
 
 public class Utilities {
+	
+	public static boolean ContainsChinese(String str)
+	{
+		char[] ch = str.trim().toCharArray();
+		for (int i = 0; i < ch.length; i++) {  
+            char c = ch[i];  
+            if (isChinese(c)) {  
+                return true;  
+            }  
+        }  
+        return false; 
+	}
+	
+    // GENERAL_PUNCTUATION 判断中文的“号  
+    // CJK_SYMBOLS_AND_PUNCTUATION 判断中文的。号  
+    // HALFWIDTH_AND_FULLWIDTH_FORMS 判断中文的，号  
+    public static final boolean isChinese(char c) {  
+        Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);  
+        if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS  
+                || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS  
+                || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A  
+                || ub == Character.UnicodeBlock.GENERAL_PUNCTUATION  
+                || ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION  
+                || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS) {  
+            return true;  
+        }  
+        return false;  
+    }  
+	
+	/**
+	 * 
+	 * @param inputString
+	 * @return 返回大写开头字母
+	 */
+	public static String GetFirstChar(String inputString)
+	{
+		String output = "";
+		char[] input = inputString.trim().toCharArray();
+		if(java.lang.Character.toString(input[0]).matches("[\\u4E00-\\u9FA5]+")) //为汉字
+		{
+			HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
+			format.setCaseType(HanyuPinyinCaseType.LOWERCASE);
+			format.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+			format.setVCharType(HanyuPinyinVCharType.WITH_V);
+			try{
+				String[] temp = PinyinHelper.toHanyuPinyinStringArray(input[0],format);
+				output += temp[0].charAt(0);
+			}catch(BadHanyuPinyinOutputFormatCombination e) {
+				e.printStackTrace();
+			}
+		}else
+			output += java.lang.Character.toString(input[0]);
+		
+		return output.toUpperCase(Locale.getDefault());
+	}
+	
+	
+	/**
+	 * 参考网站 http://hi.baidu.com/daqing15/item/613e59e0eb2424f32b09a413
+	 * @param inputString 可以是多种字符混合
+	 * I love 北京-->I love beijing, aaa-->aaa, 121!!@#$-->121!!@#$
+	 * @return
+	 */
+	public static String GetPingYin(String inputString) {
+		HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
+		format.setCaseType(HanyuPinyinCaseType.LOWERCASE);
+		format.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+		format.setVCharType(HanyuPinyinVCharType.WITH_V);
+
+		char[] input = inputString.trim().toCharArray();
+		String output ="";
+
+		try{
+			for(int i =0; i < input.length; i++) {
+				if(java.lang.Character.toString(input[i]).matches("[\\u4E00-\\u9FA5]+")) //为汉字
+				{
+					String[] temp = PinyinHelper.toHanyuPinyinStringArray(input[i],format);
+					output += temp[0]+"z ";
+				}else
+					output += java.lang.Character.toString(input[i])+" ";
+			}
+		}catch(BadHanyuPinyinOutputFormatCombination e) {
+			e.printStackTrace();
+		}
+		return output.trim();
+	} 
+	
+	
 	/**
 	 * 调用系统InstalledAppDetails界面显示已安装应用程序的详细信息。 对于Android 2.3（Api Level
 	 * 9）以上，使用SDK提供的接口； 2.3以下，使用非公开的接口（查看InstalledAppDetails源码）。
