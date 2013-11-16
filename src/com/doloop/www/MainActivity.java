@@ -497,7 +497,6 @@ public class MainActivity extends SlidingFragmentActivity implements
 				{
 					curSectionStr = "#";
 				}
-				
 				if(sectionItemsMap.get(curSectionStr) == null)
 				{
 					sectionItemsTmp = new ArrayList<AppInfo>();
@@ -512,8 +511,14 @@ public class MainActivity extends SlidingFragmentActivity implements
 			}
 			//排序整理
 			Collections.sort(sectionTextList, new StringComparator());
-			Iterator<Entry<String, ArrayList<AppInfo>>> iter = sectionItemsMap.entrySet().iterator();
+			//确保"#"在最后
+			if(sectionTextList.contains("#"))
+			{
+				sectionTextList.remove("#");
+				sectionTextList.add("#");
+			}
 			AppPinYinComparator mAppPinYinComparator = new AppPinYinComparator();
+			Iterator<Entry<String, ArrayList<AppInfo>>> iter = sectionItemsMap.entrySet().iterator();
 			while (iter.hasNext()) 
 			{
 				Map.Entry<String, ArrayList<AppInfo>> entry = (Map.Entry<String, ArrayList<AppInfo>>) iter.next();
@@ -675,7 +680,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-
+			
 		} else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
 
 		}
@@ -731,10 +736,6 @@ public class MainActivity extends SlidingFragmentActivity implements
 				 new GetApps().execute();
 			 }
 			 else if(intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)) 
-			 {
-				 new GetApps().execute();
-			 }
-			 else if(intent.getAction().equals(Intent.ACTION_LOCALE_CHANGED)) 
 			 {
 				 new GetApps().execute();
 			 }
