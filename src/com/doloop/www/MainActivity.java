@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -47,6 +49,8 @@ import com.doloop.www.UserAppsTabFragment.OnUserAppListItemActionClickListener;
 import com.doloop.www.UserAppsTabFragment.OnUserAppListItemSelectedListener;
 import com.doloop.www.util.AppInfo;
 import com.doloop.www.util.AppNameComparator;
+import com.doloop.www.util.AppPinYinComparator;
+import com.doloop.www.util.StringComparator;
 import com.doloop.www.util.SysAppListAdapter;
 import com.doloop.www.util.SysAppListAdapter.SysAppListFilterResultListener;
 import com.doloop.www.util.UserAppListAdapter;
@@ -100,7 +104,6 @@ public class MainActivity extends SlidingFragmentActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
 		thisActivityCtx = MainActivity.this;
 		isAnyStoreInstalled = Utilities.isAnyStoreInstalled(thisActivityCtx);
 		thisAppPackageName = Utilities.getSelfAppInfo(thisActivityCtx).packageName;
@@ -130,6 +133,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 		AppIntentFilter.addAction(Intent.ACTION_PACKAGE_ADDED); 
 		AppIntentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED); 
 		AppIntentFilter.addAction(Intent.ACTION_PACKAGE_CHANGED);
+		AppIntentFilter.addAction(Intent.ACTION_LOCALE_CHANGED);
 		AppIntentFilter.addDataScheme("package");
 		registerReceiver(mAppUpdateReceiver, AppIntentFilter); 
 		
@@ -416,9 +420,10 @@ public class MainActivity extends SlidingFragmentActivity implements
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			// getAppList();
-			SysAppList.clear();
+			//用于显示用户app的list
 			UserAppList.clear();
+			//用户显示系统app的list
+			SysAppList.clear();
 			sectionTextList.clear();
 			sectionItemsMap.clear();
 			
@@ -456,24 +461,46 @@ public class MainActivity extends SlidingFragmentActivity implements
 					UserAppList.add(tmpInfo);// user app
 				} else// sys app
 				{
+//					if(Utilities.ContainsChinese(tmpInfo.appName))
+//					{
+//						tmpInfo.appNamePinyin = Utilities.GetPingYin(tmpInfo.appName);
+//					}
+//					else
+//					{
+//						tmpInfo.appNamePinyin = "";
+//					}
+					tmpInfo.appNamePinyin = Utilities.GetPingYin(tmpInfo.appName);
 					SysAppList.add(tmpInfo);
 				}
 			}
 
-			AppNameComparator nameComparator = new AppNameComparator();
-			Collections.sort(UserAppList, nameComparator);
-			Collections.sort(SysAppList, nameComparator);
-
+			Collections.sort(UserAppList, new AppNameComparator());
 			// build 系统applist
 			AppInfo curAppInfo;
-			AppInfo preAppInfo;
 			String curSectionStr = "";
 			ArrayList<AppInfo> sectionItemsTmp;
 			for (int i = 0; i < SysAppList.size(); i++) {
 				curAppInfo = SysAppList.get(i);
-				curSectionStr = curAppInfo.appName.substring(0, 1).toUpperCase(
-						Locale.getDefault());
-				if (i == 0)// 第一个条目，直接添加一个section
+				//curSectionStr = curAppInfo.appName.substring(0, 1).toUpperCase(Locale.getDefault());
+				curSectionStr = Utilities.GetFirstChar(curAppInfo.appName);//.substring(0, 1).toUpperCase(Locale.getDefault());
+				if(!Character.isLetter(curSectionStr.charAt(0)))//其他的开始的字母，放入#未分类
+				{
+					curSectionStr = "#";
+				}
+				
+				if(sectionItemsMap.get(curSectionStr) == null)
+				{
+					sectionItemsTmp = new ArrayList<AppInfo>();
+					sectionItemsTmp.add(curAppInfo);
+					sectionItemsMap.put(curSectionStr, sectionItemsTmp);
+					sectionTextList.add(curSectionStr);
+				}
+				else
+				{
+					sectionItemsMap.get(curSectionStr).add(curAppInfo);
+				}
+				
+				/*if (i == 0)// 第一个条目，直接添加一个section
 				{
 					sectionTextList.add(curSectionStr);
 					sectionItemsTmp = new ArrayList<AppInfo>();
@@ -481,26 +508,38 @@ public class MainActivity extends SlidingFragmentActivity implements
 					sectionItemsMap.put(curSectionStr, sectionItemsTmp);
 				} else {
 					preAppInfo = SysAppList.get(i - 1);
-					if (curSectionStr.equalsIgnoreCase(preAppInfo.appName
-							.subSequence(0, 1).toString())) {// 与前一个是同一个开始的字符
+//					if (curSectionStr.equalsIgnoreCase(preAppInfo.appName
+//							.subSequence(0, 1).toString())) {// 与前一个是同一个开始的字符
+					if(curSectionStr.equalsIgnoreCase(Utilities.GetFirstChar(preAppInfo.appName)))
+					{
 						sectionItemsMap.get(curSectionStr).add(curAppInfo);
-					} else// 一个新section
+					} 
+					else// 一个新section
 					{
 						sectionTextList.add(curSectionStr);
 						sectionItemsTmp = new ArrayList<AppInfo>();
 						sectionItemsTmp.add(curAppInfo);
 						sectionItemsMap.put(curSectionStr, sectionItemsTmp);
 					}
-				}
+				}*/
 			}
-
+			//排序整理
+			Collections.sort(sectionTextList, new StringComparator());
+			Iterator<Entry<String, ArrayList<AppInfo>>> iter = sectionItemsMap.entrySet().iterator();
+			AppPinYinComparator mAppPinYinComparator = new AppPinYinComparator();
+			while (iter.hasNext()) 
+			{
+				Map.Entry<String, ArrayList<AppInfo>> entry = (Map.Entry<String, ArrayList<AppInfo>>) iter.next();
+				ArrayList<AppInfo> sectionItemsList = (ArrayList<AppInfo>)entry.getValue();
+				Collections.sort(sectionItemsList, mAppPinYinComparator);
+			}
+			
+			
 			return null;
 		}
 
 		@Override
-		protected void onCancelled() {
-			// MainActivity.this.finish();
-		}
+		protected void onCancelled() {}
 
 		// can use UI thread here
 		@Override
@@ -689,6 +728,10 @@ public class MainActivity extends SlidingFragmentActivity implements
 				 new GetApps().execute();
 			 }
 			 else if(intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)) 
+			 {
+				 new GetApps().execute();
+			 }
+			 else if(intent.getAction().equals(Intent.ACTION_LOCALE_CHANGED)) 
 			 {
 				 new GetApps().execute();
 			 }

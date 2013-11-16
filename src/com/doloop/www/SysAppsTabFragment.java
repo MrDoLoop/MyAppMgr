@@ -9,31 +9,51 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.doloop.www.util.AppInfo;
+import com.doloop.www.util.IndexBarView;
+import com.doloop.www.util.IndexBarView.OnIndexItemClickListener;
+import com.doloop.www.util.PinnedHeaderListView;
 import com.doloop.www.util.SysAppListAdapter;
 import com.doloop.www.util.SysAppListAdapter.SysAppListFilterResultListener;
 
 public class SysAppsTabFragment extends SherlockListFragment {
 	private SysAppListAdapter mAdapter;
+	private PinnedHeaderListView mPinnedHeaderListView;
+	private TextView PopTextView;
 
-	public OnSysAppListItemSelectedListener mListener;
+	private OnSysAppListItemSelectedListener mListener;
 	
 	// Container Activity must implement this interface
     public interface OnSysAppListItemSelectedListener {
         public void onSysAppItemClick(View v, int position);
     }
 	
+    private IndexBarView mIndexBarView;
+    
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Create, or inflate the Fragment¡¯s UI, and return it.
 		// If this Fragment has no UI then return null.
 		View FragmentView = inflater.inflate(R.layout.sys_app_pinned_section_list, container, false);
+		mIndexBarView = (IndexBarView)FragmentView.findViewById(R.id.indexBarView);
+		mPinnedHeaderListView = (PinnedHeaderListView) FragmentView.findViewById(android.R.id.list);
+		PopTextView = (TextView) FragmentView.findViewById(R.id.popTextView);
 		return FragmentView;
 	}
 	
 	
+	@Override
+	public ListView getListView() {
+		// TODO Auto-generated method stub
+		//return super.getListView();
+		return mPinnedHeaderListView;
+	}
+
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -127,6 +147,17 @@ public class SysAppsTabFragment extends SherlockListFragment {
 		mAdapter = new SysAppListAdapter(getActivity(),sectionTextList,sectionItemsMap);
 		mAdapter.setSysAppListFilterResultListener((SysAppListFilterResultListener)getActivity());
 		setListAdapter(mAdapter);
+		mIndexBarView.setOnIndexItemClickListener(new OnIndexItemClickListener() {
+
+			@Override
+			public void onItemClick(String s) {
+				int SecPos = mAdapter.getSectionPostionInList(s);
+				if (SecPos>-1) {
+					mPinnedHeaderListView.setSelection(SecPos);
+				}
+			}
+		});
+		mIndexBarView.setPopView(PopTextView);
 	}
 
 
