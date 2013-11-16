@@ -5,6 +5,7 @@ import android.util.Log;
 
 public class AppInfo {
 	public String appName = "";
+	public String appNamePinyin = "";
 	public String packageName = "";
 	public String versionName = "";
 	public int versionCode = 0;
@@ -12,6 +13,7 @@ public class AppInfo {
 	public String appSize = "";
 	public String firstTimeInstallDate = "";
 	public String lastModifiedTime = "";
+	
 	
 	public void print() {
 		Log.v("app", "Name:" + appName + " Package:" + packageName);
