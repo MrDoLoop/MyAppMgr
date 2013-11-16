@@ -459,17 +459,18 @@ public class MainActivity extends SlidingFragmentActivity implements
 				
 				if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
 					UserAppList.add(tmpInfo);// user app
-				} else// sys app
+				} 
+				else// sys app
 				{
-//					if(Utilities.ContainsChinese(tmpInfo.appName))
-//					{
-//						tmpInfo.appNamePinyin = Utilities.GetPingYin(tmpInfo.appName);
-//					}
-//					else
-//					{
-//						tmpInfo.appNamePinyin = "";
-//					}
-					tmpInfo.appNamePinyin = Utilities.GetPingYin(tmpInfo.appName);
+					if(Utilities.ContainsChinese(tmpInfo.appName))
+					{
+						tmpInfo.appNamePinyin = Utilities.GetPingYin(tmpInfo.appName);
+					}
+					else
+					{
+						tmpInfo.appNamePinyin = "";
+					}
+					
 					SysAppList.add(tmpInfo);
 				}
 			}
@@ -499,29 +500,6 @@ public class MainActivity extends SlidingFragmentActivity implements
 				{
 					sectionItemsMap.get(curSectionStr).add(curAppInfo);
 				}
-				
-				/*if (i == 0)// 第一个条目，直接添加一个section
-				{
-					sectionTextList.add(curSectionStr);
-					sectionItemsTmp = new ArrayList<AppInfo>();
-					sectionItemsTmp.add(curAppInfo);
-					sectionItemsMap.put(curSectionStr, sectionItemsTmp);
-				} else {
-					preAppInfo = SysAppList.get(i - 1);
-//					if (curSectionStr.equalsIgnoreCase(preAppInfo.appName
-//							.subSequence(0, 1).toString())) {// 与前一个是同一个开始的字符
-					if(curSectionStr.equalsIgnoreCase(Utilities.GetFirstChar(preAppInfo.appName)))
-					{
-						sectionItemsMap.get(curSectionStr).add(curAppInfo);
-					} 
-					else// 一个新section
-					{
-						sectionTextList.add(curSectionStr);
-						sectionItemsTmp = new ArrayList<AppInfo>();
-						sectionItemsTmp.add(curAppInfo);
-						sectionItemsMap.put(curSectionStr, sectionItemsTmp);
-					}
-				}*/
 			}
 			//排序整理
 			Collections.sort(sectionTextList, new StringComparator());
