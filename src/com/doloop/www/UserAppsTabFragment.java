@@ -1,9 +1,12 @@
 package com.doloop.www;
 
 import java.util.ArrayList;
+import java.util.Locale;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -202,12 +205,15 @@ public class UserAppsTabFragment extends SherlockListFragment implements ListVie
 		// TODO Auto-generated method stub
 		if(mAdapter == null) return;
 		
+		Log.i("ttt", "user appList onScroll");
+		Log.i("ttt", "mListIsScrolling is "+mListIsScrolling);
+		
 		if(mListIsScrolling) 
 		{
 			char firstLetter = mAdapter.getItem(firstVisibleItem).appName.charAt(0);
 			mShowing = true;
             mDialogText.setVisibility(View.VISIBLE);
-            mDialogText.setText(((Character)firstLetter).toString());
+            mDialogText.setText(((Character)firstLetter).toString().toUpperCase(Locale.getDefault()));
             mHandler.removeCallbacks(mRemoveWindow);
             mHandler.postDelayed(mRemoveWindow, 1000);
         }
