@@ -3,21 +3,46 @@ package com.doloop.www;
 import java.util.ArrayList;
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.doloop.slideexpandable.library.ActionSlideExpandableListView;
 import com.doloop.www.util.AppInfo;
 import com.doloop.www.util.UserAppListAdapter;
 import com.doloop.www.util.UserAppListAdapter.UserAppListFilterResultListener;
 
-public class UserAppsTabFragment extends SherlockListFragment {
+public class UserAppsTabFragment extends SherlockListFragment implements ListView.OnScrollListener{
 	// private SysAppListAdapter mAdapter;
 	private UserAppListAdapter mAdapter;
 	private ActionSlideExpandableListView mActionSlideExpandableListView;
-	
+
+
+    private final class RemoveWindow implements Runnable {
+        public void run() {
+            removeWindow();
+        }
+    }
+
+    private RemoveWindow mRemoveWindow = new RemoveWindow();
+    private Handler mHandler = new Handler();
+    private TextView mDialogText;
+    private boolean mShowing = false;
+    private boolean mListIsScrolling = false;
+
+    private void removeWindow() {
+        if (mShowing) {
+            mShowing = false;
+            mDialogText.setVisibility(View.INVISIBLE);
+        }
+    }
+    
+    
 	public OnUserAppListItemSelectedListener mItemClickListener;
 
 	// Container Activity must implement this interface
@@ -50,7 +75,7 @@ public class UserAppsTabFragment extends SherlockListFragment {
 		
 		View contentView = inflater.inflate(R.layout.user_app_slide_expandable_list,
 				container, false);
-		mActionSlideExpandableListView = (ActionSlideExpandableListView) contentView;
+		mActionSlideExpandableListView = (ActionSlideExpandableListView) contentView.findViewById(android.R.id.list);
 		ActionSlideExpandableListView mActionSlideExpandableListView=(ActionSlideExpandableListView)contentView.findViewById(android.R.id.list);
 		mActionSlideExpandableListView.setItemActionListener(
 				new ActionSlideExpandableListView.OnActionClickListener() {
@@ -64,7 +89,8 @@ public class UserAppsTabFragment extends SherlockListFragment {
 			// this is needed in order for the listview to discover the
 			// buttons
 		}, R.id.openBtn, R.id.GPBtn, R.id.AppDetailsBtn, R.id.UninstallBtn);
-		
+		mActionSlideExpandableListView.setOnScrollListener(this);
+		mDialogText = (TextView) contentView.findViewById(R.id.popTextView);
 		return contentView;
 	}
 
@@ -168,5 +194,39 @@ public class UserAppsTabFragment extends SherlockListFragment {
 		// TODO Auto-generated method stub
 		super.onListItemClick(l, v, position, id);
 		mItemClickListener.onUserAppItemClick(v, position);
+	}
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem,
+			int visibleItemCount, int totalItemCount) {
+		// TODO Auto-generated method stub
+		if(mAdapter == null) return;
+		
+		if(mListIsScrolling) 
+		{
+			char firstLetter = mAdapter.getItem(firstVisibleItem).appName.charAt(0);
+			mShowing = true;
+            mDialogText.setVisibility(View.VISIBLE);
+            mDialogText.setText(((Character)firstLetter).toString());
+            mHandler.removeCallbacks(mRemoveWindow);
+            mHandler.postDelayed(mRemoveWindow, 1000);
+        }
+	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		// TODO Auto-generated method stub
+		switch (scrollState)
+		{
+			case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+				mListIsScrolling = false;
+				break;
+			case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+				mListIsScrolling = true;
+				break;
+			case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+				mListIsScrolling = true;
+				break;
+		}
 	}
 }
