@@ -67,7 +67,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 
 	private final static int USR_APPS_TAB_POS = 0;
 	private final static int SYS_APPS_TAB_POS = 1;
-	private final static int ALL_APPS_TAB_POS = 2;
+	//private final static int ALL_APPS_TAB_POS = 2;
 	
 	private ActionBar actionBar;
 	private ViewPager viewPager;
@@ -85,8 +85,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 	private ArrayList<String> sectionTextList = new ArrayList<String>();
 	private HashMap<String, ArrayList<AppInfo>> sectionItemsMap = new HashMap<String, ArrayList<AppInfo>>();
 
-	private Fragment allAppsFrg;
-	private ArrayList<AppInfo> AllAppList = new ArrayList<AppInfo>();
+//	private Fragment allAppsFrg;
+//	private ArrayList<AppInfo> AllAppList = new ArrayList<AppInfo>();
 
 	private ProgressDialog progDialog;
 	private SlidingMenu mSlidingMenu;
@@ -114,22 +114,13 @@ public class MainActivity extends SlidingFragmentActivity implements
 		actionBar.setSubtitle("NAN MADE");
 		toast = Toast.makeText(thisActivityCtx, "", Toast.LENGTH_SHORT);
 
-		Fragmentlist = new ArrayList<Fragment>();
-		usrAppsFrg = new UserAppsTabFragment();
-		sysAppsFrg = new SysAppsTabFragment();
-		allAppsFrg = new AllAppsTabFragment();
-
-		Fragmentlist.add(usrAppsFrg);
-		Fragmentlist.add(sysAppsFrg);
-		Fragmentlist.add(allAppsFrg);
-
 		InitSlidingMenu(savedInstanceState);
-
+		
+		addActionBarTabs();
+		
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		viewPager.setOnPageChangeListener(onPageChangeListener);
 		viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager(),Fragmentlist));
-
-		addActionBarTabs();
 		
 		mAppUpdateReceiver = new AppUpdateReceiver();
 		AppIntentFilter = new IntentFilter(); 
@@ -191,8 +182,16 @@ public class MainActivity extends SlidingFragmentActivity implements
 	}
 
 	private void addActionBarTabs() {
-		// actionBar = getSupportActionBar();
-		String[] tabs = { "USER APPs", "SYS APPs", "ALL APPs" };
+		Fragmentlist = new ArrayList<Fragment>();
+		usrAppsFrg = new UserAppsTabFragment();
+		sysAppsFrg = new SysAppsTabFragment();
+		//allAppsFrg = new AllAppsTabFragment();
+
+		Fragmentlist.add(usrAppsFrg);
+		Fragmentlist.add(sysAppsFrg);
+		//Fragmentlist.add(allAppsFrg);
+		
+		String[] tabs = { "USER APPs", "SYS APPs"};//, "ALL APPs" 
 		for (String tabTitle : tabs) {
 			ActionBar.Tab tab = actionBar.newTab().setText(tabTitle)
 					.setTabListener(tabListener);
@@ -229,7 +228,10 @@ public class MainActivity extends SlidingFragmentActivity implements
 
 		@Override
 		public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-			
+//			if(tab.getPosition()==SYS_APPS_TAB_POS)
+//			{
+//				sysAppsFrg.ResetIndexBar();
+//			}
 		}
 
 		@Override
@@ -247,9 +249,9 @@ public class MainActivity extends SlidingFragmentActivity implements
 					case SYS_APPS_TAB_POS:
 						sysAppsFrg.getListView().smoothScrollToPosition(0);
 						break;
-					case ALL_APPS_TAB_POS:
-	
-						break;
+//					case ALL_APPS_TAB_POS:
+//	
+//						break;
 				}
 			}
 		}
@@ -258,6 +260,11 @@ public class MainActivity extends SlidingFragmentActivity implements
     @Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub
+    	//停止list滚动
+//    	MotionEvent me = MotionEvent.obtain(SystemClock.uptimeMillis(),  SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0);
+//    	sysAppsFrg.getListView().dispatchTouchEvent(me);
+//    	me.recycle();
+    	
     	 if(keyCode == KeyEvent.KEYCODE_MENU && event.getRepeatCount() == 0){  
              toggle();
              return true;
@@ -309,18 +316,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				// TODO Auto-generated method stub
-				switch (actionBar.getSelectedTab().getPosition()) 
-				{
-	            	case USR_APPS_TAB_POS:
-	              		((UserAppListAdapter)usrAppsFrg.getListAdapter()).getFilter().filter(query);
-						break;
-					case SYS_APPS_TAB_POS:
-						((SysAppListAdapter)sysAppsFrg.getListAdapter()).getFilter().filter(query);
-						break;
-					case ALL_APPS_TAB_POS:
-		
-						break;
-				}
+				onQueryTextChange(query);
 				return true;
 			}
 
@@ -337,9 +333,9 @@ public class MainActivity extends SlidingFragmentActivity implements
 				case SYS_APPS_TAB_POS:
 					((SysAppListAdapter)sysAppsFrg.getListAdapter()).getFilter().filter(mCurFilter);
 					break;
-				case ALL_APPS_TAB_POS:
-	
-					break;
+//				case ALL_APPS_TAB_POS:
+//	
+//					break;
 				}
 				return true;
 			}});
@@ -520,7 +516,6 @@ public class MainActivity extends SlidingFragmentActivity implements
 				Collections.sort(sectionItemsList, mAppPinYinComparator);
 			}
 			
-			
 			return null;
 		}
 
@@ -538,8 +533,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 					"USER APPS (" + UserAppList.size() + ")");
 			actionBar.getTabAt(SYS_APPS_TAB_POS).setText(
 					"SYS APPS (" + SysAppList.size() + ")");
-			actionBar.getTabAt(ALL_APPS_TAB_POS).setText(
-					"ALL APPS (" + AllAppList.size() + ")");
+//			actionBar.getTabAt(ALL_APPS_TAB_POS).setText(
+//					"ALL APPS (" + AllAppList.size() + ")");
 
 			// list设置数据
 			sysAppsFrg.setData(sectionTextList, sectionItemsMap);
