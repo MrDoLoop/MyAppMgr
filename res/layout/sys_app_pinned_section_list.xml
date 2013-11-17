@@ -26,7 +26,7 @@
         android:gravity="center"
         android:visibility="gone"
         android:text="A"
-        android:textColor="@color/theme_blue_light"
+        android:textColor="#ffffff"
         android:textSize="50sp"
         android:textStyle="bold" />
 
