@@ -82,8 +82,8 @@ public class Utilities {
 	
 	/**
 	 * 参考网站 http://hi.baidu.com/daqing15/item/613e59e0eb2424f32b09a413
-	 * @param inputString 可以是多种字符混合
-	 * I love 北京-->I love beijing, aaa-->aaa, 121!!@#$-->121!!@#$
+	 * @param inputString 可以是多种字符混合,包含汉字转成拼音，没有汉字返回  ""
+	 * I love 北京-->I love beijing,
 	 * @return
 	 */
 	public static String GetPingYin(String inputString) {
@@ -91,7 +91,7 @@ public class Utilities {
 		format.setCaseType(HanyuPinyinCaseType.LOWERCASE);
 		format.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
 		format.setVCharType(HanyuPinyinVCharType.WITH_V);
-
+		boolean ContainsChinese = false;
 		char[] input = inputString.trim().toCharArray();
 		String output ="";
 
@@ -101,13 +101,22 @@ public class Utilities {
 				{
 					String[] temp = PinyinHelper.toHanyuPinyinStringArray(input[i],format);
 					output += "z"+temp[0]+" ";//说明英文字符是汉字转换的拼音，例如 英文a和啊计较
+					ContainsChinese = true;
 				}else
 					output += java.lang.Character.toString(input[i])+" ";
 			}
 		}catch(BadHanyuPinyinOutputFormatCombination e) {
 			e.printStackTrace();
 		}
-		return output.trim();
+		
+		if(ContainsChinese)
+		{
+			return output.trim();
+		}
+		else
+		{
+			return "";
+		}
 	} 
 	
 	
