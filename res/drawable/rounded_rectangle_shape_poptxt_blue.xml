@@ -6,8 +6,8 @@
 
     <stroke
         android:width="0px"
-        android:color="@color/theme_blue_light" />
+        android:color="#b433b5e5" />
 
-    <solid android:color="@color/theme_blue_light" />
+    <solid android:color="#b433b5e5" />
 
 </shape>
