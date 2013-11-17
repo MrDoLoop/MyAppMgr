@@ -53,7 +53,13 @@ public class SysAppsTabFragment extends SherlockListFragment {
 		return mPinnedHeaderListView;
 	}
 
-
+	public void ResetIndexBar()
+	{
+		PopTextView.setVisibility(View.INVISIBLE);
+		mIndexBarView.InitIndexBar();
+	}
+	
+	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);

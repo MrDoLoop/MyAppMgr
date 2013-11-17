@@ -62,7 +62,7 @@ public class IndexBarView extends LinearLayout {
 		InitIndexBar();
 	}
 	
-	private void InitIndexBar()
+	public void InitIndexBar()
 	{
 		removeAllViews(); 
 		mIndexTextViewList.clear();
