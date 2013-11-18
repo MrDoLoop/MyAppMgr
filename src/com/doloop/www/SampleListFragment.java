@@ -65,16 +65,34 @@ public class SampleListFragment extends ListFragment {
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
+			ViewHolder holder;
+			SampleItem tmpItem = getItem(position);
+			
 			if (convertView == null) {
 				convertView = LayoutInflater.from(getContext()).inflate(R.layout.row, null);
+				holder = new ViewHolder();
+				holder.icon = (ImageView) convertView.findViewById(R.id.row_icon);
+				holder.text = (TextView) convertView.findViewById(R.id.row_title);
+				convertView.setTag(holder);
 			}
-			ImageView icon = (ImageView) convertView.findViewById(R.id.row_icon);
-			icon.setImageResource(getItem(position).iconRes);
-			TextView title = (TextView) convertView.findViewById(R.id.row_title);
-			title.setText(getItem(position).tag);
+			else
+			{
+				holder = (ViewHolder)convertView.getTag();
+			}
+			
+			holder.icon .setImageResource(tmpItem.iconRes);
+			holder.text.setText(tmpItem.tag);
 
 			return convertView;
 		}
 
 	}
+	
+	
+	static class ViewHolder
+  	{
+		ImageView icon;
+		TextView text;
+  	}
+	
 }
