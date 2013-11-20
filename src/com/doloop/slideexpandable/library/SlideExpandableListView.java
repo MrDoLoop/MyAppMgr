@@ -63,22 +63,22 @@ class SlideExpandableListView extends ListView {
 	}
 
 
-	@Override
-	public Parcelable onSaveInstanceState() {
-		if(adapter != null) return adapter.onSaveInstanceState(super.onSaveInstanceState());
-		else return super.onSaveInstanceState();
-	}
-
-	@Override
-	public void onRestoreInstanceState(Parcelable state) {
-		if(!(state instanceof AbstractSlideExpandableListAdapter.SavedState)) {
-			super.onRestoreInstanceState(state);
-			return;
-		}
-
-		AbstractSlideExpandableListAdapter.SavedState ss = (AbstractSlideExpandableListAdapter.SavedState)state;
-		super.onRestoreInstanceState(ss.getSuperState());
-
-		adapter.onRestoreInstanceState(ss);
-	}
+//	@Override
+//	public Parcelable onSaveInstanceState() {
+//		if(adapter != null) return adapter.onSaveInstanceState(super.onSaveInstanceState());
+//		else return super.onSaveInstanceState();
+//	}
+//
+//	@Override
+//	public void onRestoreInstanceState(Parcelable state) {
+//		if(!(state instanceof AbstractSlideExpandableListAdapter.SavedState)) {
+//			super.onRestoreInstanceState(state);
+//			return;
+//		}
+//
+//		AbstractSlideExpandableListAdapter.SavedState ss = (AbstractSlideExpandableListAdapter.SavedState)state;
+//		super.onRestoreInstanceState(ss.getSuperState());
+//
+//		adapter.onRestoreInstanceState(ss);
+//	}
 }

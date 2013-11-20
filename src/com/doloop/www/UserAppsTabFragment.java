@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -22,10 +24,22 @@ import com.doloop.www.util.UserAppListAdapter.UserAppListFilterResultListener;
 
 public class UserAppsTabFragment extends SherlockListFragment implements ListView.OnScrollListener{
 	// private SysAppListAdapter mAdapter;
-	private UserAppListAdapter mAdapter;
-	private ActionSlideExpandableListView mActionSlideExpandableListView;
+	private static UserAppListAdapter mAdapter;
+	private static ActionSlideExpandableListView mActionSlideExpandableListView;
 
-
+	private static UserAppsTabFragment uniqueInstance = null;
+	public UserAppsTabFragment() 
+	{
+		
+	}
+	public synchronized  static UserAppsTabFragment getInstance() {
+	       if (uniqueInstance == null) {
+	           uniqueInstance = new UserAppsTabFragment();
+	       }
+	       return uniqueInstance;
+	}
+	
+	
     private final class RemoveWindow implements Runnable {
         public void run() {
             removeWindow();
@@ -65,7 +79,12 @@ public class UserAppsTabFragment extends SherlockListFragment implements ListVie
 		// TODO Auto-generated method stub
 		return mActionSlideExpandableListView;
 	}
-
+	
+	@Override
+	public ListAdapter getListAdapter() {
+		// TODO Auto-generated method stub
+		return mAdapter;
+	}
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -186,10 +205,10 @@ public class UserAppsTabFragment extends SherlockListFragment implements ListVie
 		}
 	}
 
-	public void setData(ArrayList<AppInfo> userAppList) {
-		mAdapter = new UserAppListAdapter(getActivity(),R.layout.user_app_expandable_list_item,0,userAppList);
-		mAdapter.setUserAppListFilterResultListener((UserAppListFilterResultListener)getActivity());
-		setListAdapter(mAdapter);
+	public void setData(Context ctx, ArrayList<AppInfo> userAppList) {
+		mAdapter = new UserAppListAdapter(ctx,R.layout.user_app_expandable_list_item,0,userAppList);
+		mAdapter.setUserAppListFilterResultListener((UserAppListFilterResultListener)ctx);
+		mActionSlideExpandableListView.setAdapter(mAdapter);
 	}
 
 	@Override

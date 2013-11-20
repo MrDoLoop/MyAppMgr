@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -20,8 +22,8 @@ import com.doloop.www.util.SysAppListAdapter;
 import com.doloop.www.util.SysAppListAdapter.SysAppListFilterResultListener;
 
 public class SysAppsTabFragment extends SherlockListFragment {
-	private SysAppListAdapter mAdapter;
-	private PinnedHeaderListView mPinnedHeaderListView;
+	private static SysAppListAdapter mAdapter;
+	private static PinnedHeaderListView mPinnedHeaderListView;
 	private TextView PopTextView;
 
 	private OnSysAppListItemSelectedListener mListener;
@@ -33,6 +35,18 @@ public class SysAppsTabFragment extends SherlockListFragment {
 	
     private IndexBarView mIndexBarView;
     
+	private static SysAppsTabFragment uniqueInstance = null;
+	public SysAppsTabFragment() 
+	{
+		
+	}
+	public synchronized  static SysAppsTabFragment getInstance() {
+	       if (uniqueInstance == null) {
+	           uniqueInstance = new SysAppsTabFragment();
+	       }
+	       return uniqueInstance;
+	}
+    
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -42,6 +56,17 @@ public class SysAppsTabFragment extends SherlockListFragment {
 		mIndexBarView = (IndexBarView)FragmentView.findViewById(R.id.indexBarView);
 		mPinnedHeaderListView = (PinnedHeaderListView) FragmentView.findViewById(android.R.id.list);
 		PopTextView = (TextView) FragmentView.findViewById(R.id.popTextView);
+		mIndexBarView.setOnIndexItemClickListener(new OnIndexItemClickListener() {
+
+			@Override
+			public void onItemClick(String s) {
+				int SecPos = mAdapter.getSectionPostionInList(s);
+				if (SecPos>-1) {
+					mPinnedHeaderListView.setSelection(SecPos);
+				}
+			}
+		});
+		mIndexBarView.setPopView(PopTextView);
 		return FragmentView;
 	}
 	
@@ -53,6 +78,12 @@ public class SysAppsTabFragment extends SherlockListFragment {
 		return mPinnedHeaderListView;
 	}
 
+	@Override
+	public ListAdapter getListAdapter() {
+		// TODO Auto-generated method stub
+		return mAdapter;
+	}
+	
 	public void ResetIndexBar()
 	{
 		PopTextView.setVisibility(View.INVISIBLE);
@@ -148,22 +179,23 @@ public class SysAppsTabFragment extends SherlockListFragment {
 		}
 	}
 	
-	public void setData(ArrayList<String> sectionTextList, HashMap<String , ArrayList<AppInfo>> sectionItemsMap)
+	public void setData(Context ctx, ArrayList<String> sectionTextList, HashMap<String , ArrayList<AppInfo>> sectionItemsMap)
 	{
-		mAdapter = new SysAppListAdapter(getActivity(),sectionTextList,sectionItemsMap);
-		mAdapter.setSysAppListFilterResultListener((SysAppListFilterResultListener)getActivity());
-		setListAdapter(mAdapter);
-		mIndexBarView.setOnIndexItemClickListener(new OnIndexItemClickListener() {
-
-			@Override
-			public void onItemClick(String s) {
-				int SecPos = mAdapter.getSectionPostionInList(s);
-				if (SecPos>-1) {
-					mPinnedHeaderListView.setSelection(SecPos);
-				}
-			}
-		});
-		mIndexBarView.setPopView(PopTextView);
+		mAdapter = new SysAppListAdapter(ctx,sectionTextList,sectionItemsMap);
+		mAdapter.setSysAppListFilterResultListener((SysAppListFilterResultListener)ctx);
+		//setListAdapter(mAdapter);
+		mPinnedHeaderListView.setAdapter(mAdapter);
+//		mIndexBarView.setOnIndexItemClickListener(new OnIndexItemClickListener() {
+//
+//			@Override
+//			public void onItemClick(String s) {
+//				int SecPos = mAdapter.getSectionPostionInList(s);
+//				if (SecPos>-1) {
+//					mPinnedHeaderListView.setSelection(SecPos);
+//				}
+//			}
+//		});
+//		mIndexBarView.setPopView(PopTextView);
 	}
 
 

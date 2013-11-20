@@ -161,14 +161,14 @@ public class MainActivity extends SlidingFragmentActivity implements
 			FragmentTransaction t = this.getSupportFragmentManager()
 					.beginTransaction();
 			mFrag = new SampleListFragment();
-			mFrag.setOnMenuListItemClickListener(this);
 			t.replace(R.id.menu_frame, mFrag);
 			t.commit();
 		} else {
 			mFrag = (SampleListFragment) this.getSupportFragmentManager()
 					.findFragmentById(R.id.menu_frame);
 		}
-
+		
+		mFrag.setOnMenuListItemClickListener(this);
 		// customize the SlidingMenu
 		mSlidingMenu = getSlidingMenu();
 		mSlidingMenu.setShadowWidthRes(R.dimen.shadow_width);
@@ -183,8 +183,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 
 	private void addActionBarTabs() {
 		Fragmentlist = new ArrayList<Fragment>();
-		usrAppsFrg = new UserAppsTabFragment();
-		sysAppsFrg = new SysAppsTabFragment();
+		usrAppsFrg = UserAppsTabFragment.getInstance();
+		sysAppsFrg = SysAppsTabFragment.getInstance();
 		//allAppsFrg = new AllAppsTabFragment();
 
 		Fragmentlist.add(usrAppsFrg);
@@ -537,8 +537,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 //					"ALL APPS (" + AllAppList.size() + ")");
 
 			// list…Ë÷√ ˝æ›
-			sysAppsFrg.setData(sectionTextList, sectionItemsMap);
-			usrAppsFrg.setData(UserAppList);
+			sysAppsFrg.setData(thisActivityCtx,sectionTextList, sectionItemsMap);
+			usrAppsFrg.setData(thisActivityCtx,UserAppList);
 			
 			registerReceiver(mAppUpdateReceiver, AppIntentFilter);
 			registerReceiver(LangUpdateReceiver , LangIntentFilter);
