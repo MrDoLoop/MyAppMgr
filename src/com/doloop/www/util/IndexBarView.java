@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -71,11 +72,6 @@ public class IndexBarView extends LinearLayout {
 		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
 	                LayoutParams.WRAP_CONTENT, 1);
 		TextView tmpTV = null;
-		float textSize = 6 * mScaledDensity;
-		if(textSize<10)
-		{
-			textSize = 10;
-		}
 		for(int i = 0;i<mIndexArray.length;i++)
 		{
 			tmpTV = new TextView(getContext());
@@ -83,7 +79,7 @@ public class IndexBarView extends LinearLayout {
 			tmpTV.setLayoutParams(params);
 			tmpTV.setTextColor(Color.GRAY);
 			tmpTV.setText(mIndexArray[i]);
-			tmpTV.setTextSize(textSize);
+			tmpTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
 			addView(tmpTV);
 			mIndexTextViewList.add(tmpTV);
 		}
