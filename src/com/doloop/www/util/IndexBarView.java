@@ -43,7 +43,6 @@ public class IndexBarView extends LinearLayout {
 	private ArrayList<TextView> mIndexTextViewList = new ArrayList<TextView>();
 	private PopupWindow mPopupWindow;
 	private View mPopView = null;
-	private float mScaledDensity;
 	private TextView mPopupText;
 	private Handler handler = new Handler();
 	int choose = -1;
@@ -52,14 +51,12 @@ public class IndexBarView extends LinearLayout {
 	
 	public IndexBarView(Context context) {
 		super(context);
-		mScaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
 		InitIndexBar();
 		// TODO Auto-generated constructor stub
 	}
 
 	public IndexBarView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		mScaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
 		InitIndexBar();
 	}
 	
