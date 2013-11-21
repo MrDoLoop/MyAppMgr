@@ -13,6 +13,7 @@ public class AppInfo {
 	public String appSize = "";
 	public String firstTimeInstallDate = "";
 	public String lastModifiedTime = "";
+	public String ApkFilePath = "";
 	
 	
 	public void print() {

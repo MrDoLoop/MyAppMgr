@@ -102,6 +102,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 	private IntentFilter LangIntentFilter;
 	
 	private String thisAppPackageName = "";//避免点击自己，启动自己
+	
+	private String BACK_UP_FOLDER = "";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -110,6 +112,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 		thisActivityCtx = MainActivity.this;
 		isAnyStoreInstalled = Utilities.isAnyStoreInstalled(thisActivityCtx);
 		thisAppPackageName = Utilities.getSelfAppInfo(thisActivityCtx).packageName;
+		BACK_UP_FOLDER = Utilities.getBackUpAPKfileDir(thisActivityCtx);
 		actionBar = getSupportActionBar();
 		actionBar.setSubtitle("NAN MADE");
 		toast = Toast.makeText(thisActivityCtx, "", Toast.LENGTH_SHORT);
@@ -461,6 +464,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 				tmpAPKfile = new File(packageInfo.applicationInfo.publicSourceDir);
 				tmpInfo.appSize = Utilities.formatFileSize(tmpAPKfile.length()).toString();
 				tmpInfo.lastModifiedTime = simpleDateFormat.format(new Date(tmpAPKfile.lastModified()));
+				tmpInfo.ApkFilePath = packageInfo.applicationInfo.publicSourceDir;
 				//排序做处理
 				if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {	
 					UserAppList.add(tmpInfo);// user app
@@ -586,7 +590,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 	public void onUserAppItemActionClick(View listView, View buttonview,
 			int position) {
 		// TODO Auto-generated method stub
-		String targetpackageName = ((UserAppListAdapter)usrAppsFrg.getListAdapter()).getItem(position).packageName;
+		AppInfo selectItem = ((UserAppListAdapter)usrAppsFrg.getListAdapter()).getItem(position);
+		String targetpackageName = selectItem.packageName;
 		switch (buttonview.getId()) {
 		case R.id.openBtn:
 			if(thisAppPackageName.equals(targetpackageName))//避免再次启动自己app
@@ -619,9 +624,20 @@ public class MainActivity extends SlidingFragmentActivity implements
 		case R.id.AppDetailsBtn:
 			Utilities.showInstalledAppDetails(thisActivityCtx, targetpackageName);
 			break;
+		case R.id.BackUpBtn:
+			String backAPKfileName = selectItem.appName+"_v"+selectItem.versionName+".apk";
+			if(Utilities.copyFile(selectItem.ApkFilePath,BACK_UP_FOLDER+backAPKfileName))
+			{
+				toast.setText("BackUp success");
+			}
+			else
+			{
+				toast.setText("error");
+			}
+			toast.show();
+			break;
 		case R.id.UninstallBtn:
-			Uri packageUri = Uri.parse("package:"
-					+ targetpackageName);
+			Uri packageUri = Uri.parse("package:"+ targetpackageName);
 			Intent uninstallIntent;
 			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 				uninstallIntent = new Intent(Intent.ACTION_DELETE, packageUri);

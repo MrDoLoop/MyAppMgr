@@ -103,7 +103,15 @@
             android:singleLine="true"
             android:text="Details"
             android:textSize="12sp" />
-        
+        <Button
+            android:id="@+id/BackUpBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:focusable="false"
+            android:singleLine="true"
+            android:text="BackUp"
+            android:textSize="12sp" />
         <Button
             android:id="@+id/UninstallBtn"
             android:layout_width="match_parent"
