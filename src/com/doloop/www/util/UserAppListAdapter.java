@@ -63,7 +63,10 @@ public class UserAppListAdapter extends ArrayAdapter<AppInfo> implements Filtera
 	@Override
 	public AppInfo getItem(int position) {
 		// TODO Auto-generated method stub
-		return AppListDisplay.get(position);
+		if(position < getCount()-1)
+			return AppListDisplay.get(position);
+		else 
+			return null;
 	}
 
 	@Override
