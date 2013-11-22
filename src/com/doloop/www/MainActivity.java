@@ -31,6 +31,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ListView;
@@ -449,12 +450,11 @@ public class MainActivity extends SlidingFragmentActivity implements
 			for (int i = 0; i < packages.size(); i++) {
 
 				publishProgress((i + 1) + " / " + packages.size());
-
+				Log.i("ttt", "processing app "+(i + 1) + " / " + packages.size());
 				packageInfo = packages.get(i);
 
 				tmpInfo = new AppInfo();
-				tmpInfo.appName = packageInfo.applicationInfo.loadLabel(
-						pManager).toString();
+				tmpInfo.appName = packageInfo.applicationInfo.loadLabel(pManager).toString();
 				tmpInfo.packageName = packageInfo.packageName;
 				tmpInfo.versionName = packageInfo.versionName;
 				tmpInfo.versionCode = packageInfo.versionCode;
