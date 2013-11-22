@@ -229,6 +229,8 @@ public class UserAppsTabFragment extends SherlockListFragment implements ListVie
 		
 		if(mListIsScrolling) 
 		{
+			if(mAdapter.getItem(firstVisibleItem) == null) return;
+			
 			char firstLetter = mAdapter.getItem(firstVisibleItem).appName.charAt(0);
 			mShowing = true;
             mDialogText.setVisibility(View.VISIBLE);
