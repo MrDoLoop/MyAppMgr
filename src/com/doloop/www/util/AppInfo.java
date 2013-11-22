@@ -11,9 +11,11 @@ public class AppInfo {
 	public int versionCode = 0;
 	public Drawable appIcon = null;
 	public String appSize = "";
+	public long appRawSize = -1;
 	public String firstTimeInstallDate = "";
 	public String lastModifiedTime = "";
 	public String ApkFilePath = "";
+	public long lastModifiedRawTime = -1;
 	
 	
 	public void print() {
