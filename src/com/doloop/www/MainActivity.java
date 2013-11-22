@@ -33,7 +33,10 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -105,7 +108,10 @@ public class MainActivity extends SlidingFragmentActivity implements
 	private String thisAppPackageName = "";//避免点击自己，启动自己
 	
 	private String BACK_UP_FOLDER = "";
+	
+	private int screenWidth = 0;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -117,7 +123,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 		actionBar = getSupportActionBar();
 		actionBar.setSubtitle("NAN MADE");
 		toast = Toast.makeText(thisActivityCtx, "", Toast.LENGTH_SHORT);
-
+		screenWidth  = getWindowManager().getDefaultDisplay().getWidth();
+		
 		InitSlidingMenu(savedInstanceState);
 		
 		addActionBarTabs();
@@ -142,7 +149,31 @@ public class MainActivity extends SlidingFragmentActivity implements
 		
 		new GetApps().execute();
 	}
-
+	
+	
+	
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent ev) 
+	{
+	    if(ev.getAction() == MotionEvent.ACTION_DOWN) 
+	    {
+	        final View currentFocus = getCurrentFocus();
+	        if (!(currentFocus instanceof AutoCompleteTextView) || !isTouchInsideView(ev, currentFocus)) {//AutoCompleteTextView
+	            ((InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE))
+	                .hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+	        }
+	    }
+		
+		return super.dispatchTouchEvent(ev);
+	}
+	
+	private boolean isTouchInsideView(final MotionEvent ev, final View currentFocus) {
+	    final int[] loc = new int[2];
+	    currentFocus.getLocationOnScreen(loc);
+	    return ev.getRawX() > loc[0] && ev.getRawY() > loc[1] && ev.getRawX() < (loc[0] + screenWidth)//(loc[0] + currentFocus.getWidth())
+	        && ev.getRawY() < (loc[1] + currentFocus.getHeight());
+	}
+	
 	private ViewPager.SimpleOnPageChangeListener onPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
 		@Override
 		public void onPageSelected(int position) {
@@ -328,7 +359,6 @@ public class MainActivity extends SlidingFragmentActivity implements
 			public boolean onQueryTextChange(String newText) {
 				// TODO Auto-generated method stub
               String mCurFilter = !TextUtils.isEmpty(newText) ? newText : null;
-              //mAdapter.getFilter().filter(mCurFilter);
               switch (actionBar.getSelectedTab().getPosition()) 
               {
               	case USR_APPS_TAB_POS:
@@ -343,7 +373,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 				}
 				return true;
 			}});
-		
+
 		 MenuItem searchMenuItem = menu.add("Search");
 		 searchMenuItem.setIcon(R.drawable.abs__ic_search);
 		 searchMenuItem.setActionView(searchView);
@@ -463,7 +493,9 @@ public class MainActivity extends SlidingFragmentActivity implements
 				// dateformat.format(packageInfo.firstInstallTime);
 				tmpAPKfile = new File(packageInfo.applicationInfo.publicSourceDir);
 				tmpInfo.appSize = Utilities.formatFileSize(tmpAPKfile.length()).toString();
+				tmpInfo.appRawSize = tmpAPKfile.length();
 				tmpInfo.lastModifiedTime = simpleDateFormat.format(new Date(tmpAPKfile.lastModified()));
+				tmpInfo.lastModifiedRawTime = tmpAPKfile.lastModified();
 				tmpInfo.ApkFilePath = packageInfo.applicationInfo.publicSourceDir;
 				//排序做处理
 				if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {	
@@ -477,8 +509,13 @@ public class MainActivity extends SlidingFragmentActivity implements
 			}
 			
 			//用户程序排序
-			//Collections.sort(UserAppList, new AppPinYinComparator());
-			Collections.sort(UserAppList, new AppNameComparator());//系统自带，默认的string排序
+			Collections.sort(UserAppList, new AppNameComparator(true));//系统自带，默认的string排序
+			//Collections.sort(UserAppList, new AppNameComparator(false));//
+			//Collections.sort(UserAppList, new LastModifiedComparator(true));//
+			//Collections.sort(UserAppList, new LastModifiedComparator(false));//
+			//Collections.sort(UserAppList, new AppSizeComparator(true));//
+			//Collections.sort(UserAppList, new AppSizeComparator(false));//
+			
 			// build 系统applist
 			AppInfo curAppInfo;
 			String curSectionStr = "";
