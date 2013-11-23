@@ -492,20 +492,21 @@ public class MainActivity extends SlidingFragmentActivity implements
 				// tmpInfo.firstTimeInstallDate =
 				// dateformat.format(packageInfo.firstInstallTime);
 				tmpAPKfile = new File(packageInfo.applicationInfo.publicSourceDir);
-				tmpInfo.appSize = Utilities.formatFileSize(tmpAPKfile.length()).toString();
+				tmpInfo.appSizeStr = Utilities.formatFileSize(tmpAPKfile.length()).toString();
 				tmpInfo.appRawSize = tmpAPKfile.length();
-				tmpInfo.lastModifiedTime = simpleDateFormat.format(new Date(tmpAPKfile.lastModified()));
+				tmpInfo.lastModifiedTimeStr = simpleDateFormat.format(new Date(tmpAPKfile.lastModified()));
 				tmpInfo.lastModifiedRawTime = tmpAPKfile.lastModified();
-				tmpInfo.ApkFilePath = packageInfo.applicationInfo.publicSourceDir;
+				tmpInfo.apkFilePath = packageInfo.applicationInfo.publicSourceDir;
+				Utilities.GetPingYin(tmpInfo);
 				//排序做处理
 				if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {	
 					UserAppList.add(tmpInfo);// user app
 				} 
 				else// sys app
 				{
-					tmpInfo.appNamePinyin = Utilities.GetPingYin(tmpInfo.appName);
 					SysAppList.add(tmpInfo);
 				}
+				
 			}
 			
 			//用户程序排序
@@ -663,7 +664,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			break;
 		case R.id.BackUpBtn:
 			String backAPKfileName = selectItem.appName+"_v"+selectItem.versionName+".apk";
-			if(Utilities.copyFile(selectItem.ApkFilePath,BACK_UP_FOLDER+backAPKfileName))
+			if(Utilities.copyFile(selectItem.apkFilePath,BACK_UP_FOLDER+backAPKfileName))
 			{
 				toast.setText("BackUp success");
 			}
