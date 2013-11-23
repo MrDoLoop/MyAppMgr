@@ -29,6 +29,7 @@
         android:singleLine="true"
         android:text="App Name"
         android:textSize="15sp"
+        android:layout_marginRight="15dp"
         android:textStyle="bold"/>
 
     <TextView
