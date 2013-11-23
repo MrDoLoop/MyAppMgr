@@ -105,7 +105,7 @@ public class UserAppListAdapter extends ArrayAdapter<AppInfo> implements Filtera
   		}
 		
 		holder.AppNameTextView.setText(appInfo.appName);
-		holder.AppVersionTextView.setText("v" + appInfo.versionName+" | "+appInfo.appSize+" | "+appInfo.lastModifiedTime);
+		holder.AppVersionTextView.setText("v" + appInfo.versionName+" | "+appInfo.appSizeStr+" | "+appInfo.lastModifiedTimeStr);
 		holder.AppIconImageView.setImageDrawable(appInfo.appIcon);
 		
 		return convertView;
@@ -145,7 +145,8 @@ public class UserAppListAdapter extends ArrayAdapter<AppInfo> implements Filtera
 	        	ArrayList<AppInfo> filteredAppList = new ArrayList<AppInfo>();
 	        	for(AppInfo appInfo: full_AppList)
 	        	{
-	        		if(appInfo.appName.toLowerCase(Locale.getDefault()).contains(constraint))
+	        		if(appInfo.appName.toLowerCase(Locale.getDefault()).contains(constraint) || 
+	        				appInfo.appNamePinyin.toLowerCase(Locale.getDefault()).contains(constraint)	)
 	        		{
 	        			filteredAppList.add(appInfo);
 	        		}

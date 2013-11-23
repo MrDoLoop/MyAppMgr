@@ -137,7 +137,7 @@ public class SysAppListAdapter extends SectionedBaseAdapter implements Filterabl
 		convertView.setContentDescription(section+"-"+position);
 		
 		appViewHolder.AppNameTextView.setText(appInfo.appName);
-		appViewHolder.AppVersionTextView.setText("v" + appInfo.versionName + " | "+ appInfo.appSize + " | "+ appInfo.lastModifiedTime);
+		appViewHolder.AppVersionTextView.setText("v" + appInfo.versionName + " | "+ appInfo.appSizeStr + " | "+ appInfo.lastModifiedTimeStr);
 		appViewHolder.AppIconImageView.setImageDrawable(appInfo.appIcon);
 
 		return convertView;
@@ -199,7 +199,8 @@ public class SysAppListAdapter extends SectionedBaseAdapter implements Filterabl
 						ArrayList<AppInfo> tmpItemsInSection = new ArrayList<AppInfo>();
 						for(int i = 0;i<val.size();i++)
 						{
-							if(val.get(i).appName.toLowerCase(Locale.getDefault()).contains(constraint))
+							if(val.get(i).appName.toLowerCase(Locale.getDefault()).contains(constraint)||
+									val.get(i).appNamePinyin.toLowerCase(Locale.getDefault()).contains(constraint))
 							{
 								tmpItemsInSection.add(val.get(i));
 							}

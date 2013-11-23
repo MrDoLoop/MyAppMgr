@@ -126,35 +126,39 @@ public class Utilities {
 	 *            可以是多种字符混合,包含汉字转成拼音，没有汉字返回 "" I love 北京-->I love beijing,
 	 * @return
 	 */
-	public static String GetPingYin(String inputString) {
+	public static void GetPingYin(AppInfo mAppInfo) {
 		HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
 		format.setCaseType(HanyuPinyinCaseType.LOWERCASE);
 		format.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
 		format.setVCharType(HanyuPinyinVCharType.WITH_V);
 		boolean ContainsChinese = false;
-		char[] input = inputString.trim().toCharArray();
+		mAppInfo.appSortName = "";
+		mAppInfo.appNamePinyin = "";
+		char[] input = mAppInfo.appName.trim().toCharArray();
 		String output = "";
 
 		try {
 			for (int i = 0; i < input.length; i++) {
-				if (java.lang.Character.toString(input[i]).matches(
-						"[\\u4E00-\\u9FA5]+")) // 为汉字
+				if (java.lang.Character.toString(input[i]).matches("[\\u4E00-\\u9FA5]+")) // 为汉字
 				{
-					String[] temp = PinyinHelper.toHanyuPinyinStringArray(
-							input[i], format);
+					String[] temp = PinyinHelper.toHanyuPinyinStringArray(input[i], format);
 					output += "z" + temp[0] + " ";// 说明英文字符是汉字转换的拼音，例如 英文a和啊计较
 					ContainsChinese = true;
+					mAppInfo.appNamePinyin += temp[0];
 				} else
 					output += java.lang.Character.toString(input[i]) + " ";
 			}
 		} catch (BadHanyuPinyinOutputFormatCombination e) {
 			e.printStackTrace();
 		}
-
+		
 		if (ContainsChinese) {
-			return output.trim();
+			output = output.trim();
+			mAppInfo.appSortName = output;
+			//return output;
 		} else {
-			return "";
+			mAppInfo.appSortName = "";
+			//return "";
 		}
 	}
 

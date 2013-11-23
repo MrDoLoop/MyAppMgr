@@ -11,21 +11,21 @@ public class AppPinYinComparator implements Comparator<AppInfo>{
 		// TODO Auto-generated method stub	
 		String str1 = "";
 		String str2 = "";
-		if(lhs.appNamePinyin.length()>0 && rhs.appNamePinyin.length()>0)//中 : 中
+		if(lhs.appSortName.length()>0 && rhs.appSortName.length()>0)//中 : 中
 		{
-			str1 = lhs.appNamePinyin;
-			str2 = rhs.appNamePinyin;
+			str1 = lhs.appSortName;
+			str2 = rhs.appSortName;
 		}
-		else if(lhs.appNamePinyin.length()==0 && rhs.appNamePinyin.length()==0)//英 : 英
+		else if(lhs.appSortName.length()==0 && rhs.appSortName.length()==0)//英 : 英
 		{
 			str1 = lhs.appName;
 			str2 = rhs.appName;
 		}
-		else if(lhs.appNamePinyin.length()==0 && rhs.appNamePinyin.length()>0)//英 : 中
+		else if(lhs.appSortName.length()==0 && rhs.appSortName.length()>0)//英 : 中
 		{
 			return -1;
 		}
-		else if(lhs.appNamePinyin.length()>0 && rhs.appNamePinyin.length()==0)//中 : 英
+		else if(lhs.appSortName.length()>0 && rhs.appSortName.length()==0)//中 : 英
 		{
 			return 1;
 		}

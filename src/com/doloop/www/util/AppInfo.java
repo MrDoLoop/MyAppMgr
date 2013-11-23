@@ -6,15 +6,16 @@ import android.util.Log;
 public class AppInfo {
 	public String appName = "";
 	public String appNamePinyin = "";
+	public String appSortName = "";
 	public String packageName = "";
 	public String versionName = "";
 	public int versionCode = 0;
 	public Drawable appIcon = null;
-	public String appSize = "";
+	public String appSizeStr = "";
 	public long appRawSize = -1;
 	public String firstTimeInstallDate = "";
-	public String lastModifiedTime = "";
-	public String ApkFilePath = "";
+	public String lastModifiedTimeStr = "";
+	public String apkFilePath = "";
 	public long lastModifiedRawTime = -1;
 	
 	
