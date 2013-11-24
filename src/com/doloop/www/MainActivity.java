@@ -36,11 +36,13 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
@@ -48,12 +50,16 @@ import com.actionbarsherlock.widget.SearchView;
 import com.doloop.slideexpandable.library.ActionSlideExpandableListView;
 import com.doloop.www.SampleListFragment.OnMenuListItemClickListener;
 import com.doloop.www.SampleListFragment.SampleItem;
+import com.doloop.www.SortTypeDialogFragment.SortTypeListItemClickListener;
 import com.doloop.www.SysAppsTabFragment.OnSysAppListItemSelectedListener;
 import com.doloop.www.UserAppsTabFragment.OnUserAppListItemActionClickListener;
+import com.doloop.www.UserAppsTabFragment.OnUserAppListItemLongClickListener;
 import com.doloop.www.UserAppsTabFragment.OnUserAppListItemSelectedListener;
 import com.doloop.www.util.AppInfo;
 import com.doloop.www.util.AppNameComparator;
 import com.doloop.www.util.AppPinYinComparator;
+import com.doloop.www.util.AppSizeComparator;
+import com.doloop.www.util.LastModifiedComparator;
 import com.doloop.www.util.StringComparator;
 import com.doloop.www.util.SysAppListAdapter;
 import com.doloop.www.util.SysAppListAdapter.SysAppListFilterResultListener;
@@ -67,13 +73,20 @@ import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 public class MainActivity extends SlidingFragmentActivity implements
 		OnSysAppListItemSelectedListener, OnUserAppListItemSelectedListener,
 		OnUserAppListItemActionClickListener,UserAppListFilterResultListener,
-		SysAppListFilterResultListener,OnMenuListItemClickListener{
+		SysAppListFilterResultListener,OnMenuListItemClickListener, 
+		OnUserAppListItemLongClickListener,SortTypeListItemClickListener {
 
 	private final static int USR_APPS_TAB_POS = 0;
 	private final static int SYS_APPS_TAB_POS = 1;
 	//private final static int ALL_APPS_TAB_POS = 2;
 	
+	private final static int SORT_MENU = Menu.FIRST;
+	private final static int SEARCH_MENU = SORT_MENU + 1;
+	
 	private ActionBar actionBar;
+	private ActionMode mActionMode;
+	private int UserAppActionModeSelectCnt = 0;
+	
 	private ViewPager viewPager;
 	private static long back_pressed = 0;
 	private Toast toast;
@@ -82,10 +95,12 @@ public class MainActivity extends SlidingFragmentActivity implements
 	private ArrayList<Fragment> Fragmentlist;
 
 	private UserAppsTabFragment usrAppsFrg;
-	private ArrayList<AppInfo> UserAppList = new ArrayList<AppInfo>();
+	private UserAppListAdapter mUserAppListAdapter;
+	private ArrayList<AppInfo> UserAppFullList = new ArrayList<AppInfo>();
 
 	private SysAppsTabFragment sysAppsFrg;
-	private ArrayList<AppInfo> SysAppList = new ArrayList<AppInfo>();
+	private SysAppListAdapter mSysAppListAdapter;
+	private ArrayList<AppInfo> SysAppFullList = new ArrayList<AppInfo>();
 	private ArrayList<String> sectionTextList = new ArrayList<String>();
 	private HashMap<String, ArrayList<AppInfo>> sectionItemsMap = new HashMap<String, ArrayList<AppInfo>>();
 
@@ -111,6 +126,10 @@ public class MainActivity extends SlidingFragmentActivity implements
 	
 	private int screenWidth = 0;
 
+	private MenuItem SortMenuItem = null;
+	private MenuItem searchMenuItem = null ;
+	
+	
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -259,6 +278,17 @@ public class MainActivity extends SlidingFragmentActivity implements
 			} else {
 				mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
 			}
+			
+			switch (tab.getPosition()) 
+			{
+				case USR_APPS_TAB_POS:
+					if(!searchMenuItem.isActionViewExpanded())
+						SortMenuItem.setVisible(true);
+					break;
+				case SYS_APPS_TAB_POS:
+					SortMenuItem.setVisible(false);
+					break;
+			}
 		}
 
 		@Override
@@ -359,13 +389,13 @@ public class MainActivity extends SlidingFragmentActivity implements
 			public boolean onQueryTextChange(String newText) {
 				// TODO Auto-generated method stub
               String mCurFilter = !TextUtils.isEmpty(newText) ? newText : null;
-              switch (actionBar.getSelectedTab().getPosition()) 
+              switch (actionBar.getSelectedNavigationIndex()) 
               {
               	case USR_APPS_TAB_POS:
-              		((UserAppListAdapter)usrAppsFrg.getListAdapter()).getFilter().filter(mCurFilter);
+              		mUserAppListAdapter.getFilter().filter(mCurFilter);
 					break;
 				case SYS_APPS_TAB_POS:
-					((SysAppListAdapter)sysAppsFrg.getListAdapter()).getFilter().filter(mCurFilter);
+					mSysAppListAdapter.getFilter().filter(mCurFilter);
 					break;
 //				case ALL_APPS_TAB_POS:
 //	
@@ -374,7 +404,11 @@ public class MainActivity extends SlidingFragmentActivity implements
 				return true;
 			}});
 
-		 MenuItem searchMenuItem = menu.add("Search");
+		 SortMenuItem = menu.add(Menu.NONE, SORT_MENU, Menu.NONE, "Sort");
+		 SortMenuItem.setIcon(R.drawable.ic_action_sort_by_size);
+		 SortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		 
+		 searchMenuItem = menu.add(Menu.NONE, SEARCH_MENU, Menu.NONE, "Search");
 		 searchMenuItem.setIcon(R.drawable.abs__ic_search);
 		 searchMenuItem.setActionView(searchView);
 		 searchMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
@@ -383,18 +417,32 @@ public class MainActivity extends SlidingFragmentActivity implements
 			@Override
 			public boolean onMenuItemActionExpand(MenuItem item) {
 				// TODO Auto-generated method stub
+				SortMenuItem.setVisible(false);
 				return true;
 			}
 
 			@Override
 			public boolean onMenuItemActionCollapse(MenuItem item) {
 				// TODO Auto-generated method stub
-				((UserAppListAdapter)usrAppsFrg.getListAdapter()).getFilter().filter(null);
-				((SysAppListAdapter)sysAppsFrg.getListAdapter()).getFilter().filter(null);
+
+				switch (actionBar.getSelectedNavigationIndex())
+				{
+				case USR_APPS_TAB_POS:
+					SortMenuItem.setVisible(true);
+					break;
+				case SYS_APPS_TAB_POS:
+					break;
+				}
+				
+				mUserAppListAdapter.getFilter().filter(null);
+				mSysAppListAdapter.getFilter().filter(null);
 				return true;
 			}});
+		 
+		 
 		 return true;
 	 }
+	  
 	//
 	// @Override
 	// public boolean onPrepareOptionsMenu(Menu menu) {
@@ -425,6 +473,15 @@ public class MainActivity extends SlidingFragmentActivity implements
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			toggle();
+			return true;
+		case SORT_MENU:
+			
+			SortTypeDialogFragment dialog = new SortTypeDialogFragment();
+			Bundle bundle = new Bundle();
+			bundle.putInt(SortTypeDialogFragment.SELECTED_ITEM, usrAppsFrg.getListSortType());
+			dialog.setArguments(bundle);
+			dialog.show(getSupportFragmentManager(), "SortTypeDialog");
+			
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -460,9 +517,9 @@ public class MainActivity extends SlidingFragmentActivity implements
 		@Override
 		protected Void doInBackground(Void... params) {
 			//用于显示用户app的list
-			UserAppList.clear();
+			UserAppFullList.clear();
 			//用户显示系统app的list
-			SysAppList.clear();
+			SysAppFullList.clear();
 			sectionTextList.clear();
 			sectionItemsMap.clear();
 			
@@ -500,17 +557,17 @@ public class MainActivity extends SlidingFragmentActivity implements
 				Utilities.GetPingYin(tmpInfo);
 				//排序做处理
 				if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {	
-					UserAppList.add(tmpInfo);// user app
+					UserAppFullList.add(tmpInfo);// user app
 				} 
 				else// sys app
 				{
-					SysAppList.add(tmpInfo);
+					SysAppFullList.add(tmpInfo);
 				}
 				
 			}
 			
 			//用户程序排序
-			Collections.sort(UserAppList, new AppNameComparator(true));//系统自带，默认的string排序
+			Collections.sort(UserAppFullList, new AppNameComparator(true));//系统自带，默认的string排序
 			//Collections.sort(UserAppList, new AppNameComparator(false));//
 			//Collections.sort(UserAppList, new LastModifiedComparator(true));//
 			//Collections.sort(UserAppList, new LastModifiedComparator(false));//
@@ -521,8 +578,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 			AppInfo curAppInfo;
 			String curSectionStr = "";
 			ArrayList<AppInfo> sectionItemsTmp;
-			for (int i = 0; i < SysAppList.size(); i++) {
-				curAppInfo = SysAppList.get(i);
+			for (int i = 0; i < SysAppFullList.size(); i++) {
+				curAppInfo = SysAppFullList.get(i);
 				//curSectionStr = curAppInfo.appName.substring(0, 1).toUpperCase(Locale.getDefault());
 				curSectionStr = Utilities.GetFirstChar(curAppInfo.appName);//.substring(0, 1).toUpperCase(Locale.getDefault());
 				if(!Character.isLetter(curSectionStr.charAt(0)))//其他的开始的字母，放入#未分类
@@ -572,55 +629,68 @@ public class MainActivity extends SlidingFragmentActivity implements
 			}
 			// 设置tab 标题
 			actionBar.getTabAt(USR_APPS_TAB_POS).setText(
-					"USER APPS (" + UserAppList.size() + ")");
+					"USER APPS (" + UserAppFullList.size() + ")");
 			actionBar.getTabAt(SYS_APPS_TAB_POS).setText(
-					"SYS APPS (" + SysAppList.size() + ")");
+					"SYS APPS (" + SysAppFullList.size() + ")");
 //			actionBar.getTabAt(ALL_APPS_TAB_POS).setText(
 //					"ALL APPS (" + AllAppList.size() + ")");
 
 			// list设置数据
 			sysAppsFrg.setData(thisActivityCtx,sectionTextList, sectionItemsMap);
-			usrAppsFrg.setData(thisActivityCtx,UserAppList);
+			
+			usrAppsFrg.setListSortType(SortTypeDialogFragment.LIST_SORT_TYPE_NAME_ASC);
+			usrAppsFrg.setData(thisActivityCtx,UserAppFullList);
+			
+			mUserAppListAdapter = (UserAppListAdapter)usrAppsFrg.getListAdapter();
+			mSysAppListAdapter = (SysAppListAdapter)sysAppsFrg.getListAdapter();
 			
 			registerReceiver(mAppUpdateReceiver, AppIntentFilter);
 			registerReceiver(LangUpdateReceiver , LangIntentFilter);
 		}
 	}
 
-	// 系统app list点击事件
 	@Override
-	public void onSysAppItemClick(View v, int position) {
+	public void onUserAppItemLongClick(AdapterView<?> parent, View view,
+			int position, long id) {
 		// TODO Auto-generated method stub
-		String viewContentDesStr = v.getContentDescription().toString();
-		if (viewContentDesStr.contains("-"))// app view "section-position"
-		{
-			String[] DesStr = viewContentDesStr.split("-");
-			String section = DesStr[0];
-			int pos = Integer.parseInt(DesStr[1]);
-
-			String toastMsg = "SYS appList app click\n"
-					+ sectionItemsMap.get(
-							sectionTextList.get(Integer.parseInt(section)))
-							.get(pos).appName;
-			toast.setText(toastMsg);
-			toast.show();
-		} 
-		else// section
-		{
-			sysAppsFrg.getListView().setSelection(position);
-		}
+		AppInfo selectItem = mUserAppListAdapter.getItem(position);
+		selectItem.selected = true;
+		UserAppActionModeSelectCnt++;
+		if (mActionMode != null) {	
+			 mActionMode.setTitle(""+UserAppActionModeSelectCnt);
+		 }
+		 else
+		 {
+			 mActionMode = startActionMode(mActionModeCallback);
+			 
+		 }
+		mActionMode.setTitle(""+UserAppActionModeSelectCnt);
+		mUserAppListAdapter.notifyDataSetChanged();
+		 
 	}
+
+
 
 	// 用户App列表点击事件
 	@Override
 	public void onUserAppItemClick(View v, int position) {
 		// TODO Auto-generated method stub
-		
-		((ActionSlideExpandableListView)usrAppsFrg.getListView()).collapse(true);
-		
-		toast.setText("user AppList " + position);
-		toast.show();
-		
+		AppInfo selectItem = mUserAppListAdapter.getItem(position);
+		if (mActionMode != null) {
+			selectItem.selected = true;
+			UserAppActionModeSelectCnt++;
+			mActionMode.setTitle(""+UserAppActionModeSelectCnt);
+			mUserAppListAdapter.notifyDataSetChanged();
+		}
+		else
+		{
+			((ActionSlideExpandableListView)usrAppsFrg.getListView()).collapse(true);
+			
+			toast.setText("user AppList " + position);
+			toast.show();
+		}
+		 
+		 
 	}
 
 	// 用户App列表中的action点击事件
@@ -628,7 +698,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 	public void onUserAppItemActionClick(View listView, View buttonview,
 			int position) {
 		// TODO Auto-generated method stub
-		AppInfo selectItem = ((UserAppListAdapter)usrAppsFrg.getListAdapter()).getItem(position);
+		AppInfo selectItem = mUserAppListAdapter.getItem(position);
 		String targetpackageName = selectItem.packageName;
 		switch (buttonview.getId()) {
 		case R.id.openBtn:
@@ -686,7 +756,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			break;
 		}
 	}
-
+	
 	//用户app list过滤之后
 	@Override
 	public void onUserAppListFilterResultPublish(ArrayList<AppInfo> resultsList) {
@@ -696,6 +766,32 @@ public class MainActivity extends SlidingFragmentActivity implements
 		actionBar.getTabAt(USR_APPS_TAB_POS).setText(newTitle);
 	}
 	
+	// 系统app list点击事件
+	@Override
+	public void onSysAppItemClick(View v, int position) {
+		// TODO Auto-generated method stub
+		String viewContentDesStr = v.getContentDescription().toString();
+		if (viewContentDesStr.contains("-"))// app view "section-position"
+		{
+			String[] DesStr = viewContentDesStr.split("-");
+			String section = DesStr[0];
+			int pos = Integer.parseInt(DesStr[1]);
+	
+			String toastMsg = "SYS appList app click\n"
+					+ sectionItemsMap.get(
+							sectionTextList.get(Integer.parseInt(section)))
+							.get(pos).appName;
+			toast.setText(toastMsg);
+			toast.show();
+		} 
+		else// section
+		{
+			sysAppsFrg.getListView().setSelection(position);
+		}
+	}
+
+
+
 	@Override
 	public void onSysAppListFilterResultPublish(
 			ArrayList<String> ResultSectionTextList,
@@ -704,7 +800,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 		sectionTextList = ResultSectionTextList;
 		sectionItemsMap = ResultSectionItemsMap;
 		
-		String newTitle = "SYS APPS (" + ((SysAppListAdapter)sysAppsFrg.getListAdapter()).getItemsCount() + ")";
+		String newTitle = "SYS APPS (" + mSysAppListAdapter.getItemsCount() + ")";
 		actionBar.getTabAt(SYS_APPS_TAB_POS).setText(newTitle);
 	}
 	
@@ -735,6 +831,40 @@ public class MainActivity extends SlidingFragmentActivity implements
 	  unregisterReceiver(mAppUpdateReceiver);
 	  unregisterReceiver(LangUpdateReceiver);
 	}
+	
+	private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
+
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			// TODO Auto-generated method stub
+			menu.add(Menu.NONE, Menu.FIRST, Menu.NONE,"Backup").setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+			menu.add(Menu.NONE, Menu.FIRST+1, Menu.NONE,"Send").setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+			menu.add(Menu.NONE, Menu.FIRST+2, Menu.NONE,"Uninstall").setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+			return true;
+		}
+
+		// Called each time the action mode is shown. Always called after onCreateActionMode, but
+	    // may be called multiple times if the mode is invalidated.
+	    @Override
+	    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+	        return false; // Return false if nothing is done
+	    }
+
+		@Override
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			// TODO Auto-generated method stub
+			toast.setText("MenuItemID: "+item.getItemId()+" Title: "+item.getTitle());
+			toast.show();
+			return true;
+		}
+
+		@Override
+		public void onDestroyActionMode(ActionMode mode) {
+			// TODO Auto-generated method stub
+			mActionMode = null;
+		}
+	};
+	
 	
 	private class LangUpdateReceiver extends BroadcastReceiver 
 	{
@@ -783,5 +913,33 @@ public class MainActivity extends SlidingFragmentActivity implements
 				 new GetApps().execute();
 			 }
 		} 
+	}
+
+	@Override
+	public void onSortTypeListItemClick(DialogInterface dialog, int which) {
+		// TODO Auto-generated method stub
+		switch (which)
+		{
+		case SortTypeDialogFragment.LIST_SORT_TYPE_NAME_ASC:
+			Collections.sort(UserAppFullList, new AppNameComparator(true));
+			break;
+		case SortTypeDialogFragment.LIST_SORT_TYPE_NAME_DES:
+			Collections.sort(UserAppFullList, new AppNameComparator(false));
+			break;
+		case SortTypeDialogFragment.LIST_SORT_TYPE_SIZE_ASC:
+			Collections.sort(UserAppFullList, new AppSizeComparator(true));
+			break;
+		case SortTypeDialogFragment.LIST_SORT_TYPE_SIZE_DES:
+			Collections.sort(UserAppFullList, new AppSizeComparator(false));
+			break;
+		case SortTypeDialogFragment.LIST_SORT_TYPE_LAST_MOD_TIME_ASC:
+			Collections.sort(UserAppFullList, new LastModifiedComparator(true));
+			break;
+		case SortTypeDialogFragment.LIST_SORT_TYPE_LAST_MOD_TIME_DES:
+			Collections.sort(UserAppFullList, new LastModifiedComparator(false));
+			break;
+		}
+		usrAppsFrg.setListSortType(which);
+		mUserAppListAdapter.notifyDataSetChanged();
 	}
 }

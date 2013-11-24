@@ -8,12 +8,17 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
@@ -22,8 +27,45 @@ import com.doloop.www.util.AppInfo;
 import com.doloop.www.util.UserAppListAdapter;
 import com.doloop.www.util.UserAppListAdapter.UserAppListFilterResultListener;
 
-public class UserAppsTabFragment extends SherlockListFragment implements ListView.OnScrollListener{
-	// private SysAppListAdapter mAdapter;
+public class UserAppsTabFragment extends SherlockListFragment implements 
+	ListView.OnScrollListener, AdapterView.OnItemLongClickListener {
+
+	private int currentSortType = SortTypeDialogFragment.LIST_SORT_TYPE_NAME_ASC;
+	
+	public void setListSortType(int sortType)
+	{
+		currentSortType = sortType;
+		switch (currentSortType)
+		{
+		case SortTypeDialogFragment.LIST_SORT_TYPE_NAME_ASC:
+		case SortTypeDialogFragment.LIST_SORT_TYPE_NAME_DES:
+            //mDialogText = nameText;
+			int size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getActivity().getResources().getDisplayMetrics());
+			LayoutParams paramsFixSize = new LayoutParams(size,size); 
+			paramsFixSize.alignWithParent = true;
+			paramsFixSize.addRule(RelativeLayout.CENTER_IN_PARENT);
+			mDialogText.setPadding(0, 0, 0, 0);
+			mDialogText.setLayoutParams(paramsFixSize);
+			break;
+		case SortTypeDialogFragment.LIST_SORT_TYPE_SIZE_ASC:
+		case SortTypeDialogFragment.LIST_SORT_TYPE_SIZE_DES:
+		case SortTypeDialogFragment.LIST_SORT_TYPE_LAST_MOD_TIME_ASC:
+		case SortTypeDialogFragment.LIST_SORT_TYPE_LAST_MOD_TIME_DES:
+			LayoutParams paramsWrapContent = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);  
+			paramsWrapContent.alignWithParent = true;
+			paramsWrapContent.addRule(RelativeLayout.CENTER_IN_PARENT);
+			int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getActivity().getResources().getDisplayMetrics());
+			mDialogText.setPadding(padding, 0, padding, 0);
+			mDialogText.setLayoutParams(paramsWrapContent);
+			break;
+		}
+	}
+	
+	public int getListSortType()
+	{
+		return this.currentSortType;
+	}
+	
 	private static UserAppListAdapter mAdapter;
 	private static ActionSlideExpandableListView mActionSlideExpandableListView;
 
@@ -33,12 +75,11 @@ public class UserAppsTabFragment extends SherlockListFragment implements ListVie
 		
 	}
 	public synchronized  static UserAppsTabFragment getInstance() {
-	       if (uniqueInstance == null) {
-	           uniqueInstance = new UserAppsTabFragment();
-	       }
-	       return uniqueInstance;
+		if (uniqueInstance == null) {
+			uniqueInstance = new UserAppsTabFragment();
+		}
+		return uniqueInstance;
 	}
-	
 	
     private final class RemoveWindow implements Runnable {
         public void run() {
@@ -59,14 +100,22 @@ public class UserAppsTabFragment extends SherlockListFragment implements ListVie
         }
     }
     
+    //list长按事件
+	public OnUserAppListItemLongClickListener mItemLongClickListener;
+
+	// Container Activity must implement this interface
+	public interface OnUserAppListItemLongClickListener {
+		public void onUserAppItemLongClick(AdapterView<?> parent, View view, int position, long id);
+	}
     
+    //list条目点击事件
 	public OnUserAppListItemSelectedListener mItemClickListener;
 
 	// Container Activity must implement this interface
 	public interface OnUserAppListItemSelectedListener {
 		public void onUserAppItemClick(View v, int position);
 	}
-
+	//list action 点击事件
 	public OnUserAppListItemActionClickListener mActionClickListener;
 
 	// Container Activity must implement this interface
@@ -112,6 +161,7 @@ public class UserAppsTabFragment extends SherlockListFragment implements ListVie
 			// buttons
 		}, R.id.openBtn, R.id.GPBtn, R.id.AppDetailsBtn, R.id.BackUpBtn, R.id.UninstallBtn);
 		mActionSlideExpandableListView.setOnScrollListener(this);
+		mActionSlideExpandableListView.setOnItemLongClickListener(this);
 		mDialogText = (TextView) contentView.findViewById(R.id.popTextView);
 		return contentView;
 	}
@@ -199,6 +249,7 @@ public class UserAppsTabFragment extends SherlockListFragment implements ListVie
 		try {
 			mItemClickListener = (OnUserAppListItemSelectedListener) activity;
 			mActionClickListener = (OnUserAppListItemActionClickListener) activity;
+			mItemLongClickListener = (OnUserAppListItemLongClickListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ "must implement Listener");
@@ -229,12 +280,28 @@ public class UserAppsTabFragment extends SherlockListFragment implements ListVie
 		
 		if(mListIsScrolling) 
 		{
-			if(mAdapter.getItem(firstVisibleItem) == null) return;
+			AppInfo firstVisiableApp = mAdapter.getItem(firstVisibleItem);
+			if(firstVisiableApp == null) return;
 			
-			char firstLetter = mAdapter.getItem(firstVisibleItem).appName.charAt(0);
+			switch (currentSortType)
+			{
+			case SortTypeDialogFragment.LIST_SORT_TYPE_NAME_ASC:
+			case SortTypeDialogFragment.LIST_SORT_TYPE_NAME_DES:
+				char firstLetter = firstVisiableApp.appName.charAt(0);
+				mDialogText.setText(((Character)firstLetter).toString().toUpperCase(Locale.getDefault()));
+				break;
+			case SortTypeDialogFragment.LIST_SORT_TYPE_SIZE_ASC:
+			case SortTypeDialogFragment.LIST_SORT_TYPE_SIZE_DES:
+				mDialogText.setText(firstVisiableApp.appSizeStr);
+				break;
+			case SortTypeDialogFragment.LIST_SORT_TYPE_LAST_MOD_TIME_ASC:
+			case SortTypeDialogFragment.LIST_SORT_TYPE_LAST_MOD_TIME_DES:
+				mDialogText.setText(firstVisiableApp.lastModifiedTimeStr);
+				break;
+			}
+			
 			mShowing = true;
             mDialogText.setVisibility(View.VISIBLE);
-            mDialogText.setText(((Character)firstLetter).toString().toUpperCase(Locale.getDefault()));
             mHandler.removeCallbacks(mRemoveWindow);
             mHandler.postDelayed(mRemoveWindow, 1000);
         }
@@ -255,5 +322,12 @@ public class UserAppsTabFragment extends SherlockListFragment implements ListVie
 				mListIsScrolling = true;
 				break;
 		}
+	}
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+		// TODO Auto-generated method stub
+		mItemLongClickListener.onUserAppItemLongClick(parent, view, position, id);
+		return true;
 	}
 }
