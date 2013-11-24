@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -694,6 +695,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 	}
 
 	// 用户App列表中的action点击事件
+	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	@Override
 	public void onUserAppItemActionClick(View listView, View buttonview,
 			int position) {
