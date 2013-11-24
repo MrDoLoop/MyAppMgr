@@ -84,6 +84,11 @@ public class MainActivity extends SlidingFragmentActivity implements
 	private final static int SORT_MENU = Menu.FIRST;
 	private final static int SEARCH_MENU = SORT_MENU + 1;
 	
+	private final static int ACTIONMODE_MENU_SELECT = 0;
+	private final static int ACTIONMODE_MENU_BACKUP = 1;
+	private final static int ACTIONMODE_MENU_SEND = 2;
+	private final static int ACTIONMODE_MENU_UNINSTALL = 4;
+	
 	private ActionBar actionBar;
 	private ActionMode mActionMode;
 	private int UserAppActionModeSelectCnt = 0;
@@ -458,6 +463,24 @@ public class MainActivity extends SlidingFragmentActivity implements
 	// return true;
 	// }
 
+	 @Override  
+	 public boolean onSearchRequested() {  
+	        // TODO Auto-generated method stub
+		if(mActionMode == null)
+		{
+			if(searchMenuItem.isActionViewExpanded())
+			{
+				searchMenuItem.collapseActionView();
+			}
+			else
+			{
+				searchMenuItem.expandActionView();
+			}
+		}
+
+		return false;  
+	 }
+	 
 	@Override
 	public void onBackPressed() {
 		if (back_pressed + 2000 > System.currentTimeMillis()) {
@@ -655,19 +678,33 @@ public class MainActivity extends SlidingFragmentActivity implements
 			int position, long id) {
 		// TODO Auto-generated method stub
 		AppInfo selectItem = mUserAppListAdapter.getItem(position);
-		selectItem.selected = true;
-		UserAppActionModeSelectCnt++;
-		if (mActionMode != null) {	
-			 mActionMode.setTitle(""+UserAppActionModeSelectCnt);
-		 }
-		 else
-		 {
-			 mActionMode = startActionMode(mActionModeCallback);
-			 
-		 }
+		if(selectItem.selected)
+		{
+			UserAppActionModeSelectCnt--;
+			selectItem.selected = false;
+		}
+		else
+		{
+			UserAppActionModeSelectCnt++;
+			selectItem.selected = true;
+		}
+		
+		if (mActionMode == null) {	
+			mActionMode = startActionMode(mActionModeCallback);	
+		}
+		
+		if(UserAppActionModeSelectCnt < UserAppFullList.size())
+		{
+			mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setTitle("Select All");
+		}
+		else
+		{
+			mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setTitle("Deselect All");
+		}
+		
 		mActionMode.setTitle(""+UserAppActionModeSelectCnt);
 		mUserAppListAdapter.notifyDataSetChanged();
-		 
+		
 	}
 
 
@@ -677,11 +714,31 @@ public class MainActivity extends SlidingFragmentActivity implements
 	public void onUserAppItemClick(View v, int position) {
 		// TODO Auto-generated method stub
 		AppInfo selectItem = mUserAppListAdapter.getItem(position);
-		if (mActionMode != null) {
-			selectItem.selected = true;
-			UserAppActionModeSelectCnt++;
+		if (mActionMode != null) 
+		{
+			if(selectItem.selected)
+			{
+				UserAppActionModeSelectCnt--;
+				selectItem.selected = false;
+			}
+			else
+			{
+				UserAppActionModeSelectCnt++;
+				selectItem.selected = true;
+			}
+			
+			if(UserAppActionModeSelectCnt < UserAppFullList.size())
+			{
+				mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setTitle("Select All");
+			}
+			else
+			{
+				mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setTitle("Deselect All");
+			}
+			
 			mActionMode.setTitle(""+UserAppActionModeSelectCnt);
 			mUserAppListAdapter.notifyDataSetChanged();
+			
 		}
 		else
 		{
@@ -839,9 +896,10 @@ public class MainActivity extends SlidingFragmentActivity implements
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			// TODO Auto-generated method stub
-			menu.add(Menu.NONE, Menu.FIRST, Menu.NONE,"Backup").setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-			menu.add(Menu.NONE, Menu.FIRST+1, Menu.NONE,"Send").setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-			menu.add(Menu.NONE, Menu.FIRST+2, Menu.NONE,"Uninstall").setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+			menu.add(Menu.NONE, ACTIONMODE_MENU_SELECT, Menu.NONE,"Select All").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			menu.add(Menu.NONE, ACTIONMODE_MENU_BACKUP, Menu.NONE,"Backup").setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+			menu.add(Menu.NONE, ACTIONMODE_MENU_SEND, Menu.NONE,"Send").setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+			menu.add(Menu.NONE, ACTIONMODE_MENU_UNINSTALL, Menu.NONE,"Uninstall").setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 			return true;
 		}
 
@@ -855,6 +913,38 @@ public class MainActivity extends SlidingFragmentActivity implements
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			// TODO Auto-generated method stub
+			switch (item.getItemId())
+			{
+			case ACTIONMODE_MENU_SELECT:
+				if(UserAppActionModeSelectCnt < UserAppFullList.size())
+				{//选择全部
+					for(AppInfo appInfo : UserAppFullList)
+					{
+						appInfo.selected = true;
+					}
+					UserAppActionModeSelectCnt = UserAppFullList.size();	
+					item.setTitle("Deselect All");
+				}
+				else
+				{//都不选
+					for(AppInfo appInfo : UserAppFullList)
+					{
+						appInfo.selected = false;
+					}
+					UserAppActionModeSelectCnt = 0;
+					item.setTitle("Select All");
+				}
+				mActionMode.setTitle(""+UserAppActionModeSelectCnt);
+				mUserAppListAdapter.notifyDataSetChanged();
+				break;
+			case ACTIONMODE_MENU_BACKUP:
+				break;
+			case ACTIONMODE_MENU_SEND:
+				break;
+			case ACTIONMODE_MENU_UNINSTALL:
+				break;
+			}
+			
 			toast.setText("MenuItemID: "+item.getItemId()+" Title: "+item.getTitle());
 			toast.show();
 			return true;
@@ -863,6 +953,13 @@ public class MainActivity extends SlidingFragmentActivity implements
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
 			// TODO Auto-generated method stub
+			for(AppInfo appInfo : UserAppFullList)
+			{
+				appInfo.selected = false;
+			}
+
+			UserAppActionModeSelectCnt = 0;
+			mUserAppListAdapter.notifyDataSetChanged();
 			mActionMode = null;
 		}
 	};
