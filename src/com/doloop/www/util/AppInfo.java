@@ -17,6 +17,7 @@ public class AppInfo {
 	public String lastModifiedTimeStr = "";
 	public String apkFilePath = "";
 	public long lastModifiedRawTime = -1;
+	public boolean selected = false;
 	
 	
 	public void print() {

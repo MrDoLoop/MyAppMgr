@@ -6,6 +6,7 @@ import java.util.Locale;
 import com.doloop.www.R;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -63,7 +64,7 @@ public class UserAppListAdapter extends ArrayAdapter<AppInfo> implements Filtera
 	@Override
 	public AppInfo getItem(int position) {
 		// TODO Auto-generated method stub
-		if(position < getCount()-1)
+		if(position < getCount()-1)// position > 0 && 
 			return AppListDisplay.get(position);
 		else 
 			return null;
@@ -93,6 +94,7 @@ public class UserAppListAdapter extends ArrayAdapter<AppInfo> implements Filtera
 			holder.moreItemBtn = (ImageButton) convertView.findViewById(R.id.expandable_toggle_button); 
 			holder.moreItemBtn.setFocusable(false);
 			holder.expandableLinearLayout = (LinearLayout) convertView.findViewById(R.id.expandable); 
+			holder.bgLayout = (LinearLayout) convertView.findViewById(R.id.bgLayout); 
 			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) 
 			{
 				holder.expandableLinearLayout.setPadding(1, 7, 1, 1);
@@ -107,6 +109,15 @@ public class UserAppListAdapter extends ArrayAdapter<AppInfo> implements Filtera
 		holder.AppNameTextView.setText(appInfo.appName);
 		holder.AppVersionTextView.setText("v" + appInfo.versionName+" | "+appInfo.appSizeStr+" | "+appInfo.lastModifiedTimeStr);
 		holder.AppIconImageView.setImageDrawable(appInfo.appIcon);
+		
+		if(appInfo.selected)
+		{
+			holder.bgLayout.setBackgroundColor(Color.CYAN);
+		}
+		else
+		{
+			holder.bgLayout.setBackgroundResource(R.drawable.list_row_item_bg);
+		}
 		
 		return convertView;
 	}
@@ -182,5 +193,6 @@ public class UserAppListAdapter extends ArrayAdapter<AppInfo> implements Filtera
   		ImageView AppIconImageView;
   		ImageButton moreItemBtn;
   		LinearLayout expandableLinearLayout;
+  		LinearLayout bgLayout;
   	}
 }
