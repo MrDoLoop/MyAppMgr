@@ -8,6 +8,7 @@ import com.doloop.www.R;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -102,7 +103,7 @@ public class IndexBarView extends LinearLayout {
 			setBackgroundResource(R.drawable.rounded_rectangle_shape);
 			if (oldChoose != c) {
 				if (c >= 0 && c < mIndexArray.length) {
-					clearIndexListItemBG(Color.BLACK);
+					clearIndexListItemBG(Color.BLACK,true);
 					//mIndexTextViewList.get(c).setBackgroundColor(Color.RED);
 					mIndexTextViewList.get(c).setBackgroundResource(R.drawable.rounded_rectangle_shape_index_selected);
 					performItemClicked(c);
@@ -114,7 +115,7 @@ public class IndexBarView extends LinearLayout {
 		case MotionEvent.ACTION_MOVE:
 			if (oldChoose != c) {
 				if (c >= 0 && c < mIndexArray.length) {
-					clearIndexListItemBG(Color.BLACK);
+					clearIndexListItemBG(Color.BLACK,true);
 					//mIndexTextViewList.get(c).setBackgroundColor(Color.RED);
 					mIndexTextViewList.get(c).setBackgroundResource(R.drawable.rounded_rectangle_shape_index_selected);
 					performItemClicked(c);
@@ -125,7 +126,7 @@ public class IndexBarView extends LinearLayout {
 			break;
 		case MotionEvent.ACTION_UP:
 			setBackgroundColor(Color.TRANSPARENT);
-			clearIndexListItemBG(Color.GRAY);
+			clearIndexListItemBG(Color.GRAY,false);
 			choose = -1;
 			dismissPopup();
 			break;
@@ -133,12 +134,17 @@ public class IndexBarView extends LinearLayout {
 		return true;
 	}
 	
-	private void clearIndexListItemBG(int TextColor)
+	private void clearIndexListItemBG(int TextColor, boolean bold)
 	{
 		for(TextView tv: mIndexTextViewList)
 		{
 			tv.setBackgroundColor(Color.TRANSPARENT);
 			tv.setTextColor(TextColor);
+			
+			if(bold)
+				tv.setTypeface(null,Typeface.BOLD);
+			else
+				tv.setTypeface(null,Typeface.NORMAL);
 		}
 	}
 	
