@@ -243,7 +243,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 
 	private void addActionBarTabs() {
 		Fragmentlist = new ArrayList<Fragment>();
-		usrAppsFrg = UserAppsTabFragment.getInstance();
+		usrAppsFrg = UserAppsTabFragment.getInstance(thisActivityCtx);
 		sysAppsFrg = SysAppsTabFragment.getInstance();
 		//allAppsFrg = new AllAppsTabFragment();
 

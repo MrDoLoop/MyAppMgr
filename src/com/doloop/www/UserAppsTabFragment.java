@@ -30,6 +30,8 @@ import com.doloop.www.util.UserAppListAdapter.UserAppListFilterResultListener;
 public class UserAppsTabFragment extends SherlockListFragment implements 
 	ListView.OnScrollListener, AdapterView.OnItemLongClickListener {
 
+	
+	private static Context mContext;
 	private int currentSortType = SortTypeDialogFragment.LIST_SORT_TYPE_NAME_ASC;
 	
 	public void setListSortType(int sortType)
@@ -40,7 +42,7 @@ public class UserAppsTabFragment extends SherlockListFragment implements
 		case SortTypeDialogFragment.LIST_SORT_TYPE_NAME_ASC:
 		case SortTypeDialogFragment.LIST_SORT_TYPE_NAME_DES:
             //mDialogText = nameText;
-			int size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getActivity().getResources().getDisplayMetrics());
+			int size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, mContext.getResources().getDisplayMetrics());
 			LayoutParams paramsFixSize = new LayoutParams(size,size); 
 			paramsFixSize.alignWithParent = true;
 			paramsFixSize.addRule(RelativeLayout.CENTER_IN_PARENT);
@@ -54,7 +56,7 @@ public class UserAppsTabFragment extends SherlockListFragment implements
 			LayoutParams paramsWrapContent = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);  
 			paramsWrapContent.alignWithParent = true;
 			paramsWrapContent.addRule(RelativeLayout.CENTER_IN_PARENT);
-			int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getActivity().getResources().getDisplayMetrics());
+			int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, mContext.getResources().getDisplayMetrics());
 			mDialogText.setPadding(padding, 0, padding, 0);
 			mDialogText.setLayoutParams(paramsWrapContent);
 			break;
@@ -74,10 +76,11 @@ public class UserAppsTabFragment extends SherlockListFragment implements
 	{
 		
 	}
-	public synchronized  static UserAppsTabFragment getInstance() {
+	public synchronized  static UserAppsTabFragment getInstance(Context ctx) {
 		if (uniqueInstance == null) {
 			uniqueInstance = new UserAppsTabFragment();
 		}
+		mContext = ctx;
 		return uniqueInstance;
 	}
 	
