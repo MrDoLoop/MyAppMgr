@@ -1017,6 +1017,9 @@ public class MainActivity extends SlidingFragmentActivity implements
 	@Override
 	public void onSortTypeListItemClick(DialogInterface dialog, int which) {
 		// TODO Auto-generated method stub
+		
+		if(usrAppsFrg.getListSortType() == which) return;
+		
 		switch (which)
 		{
 		case SortTypeDialogFragment.LIST_SORT_TYPE_NAME_ASC:
