@@ -144,7 +144,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 		thisActivityCtx = MainActivity.this;
 		isAnyStoreInstalled = Utilities.isAnyStoreInstalled(thisActivityCtx);
 		thisAppPackageName = Utilities.getSelfAppInfo(thisActivityCtx).packageName;
-		BACK_UP_FOLDER = Utilities.getBackUpAPKfileDir(thisActivityCtx);
+		
 		actionBar = getSupportActionBar();
 		actionBar.setSubtitle("NAN MADE");
 		toast = Toast.makeText(thisActivityCtx, "", Toast.LENGTH_SHORT);
@@ -511,20 +511,118 @@ public class MainActivity extends SlidingFragmentActivity implements
 		return super.onOptionsItemSelected(item);
 	}
 
-	private class GetApps extends AsyncTask<Void, String, Void> {
-
+	private class BackUpApps extends AsyncTask<Void, String, Void> {
+		boolean saveSucc = false;
 		@Override
 		protected void onProgressUpdate(String... values) {
 			// TODO Auto-generated method stub
 			super.onProgressUpdate(values);
-			progDialog.setMessage("Loading Apps " + values[0]);
+			progDialog.setProgress(Integer.valueOf(values[0]));
+			progDialog.setMessage("Saving App: "+values[1]);
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			unregisterReceiver(mAppUpdateReceiver);
+			unregisterReceiver(LangUpdateReceiver);
+			progDialog = new ProgressDialog(MainActivity.this);
+			progDialog.setCancelable(false);
+			progDialog.setMessage("Saving Apps");
+			progDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			progDialog.setProgress(0);
+			progDialog.setMax(UserAppActionModeSelectCnt);
+			progDialog.setOnCancelListener(new OnCancelListener() {
+
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					BackUpApps.this.cancel(true);
+				}
+
+			});
+			progDialog.show();
+		}
+		
+		
+		@Override
+		protected Void doInBackground(Void... arg0) {
+			// TODO Auto-generated method stub
+			BACK_UP_FOLDER = Utilities.getBackUpAPKfileDir(thisActivityCtx);
+			String[] dialogInfo = new String[2];
+			int counter = 1;
+			for(int i = 0;i<UserAppFullList.size();i++)
+			{
+				if(UserAppFullList.get(i).selected)
+				{
+					dialogInfo[0] = ""+counter;
+					dialogInfo[1] = UserAppFullList.get(i).appName;		
+					publishProgress(dialogInfo);
+					counter++;
+					String backAPKfileName = UserAppFullList.get(i).appName+"_v"+UserAppFullList.get(i).versionName+".apk";
+					if(!Utilities.copyFile(UserAppFullList.get(i).apkFilePath,BACK_UP_FOLDER+backAPKfileName))
+					{
+						saveSucc = false;
+						return null;
+					}
+				}
+			}
+			
+			saveSucc = true;
+			return null;
+		}
+		
+		@Override
+		protected void onCancelled() {}
+
+		// can use UI thread here
+		@Override
+		protected void onPostExecute(final Void unused) {
+			if (progDialog.isShowing()) {
+				progDialog.dismiss();
+			}
+			
+			registerReceiver(mAppUpdateReceiver, AppIntentFilter);
+			registerReceiver(LangUpdateReceiver , LangIntentFilter);
+			
+			if(saveSucc)
+			{
+				toast.setText("backUp success");
+				toast.show();
+			}
+			else
+			{
+				toast.setText("error");
+				toast.show();
+				finish();
+			}
+			
+		}
+		
+		
+	}
+	
+	private class GetApps extends AsyncTask<Void, String, Void> {
+		private List<PackageInfo> packages;
+		private PackageManager pManager;
+		@Override
+		protected void onProgressUpdate(String... values) {
+			// TODO Auto-generated method stub
+			super.onProgressUpdate(values);
+			//progDialog.setMessage("Loading Apps " + values[0]);
+			progDialog.setProgress(Integer.valueOf(values[0]));
 		}
 
 		@Override
 		protected void onPreExecute() {
 			unregisterReceiver(mAppUpdateReceiver);
 			unregisterReceiver(LangUpdateReceiver);
+			
+			pManager = getPackageManager();
+			packages = pManager.getInstalledPackages(0);
+			
 			progDialog = new ProgressDialog(MainActivity.this);
+			progDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			progDialog.setProgress(0);
+			progDialog.setMax(packages.size());
 			progDialog.setCancelable(false);
 			progDialog.setMessage("Loading Apps");
 			progDialog.setOnCancelListener(new OnCancelListener() {
@@ -536,6 +634,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 
 			});
 			progDialog.show();
+			
 		}
 
 		@Override
@@ -547,8 +646,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 			sectionTextList.clear();
 			sectionItemsMap.clear();
 			
-			PackageManager pManager = getPackageManager();
-			List<PackageInfo> packages = pManager.getInstalledPackages(0);
+//			PackageManager pManager = getPackageManager();
+//			List<PackageInfo> packages = pManager.getInstalledPackages(0);
 			
 //			List<ApplicationInfo> apps = pManager.getInstalledApplications(
 //                    PackageManager.GET_UNINSTALLED_PACKAGES |
@@ -560,7 +659,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 			SimpleDateFormat simpleDateFormat = Utilities.getLocalDataDigitalDisplayFormat();
 			for (int i = 0; i < packages.size(); i++) {
 
-				publishProgress((i + 1) + " / " + packages.size());
+				//publishProgress((i + 1) + " / " + packages.size());
+				publishProgress(""+(i+1));
 				Log.i("ttt", "processing app "+(i + 1) + " / " + packages.size());
 				packageInfo = packages.get(i);
 
@@ -793,6 +893,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			break;
 		case R.id.BackUpBtn:
 			String backAPKfileName = selectItem.appName+"_v"+selectItem.versionName+".apk";
+			BACK_UP_FOLDER = Utilities.getBackUpAPKfileDir(thisActivityCtx);
 			if(Utilities.copyFile(selectItem.apkFilePath,BACK_UP_FOLDER+backAPKfileName))
 			{
 				toast.setText("BackUp success");
@@ -938,6 +1039,15 @@ public class MainActivity extends SlidingFragmentActivity implements
 				mUserAppListAdapter.notifyDataSetChanged();
 				break;
 			case ACTIONMODE_MENU_BACKUP:
+				if(UserAppActionModeSelectCnt > 0)
+				{
+					new BackUpApps().execute();
+				}
+				else
+				{
+					toast.setText("Nothing selected");
+					toast.show();
+				}
 				break;
 			case ACTIONMODE_MENU_SEND:
 				break;
@@ -945,8 +1055,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 				break;
 			}
 			
-			toast.setText("MenuItemID: "+item.getItemId()+" Title: "+item.getTitle());
-			toast.show();
+//			toast.setText("MenuItemID: "+item.getItemId()+" Title: "+item.getTitle());
+//			toast.show();
 			return true;
 		}
 
