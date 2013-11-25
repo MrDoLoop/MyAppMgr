@@ -244,7 +244,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 	private void addActionBarTabs() {
 		Fragmentlist = new ArrayList<Fragment>();
 		usrAppsFrg = UserAppsTabFragment.getInstance(thisActivityCtx);
-		sysAppsFrg = SysAppsTabFragment.getInstance();
+		sysAppsFrg = SysAppsTabFragment.getInstance(thisActivityCtx);
 		//allAppsFrg = new AllAppsTabFragment();
 
 		Fragmentlist.add(usrAppsFrg);
@@ -660,10 +660,10 @@ public class MainActivity extends SlidingFragmentActivity implements
 //					"ALL APPS (" + AllAppList.size() + ")");
 
 			// list…Ë÷√ ˝æ›
-			sysAppsFrg.setData(thisActivityCtx,sectionTextList, sectionItemsMap);
+			sysAppsFrg.setData(sectionTextList, sectionItemsMap);
 			
 			usrAppsFrg.setListSortType(SortTypeDialogFragment.LIST_SORT_TYPE_NAME_ASC);
-			usrAppsFrg.setData(thisActivityCtx,UserAppFullList);
+			usrAppsFrg.setData(UserAppFullList);
 			
 			mUserAppListAdapter = (UserAppListAdapter)usrAppsFrg.getListAdapter();
 			mSysAppListAdapter = (SysAppListAdapter)sysAppsFrg.getListAdapter();

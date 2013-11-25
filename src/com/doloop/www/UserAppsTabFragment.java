@@ -259,9 +259,9 @@ public class UserAppsTabFragment extends SherlockListFragment implements
 		}
 	}
 
-	public void setData(Context ctx, ArrayList<AppInfo> userAppList) {
-		mAdapter = new UserAppListAdapter(ctx,R.layout.user_app_expandable_list_item,0,userAppList);
-		mAdapter.setUserAppListFilterResultListener((UserAppListFilterResultListener)ctx);
+	public void setData(ArrayList<AppInfo> userAppList) {
+		mAdapter = new UserAppListAdapter(mContext,R.layout.user_app_expandable_list_item,0,userAppList);
+		mAdapter.setUserAppListFilterResultListener((UserAppListFilterResultListener)mContext);
 		mActionSlideExpandableListView.setAdapter(mAdapter);
 	}
 

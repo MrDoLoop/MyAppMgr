@@ -24,6 +24,7 @@ import com.doloop.www.util.SysAppListAdapter.SysAppListFilterResultListener;
 public class SysAppsTabFragment extends SherlockListFragment {
 	private static SysAppListAdapter mAdapter;
 	private static PinnedHeaderListView mPinnedHeaderListView;
+	private static Context mContext;
 	private TextView PopTextView;
 
 	private OnSysAppListItemSelectedListener mListener;
@@ -40,11 +41,12 @@ public class SysAppsTabFragment extends SherlockListFragment {
 	{
 		
 	}
-	public synchronized  static SysAppsTabFragment getInstance() {
-	       if (uniqueInstance == null) {
-	           uniqueInstance = new SysAppsTabFragment();
-	       }
-	       return uniqueInstance;
+	public synchronized  static SysAppsTabFragment getInstance(Context ctx) {
+		if (uniqueInstance == null) {
+			uniqueInstance = new SysAppsTabFragment();
+		}
+		mContext = ctx;
+		return uniqueInstance;
 	}
     
 	@Override
@@ -179,25 +181,12 @@ public class SysAppsTabFragment extends SherlockListFragment {
 		}
 	}
 	
-	public void setData(Context ctx, ArrayList<String> sectionTextList, HashMap<String , ArrayList<AppInfo>> sectionItemsMap)
+	public void setData(ArrayList<String> sectionTextList, HashMap<String , ArrayList<AppInfo>> sectionItemsMap)
 	{
-		mAdapter = new SysAppListAdapter(ctx,sectionTextList,sectionItemsMap);
-		mAdapter.setSysAppListFilterResultListener((SysAppListFilterResultListener)ctx);
-		//setListAdapter(mAdapter);
+		mAdapter = new SysAppListAdapter(mContext,sectionTextList,sectionItemsMap);
+		mAdapter.setSysAppListFilterResultListener((SysAppListFilterResultListener)mContext);
 		mPinnedHeaderListView.setAdapter(mAdapter);
-//		mIndexBarView.setOnIndexItemClickListener(new OnIndexItemClickListener() {
-//
-//			@Override
-//			public void onItemClick(String s) {
-//				int SecPos = mAdapter.getSectionPostionInList(s);
-//				if (SecPos>-1) {
-//					mPinnedHeaderListView.setSelection(SecPos);
-//				}
-//			}
-//		});
-//		mIndexBarView.setPopView(PopTextView);
 	}
-
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
