@@ -54,6 +54,10 @@ public class UserAppListAdapter extends ArrayAdapter<AppInfo> implements Filtera
 		this.mInflater = LayoutInflater.from(context);
 	}
 	
+	public ArrayList<AppInfo> getDisplayList()
+	{
+		return this.AppListDisplay;
+	}
 	
 	@Override
 	public int getCount() {
