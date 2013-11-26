@@ -717,7 +717,30 @@ public class MainActivity extends SlidingFragmentActivity implements
 			}
 			
 			//用户程序排序
-			Collections.sort(UserAppFullList, new AppNameComparator(true));//系统自带，默认的string排序
+			
+			switch (Utilities.getUserAppListSortType(thisActivityCtx))
+			{
+			case SortTypeDialogFragment.LIST_SORT_TYPE_NAME_ASC:
+				Collections.sort(UserAppFullList, new AppNameComparator(true));
+				break;
+			case SortTypeDialogFragment.LIST_SORT_TYPE_NAME_DES:
+				Collections.sort(UserAppFullList, new AppNameComparator(false));
+				break;
+			case SortTypeDialogFragment.LIST_SORT_TYPE_SIZE_ASC:
+				Collections.sort(UserAppFullList, new AppSizeComparator(true));
+				break;
+			case SortTypeDialogFragment.LIST_SORT_TYPE_SIZE_DES:
+				Collections.sort(UserAppFullList, new AppSizeComparator(false));
+				break;
+			case SortTypeDialogFragment.LIST_SORT_TYPE_LAST_MOD_TIME_ASC:
+				Collections.sort(UserAppFullList, new LastModifiedComparator(true));
+				break;
+			case SortTypeDialogFragment.LIST_SORT_TYPE_LAST_MOD_TIME_DES:
+				Collections.sort(UserAppFullList, new LastModifiedComparator(false));
+				break;
+			}
+			
+			//Collections.sort(UserAppFullList, new AppNameComparator(true));//系统自带，默认的string排序
 			//Collections.sort(UserAppList, new AppNameComparator(false));//
 			//Collections.sort(UserAppList, new LastModifiedComparator(true));//
 			//Collections.sort(UserAppList, new LastModifiedComparator(false));//
@@ -788,7 +811,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			// list设置数据
 			sysAppsFrg.setData(sectionTextList, sectionItemsMap);
 			
-			usrAppsFrg.setListSortType(SortTypeDialogFragment.LIST_SORT_TYPE_NAME_ASC);
+			usrAppsFrg.setListSortType(Utilities.getUserAppListSortType(thisActivityCtx));
 			usrAppsFrg.setData(UserAppFullList);
 			
 			mUserAppListAdapter = (UserAppListAdapter)usrAppsFrg.getListAdapter();
@@ -1233,6 +1256,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 			Collections.sort(UserAppFullList, new LastModifiedComparator(false));
 			break;
 		}
+		
+		Utilities.setUserAppListSortType(thisActivityCtx, which);
 		usrAppsFrg.setListSortType(which);
 		mUserAppListAdapter.notifyDataSetChanged();
 	}

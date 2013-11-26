@@ -19,6 +19,7 @@ import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombi
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -30,6 +31,20 @@ import android.provider.Settings;
 
 public class Utilities {
 
+	public static int getUserAppListSortType(Context ctx)
+	{
+		int type = ctx.getSharedPreferences("MyAppMgrSharedPreferences", 0).getInt("UserAppListSortType", 0);
+		return type;
+	}
+	
+	public static void setUserAppListSortType(Context ctx, int sortType)
+	{
+		SharedPreferences.Editor shPrefEdit = ctx.getSharedPreferences("MyAppMgrSharedPreferences", 0).edit();
+		shPrefEdit.putInt("UserAppListSortType", sortType);
+		shPrefEdit.commit();
+	}
+	
+	
 	public static String getBackUpAPKfileDir(Context ctx)
 	{
 		String path = Environment.getExternalStorageDirectory().toString()+"/MyAppMgr/";
