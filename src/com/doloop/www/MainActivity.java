@@ -135,6 +135,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 	private MenuItem SortMenuItem = null;
 	private MenuItem searchMenuItem = null ;
 	
+	private boolean SendAfterBackUp = false;
 	
 	@SuppressWarnings("deprecation")
 	@Override
@@ -513,6 +514,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 
 	private class BackUpApps extends AsyncTask<Void, String, Void> {
 		boolean saveSucc = false;
+		private ArrayList<Uri> SnedApkUris = new ArrayList<Uri>();
 		@Override
 		protected void onProgressUpdate(String... values) {
 			// TODO Auto-generated method stub
@@ -549,23 +551,36 @@ public class MainActivity extends SlidingFragmentActivity implements
 			BACK_UP_FOLDER = Utilities.getBackUpAPKfileDir(thisActivityCtx);
 			String[] dialogInfo = new String[2];
 			int counter = 1;
-			for(int i = 0;i<UserAppFullList.size();i++)
+			AppInfo  tmpAppInfo = null;
+			for(int i = 0;i<mUserAppListAdapter.getCount();i++)
 			{
-				if(UserAppFullList.get(i).selected)
+				tmpAppInfo = mUserAppListAdapter.getItem(i);
+				if(tmpAppInfo.selected)
 				{
 					dialogInfo[0] = ""+counter;
-					dialogInfo[1] = UserAppFullList.get(i).appName;		
+					dialogInfo[1] = tmpAppInfo.appName;		
 					publishProgress(dialogInfo);
-					counter++;
-					String backAPKfileName = UserAppFullList.get(i).appName+"_v"+UserAppFullList.get(i).versionName+".apk";
-					if(!Utilities.copyFile(UserAppFullList.get(i).apkFilePath,BACK_UP_FOLDER+backAPKfileName))
+							
+					String backAPKfileName = tmpAppInfo.appName+"_v"+tmpAppInfo.versionName+".apk";
+					if(!Utilities.copyFile(tmpAppInfo.apkFilePath,BACK_UP_FOLDER+backAPKfileName))
 					{
 						saveSucc = false;
 						return null;
 					}
+							
+					if(SendAfterBackUp)
+					{
+						SnedApkUris.add(Uri.parse("file://" + BACK_UP_FOLDER+backAPKfileName));
+					}
+							
+					if(counter == UserAppActionModeSelectCnt)
+					{
+						break;
+					}	
+					counter++;
 				}
-			}
-			
+			}		
+							
 			saveSucc = true;
 			return null;
 		}
@@ -585,8 +600,19 @@ public class MainActivity extends SlidingFragmentActivity implements
 			
 			if(saveSucc)
 			{
-				toast.setText("backUp success");
+				toast.setText("Backup success");
 				toast.show();
+				
+				if(SendAfterBackUp)
+				{
+					Intent sendIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+					sendIntent.setType("application/vnd.android.package-archive");   
+		            sendIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, SnedApkUris);//添加附件
+		            sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Share apps");//主题
+		            sendIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Enjoy apps, thanks"); //邮件主体
+		            sendIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		            startActivity(Intent.createChooser(sendIntent, "Send by"));//Chooser的标题
+				}
 			}
 			else
 			{
@@ -1041,6 +1067,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			case ACTIONMODE_MENU_BACKUP:
 				if(UserAppActionModeSelectCnt > 0)
 				{
+					SendAfterBackUp = false;
 					new BackUpApps().execute();
 				}
 				else
@@ -1050,6 +1077,16 @@ public class MainActivity extends SlidingFragmentActivity implements
 				}
 				break;
 			case ACTIONMODE_MENU_SEND:
+				if(UserAppActionModeSelectCnt > 0)
+				{
+					SendAfterBackUp = true;
+					new BackUpApps().execute();
+				}
+				else
+				{
+					toast.setText("Nothing selected");
+					toast.show();
+				}
 				break;
 			case ACTIONMODE_MENU_UNINSTALL:
 				break;
@@ -1112,10 +1149,30 @@ public class MainActivity extends SlidingFragmentActivity implements
 			 }
 			 else if(intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) 
 			 {
-				 //String RemovedPkgName = intent.getDataString().substring(8); 
 				 toast.setText("App Removed.");
+				 String RemovedPkgName = intent.getDataString().substring(8); 
+				 ArrayList<AppInfo> tmpUserDisplayList = mUserAppListAdapter.getDisplayList();
+				 for(int i = 0;i<UserAppFullList.size();i++)
+				 {
+					 if(UserAppFullList.get(i).packageName.equals(RemovedPkgName))
+					 {
+						 toast.setText("App Removed: "+UserAppFullList.get(i).appName);
+						 UserAppFullList.remove(i);
+						 if(i<tmpUserDisplayList.size())
+						 {
+							 if(tmpUserDisplayList.get(i).packageName.equals(RemovedPkgName))
+							 {
+								 tmpUserDisplayList.remove(i);
+							 } 
+						 }
+					 }
+				 }
+
 				 toast.show();
-				 new GetApps().execute();
+				 mUserAppListAdapter.notifyDataSetChanged();
+				 ((ActionSlideExpandableListView)usrAppsFrg.getListView()).collapse(false);
+				 actionBar.getTabAt(USR_APPS_TAB_POS).setText("USER APPS (" + tmpUserDisplayList.size() + ")");
+				 //new GetApps().execute();
 			 }
 			 else if(intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)) 
 			 {
