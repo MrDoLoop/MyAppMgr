@@ -32,7 +32,7 @@ public class UserAppsTabFragment extends SherlockListFragment implements
 
 	
 	private static Context mContext;
-	private int currentSortType = SortTypeDialogFragment.LIST_SORT_TYPE_NAME_ASC;
+	private static int currentSortType = SortTypeDialogFragment.LIST_SORT_TYPE_NAME_ASC;
 	
 	public void setListSortType(int sortType)
 	{
@@ -65,7 +65,7 @@ public class UserAppsTabFragment extends SherlockListFragment implements
 	
 	public int getListSortType()
 	{
-		return this.currentSortType;
+		return currentSortType;
 	}
 	
 	private static UserAppListAdapter mAdapter;
@@ -92,7 +92,7 @@ public class UserAppsTabFragment extends SherlockListFragment implements
 
     private RemoveWindow mRemoveWindow = new RemoveWindow();
     private Handler mHandler = new Handler();
-    private TextView mDialogText;
+    private static TextView mDialogText;
     private boolean mShowing = false;
     private boolean mListIsScrolling = false;
 

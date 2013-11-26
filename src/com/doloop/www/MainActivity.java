@@ -286,16 +286,20 @@ public class MainActivity extends SlidingFragmentActivity implements
 				mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
 			}
 			
-			switch (tab.getPosition()) 
+			if(searchMenuItem != null && SortMenuItem != null)//·ÀÖ¹»Ö¸´µÄÇé¿ö
 			{
-				case USR_APPS_TAB_POS:
-					if(!searchMenuItem.isActionViewExpanded())
-						SortMenuItem.setVisible(true);
-					break;
-				case SYS_APPS_TAB_POS:
-					SortMenuItem.setVisible(false);
-					break;
+				switch (tab.getPosition()) 
+				{
+					case USR_APPS_TAB_POS:
+						if(!searchMenuItem.isActionViewExpanded())
+							SortMenuItem.setVisible(true);
+						break;
+					case SYS_APPS_TAB_POS:
+						SortMenuItem.setVisible(false);
+						break;
+				}
 			}
+			
 		}
 
 		@Override
