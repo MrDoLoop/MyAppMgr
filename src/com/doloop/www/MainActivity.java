@@ -1089,6 +1089,31 @@ public class MainActivity extends SlidingFragmentActivity implements
 				}
 				break;
 			case ACTIONMODE_MENU_UNINSTALL:
+				if(UserAppActionModeSelectCnt > 0)
+				{
+					AppInfo tmpAppInfo = null;
+					for(int i = 0;i<mUserAppListAdapter.getCount();i++)
+					{
+						tmpAppInfo = mUserAppListAdapter.getItem(i);
+						if(tmpAppInfo.selected)
+						{
+							Uri packageUri = Uri.parse("package:"+ tmpAppInfo.packageName);
+							Intent uninstallIntent;
+							if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+								uninstallIntent = new Intent(Intent.ACTION_DELETE, packageUri);
+							} else {
+								uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE,packageUri);
+							}
+							startActivity(uninstallIntent);
+						}
+					}
+					mActionMode.finish();
+				}
+				else
+				{
+					toast.setText("Nothing selected");
+					toast.show();
+				}
 				break;
 			}
 			
