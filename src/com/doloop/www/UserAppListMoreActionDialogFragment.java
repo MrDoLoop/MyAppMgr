@@ -20,7 +20,7 @@ public class UserAppListMoreActionDialogFragment extends DialogFragment {
 	private AppInfo mAppinfo;
 	
 	private static final String[] moreActionOpt = {"Google Play","Send"};
-	private static final Integer[] moreActionOptIcon = {R.drawable.google_paly,R.drawable.send};
+	private static final Integer[] moreActionOptIcon = {R.drawable.google_paly_80x80,R.drawable.send_80x80};
 
 	public UserAppMoreActionListItemClickListener mUserAppMoreActionListItemClickListener;
 
@@ -86,7 +86,7 @@ public class UserAppListMoreActionDialogFragment extends DialogFragment {
 	    	    TextView textView = (TextView) view.findViewById(android.R.id.text1);
 	    	    textView.setCompoundDrawablesWithIntrinsicBounds(moreActionOptIcon[position], 0, 0, 0);
 	    	    textView.setCompoundDrawablePadding(
-	    	            (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12, getContext().getResources().getDisplayMetrics()));
+	    	            (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, getContext().getResources().getDisplayMetrics()));
 	    	    return view;
 	    	}
 	    }
