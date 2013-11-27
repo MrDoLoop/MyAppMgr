@@ -53,6 +53,7 @@ import com.doloop.www.SampleListFragment.OnMenuListItemClickListener;
 import com.doloop.www.SampleListFragment.SampleItem;
 import com.doloop.www.SortTypeDialogFragment.SortTypeListItemClickListener;
 import com.doloop.www.SysAppsTabFragment.OnSysAppListItemSelectedListener;
+import com.doloop.www.UserAppListMoreActionDialogFragment.UserAppMoreActionListItemClickListener;
 import com.doloop.www.UserAppsTabFragment.OnUserAppListItemActionClickListener;
 import com.doloop.www.UserAppsTabFragment.OnUserAppListItemLongClickListener;
 import com.doloop.www.UserAppsTabFragment.OnUserAppListItemSelectedListener;
@@ -75,7 +76,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 		OnSysAppListItemSelectedListener, OnUserAppListItemSelectedListener,
 		OnUserAppListItemActionClickListener,UserAppListFilterResultListener,
 		SysAppListFilterResultListener,OnMenuListItemClickListener, 
-		OnUserAppListItemLongClickListener,SortTypeListItemClickListener {
+		OnUserAppListItemLongClickListener,SortTypeListItemClickListener,
+		UserAppMoreActionListItemClickListener {
 
 	private final static int USR_APPS_TAB_POS = 0;
 	private final static int SYS_APPS_TAB_POS = 1;
@@ -974,6 +976,11 @@ public class MainActivity extends SlidingFragmentActivity implements
 //				uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE,packageUri);
 //			}
 //			startActivity(uninstallIntent);
+			UserAppListMoreActionDialogFragment dialog = new UserAppListMoreActionDialogFragment(selectItem);
+//			Bundle bundle = new Bundle();
+//			bundle.putString(UserAppListMoreActionDialogFragment.SELECTED_ITEM, targetpackageName);
+//			dialog.setArguments(bundle);
+			dialog.show(getSupportFragmentManager(), "UserAppListMoreActionDialog");
 			break;
 		}
 	}
@@ -1273,5 +1280,46 @@ public class MainActivity extends SlidingFragmentActivity implements
 		usrAppsFrg.setListSortType(which);
 		((ActionSlideExpandableListView)usrAppsFrg.getListView()).collapse(false);
 		mUserAppListAdapter.notifyDataSetChanged();
+	}
+
+
+
+	@Override
+	public void onUserAppMoreActionListItemClickListener(
+			DialogInterface dialog, int item, AppInfo appInfo) {
+		// TODO Auto-generated method stub
+		if(item == 0)//google play
+		{
+			if (isAnyStoreInstalled) {
+				startActivity(new Intent(Intent.ACTION_VIEW,
+						Uri.parse("market://details?id="+ appInfo.packageName)));
+			} else {
+				startActivity(new Intent(
+						Intent.ACTION_VIEW,
+						Uri.parse("http://play.google.com/store/apps/details?id="
+								+ appInfo.packageName)));
+			}
+		}
+		else if(item == 1) //send
+		{
+			String backAPKfileName = appInfo.appName+"_v"+appInfo.versionName+".apk";
+			BACK_UP_FOLDER = Utilities.getBackUpAPKfileDir(thisActivityCtx);
+			if(Utilities.copyFile(appInfo.apkFilePath,BACK_UP_FOLDER+backAPKfileName))
+			{
+				Intent sendIntent = new Intent(Intent.ACTION_SEND);
+				sendIntent.setType("application/vnd.android.package-archive");   
+	            sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + BACK_UP_FOLDER+backAPKfileName));//添加附件
+	            sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Share apps");//主题
+	            sendIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Enjoy apps, thanks"); //邮件主体
+	            sendIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+	            startActivity(Intent.createChooser(sendIntent, "Send by"));//Chooser的标题
+			}
+			else
+			{
+				toast.setText("error");
+				toast.show();
+			}
+		}
+		
 	}
 }
