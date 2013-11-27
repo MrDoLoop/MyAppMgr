@@ -1271,6 +1271,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 		
 		Utilities.setUserAppListSortType(thisActivityCtx, which);
 		usrAppsFrg.setListSortType(which);
+		((ActionSlideExpandableListView)usrAppsFrg.getListView()).collapse(false);
 		mUserAppListAdapter.notifyDataSetChanged();
 	}
 }
