@@ -425,7 +425,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 		 SortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		 
 		 searchMenuItem = menu.add(Menu.NONE, SEARCH_MENU, Menu.NONE, "Search");
-		 searchMenuItem.setIcon(R.drawable.abs__ic_search);
+		 searchMenuItem.setIcon(R.drawable.ic_action_search);
 		 searchMenuItem.setActionView(searchView);
 		 searchMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 		 searchMenuItem.setOnActionExpandListener(new OnActionExpandListener(){
