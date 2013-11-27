@@ -1219,6 +1219,14 @@ public class MainActivity extends SlidingFragmentActivity implements
 				 {
 					 if(UserAppFullList.get(i).packageName.equals(RemovedPkgName))
 					 {
+						 if(mActionMode != null)
+						 {
+							 if(UserAppFullList.get(i).selected)
+							 {
+								 UserAppActionModeSelectCnt--;
+								 mActionMode.setTitle(""+UserAppActionModeSelectCnt);
+							 } 
+						 }
 						 toast.setText("App Removed: "+UserAppFullList.get(i).appName);
 						 UserAppFullList.remove(i); 
 					 }
