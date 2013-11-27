@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -31,6 +32,29 @@ import android.provider.Settings;
 
 public class Utilities {
 
+	public static void chooseSendByApp(Context ctx, Uri uri)
+	{
+		Intent sendIntent = new Intent(Intent.ACTION_SEND);
+		sendIntent.setType("application/vnd.android.package-archive");   
+        sendIntent.putExtra(Intent.EXTRA_STREAM, uri);//添加附件
+        sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Share apps");//主题
+        sendIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Enjoy apps, thanks"); //邮件主体
+        sendIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        ctx.startActivity(Intent.createChooser(sendIntent, "Send by"));//Chooser的标题
+	}
+	
+	public static void chooseSendByApp(Context ctx, ArrayList<Uri> Uris)
+	{
+		Intent sendIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+		sendIntent.setType("application/vnd.android.package-archive");   
+        sendIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, Uris);//添加附件
+        sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Share apps");//主题
+        sendIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Enjoy apps, thanks"); //邮件主体
+        sendIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        ctx.startActivity(Intent.createChooser(sendIntent, "Send by"));//Chooser的标题
+	}
+	
+	
 	public static int getUserAppListSortType(Context ctx)
 	{
 		int type = ctx.getSharedPreferences("MyAppMgrSharedPreferences", 0).getInt("UserAppListSortType", 0);
@@ -186,6 +210,7 @@ public class Utilities {
 	 * @param packageName
 	 *            应用程序的包名
 	 */
+	@SuppressLint("InlinedApi")
 	public static void showInstalledAppDetails(Context context,
 			String packageName) {
 		String SCHEME = "package";
