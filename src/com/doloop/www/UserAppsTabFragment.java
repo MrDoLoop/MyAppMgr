@@ -162,7 +162,7 @@ public class UserAppsTabFragment extends SherlockListFragment implements
 			// setItemActionListener
 			// this is needed in order for the listview to discover the
 			// buttons
-		}, R.id.openBtn, R.id.GPBtn, R.id.AppDetailsBtn, R.id.BackUpBtn, R.id.UninstallBtn);
+		}, R.id.openActionLayout, R.id.infoActionLayout, R.id.backupActionLayout, R.id.uninstallActionLayout, R.id.moreActionLayout);
 		mActionSlideExpandableListView.setOnScrollListener(this);
 		mActionSlideExpandableListView.setOnItemLongClickListener(this);
 		mDialogText = (TextView) contentView.findViewById(R.id.popTextView);

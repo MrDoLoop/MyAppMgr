@@ -7,7 +7,6 @@ import com.doloop.www.R;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -97,12 +96,12 @@ public class UserAppListAdapter extends ArrayAdapter<AppInfo> implements Filtera
 			holder.AppIconImageView = (ImageView) convertView.findViewById(R.id.app_icon);
 			holder.moreItemBtn = (ImageButton) convertView.findViewById(R.id.expandable_toggle_button); 
 			holder.moreItemBtn.setFocusable(false);
-			holder.expandableLinearLayout = (LinearLayout) convertView.findViewById(R.id.expandable); 
+			//holder.expandableLinearLayout = (LinearLayout) convertView.findViewById(R.id.expandable); 
 			holder.bgLayout = (LinearLayout) convertView.findViewById(R.id.bgLayout); 
-			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) 
-			{
-				holder.expandableLinearLayout.setPadding(1, 7, 1, 1);
-			}
+//			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) 
+//			{
+//				holder.expandableLinearLayout.setPadding(1, 7, 1, 1);
+//			}
 			convertView.setTag(holder);
   		}
   		else
@@ -196,7 +195,7 @@ public class UserAppListAdapter extends ArrayAdapter<AppInfo> implements Filtera
   		TextView AppVersionTextView;
   		ImageView AppIconImageView;
   		ImageButton moreItemBtn;
-  		LinearLayout expandableLinearLayout;
+  		//LinearLayout expandableLinearLayout;
   		LinearLayout bgLayout;
   	}
 }

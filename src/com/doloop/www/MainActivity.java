@@ -913,7 +913,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 		AppInfo selectItem = mUserAppListAdapter.getItem(position);
 		String targetpackageName = selectItem.packageName;
 		switch (buttonview.getId()) {
-		case R.id.openBtn:
+		case R.id.openActionLayout:
 			if(thisAppPackageName.equals(targetpackageName))//避免再次启动自己app
 			{
 				toast.setText("You catch me!!NAN Made app");
@@ -930,21 +930,19 @@ public class MainActivity extends SlidingFragmentActivity implements
 				}
 			}
 			break;
-		case R.id.GPBtn:
-			if (isAnyStoreInstalled) {
-				startActivity(new Intent(Intent.ACTION_VIEW,
-						Uri.parse("market://details?id="+ targetpackageName)));
-			} else {
-				startActivity(new Intent(
-						Intent.ACTION_VIEW,
-						Uri.parse("http://play.google.com/store/apps/details?id="
-								+ targetpackageName)));
-			}
-			break;
-		case R.id.AppDetailsBtn:
+		case R.id.infoActionLayout:
+//			if (isAnyStoreInstalled) {
+//				startActivity(new Intent(Intent.ACTION_VIEW,
+//						Uri.parse("market://details?id="+ targetpackageName)));
+//			} else {
+//				startActivity(new Intent(
+//						Intent.ACTION_VIEW,
+//						Uri.parse("http://play.google.com/store/apps/details?id="
+//								+ targetpackageName)));
+//			}
 			Utilities.showInstalledAppDetails(thisActivityCtx, targetpackageName);
 			break;
-		case R.id.BackUpBtn:
+		case R.id.backupActionLayout:
 			String backAPKfileName = selectItem.appName+"_v"+selectItem.versionName+".apk";
 			BACK_UP_FOLDER = Utilities.getBackUpAPKfileDir(thisActivityCtx);
 			if(Utilities.copyFile(selectItem.apkFilePath,BACK_UP_FOLDER+backAPKfileName))
@@ -957,7 +955,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			}
 			toast.show();
 			break;
-		case R.id.UninstallBtn:
+		case R.id.uninstallActionLayout:
 			Uri packageUri = Uri.parse("package:"+ targetpackageName);
 			Intent uninstallIntent;
 			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -966,6 +964,16 @@ public class MainActivity extends SlidingFragmentActivity implements
 				uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE,packageUri);
 			}
 			startActivity(uninstallIntent);
+			break;
+		case R.id.moreActionLayout:
+//			Uri packageUri = Uri.parse("package:"+ targetpackageName);
+//			Intent uninstallIntent;
+//			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+//				uninstallIntent = new Intent(Intent.ACTION_DELETE, packageUri);
+//			} else {
+//				uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE,packageUri);
+//			}
+//			startActivity(uninstallIntent);
 			break;
 		}
 	}

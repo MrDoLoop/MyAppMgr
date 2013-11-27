@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bgLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/list_row_item_bg"
-    android:id="@+id/bgLayout"
     android:orientation="vertical" >
 
     <RelativeLayout
@@ -23,9 +23,9 @@
             android:layout_alignParentTop="true"
             android:layout_centerVertical="true"
             android:background="@drawable/imageview_border_blue"
-            android:scaleType="centerInside"
-            android:padding="3dp"
             android:contentDescription="appIcon"
+            android:padding="3dp"
+            android:scaleType="centerInside"
             android:src="@drawable/ic_launcher" />
 
         <TextView
@@ -49,10 +49,10 @@
             android:layout_alignBottom="@+id/app_icon"
             android:layout_alignLeft="@+id/app_name"
             android:layout_alignRight="@+id/app_name"
-            android:textColor="@color/gray"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="App Version" />
+            android:text="App Version"
+            android:textColor="@color/gray" />
 
         <ImageButton
             android:id="@+id/expandable_toggle_button"
@@ -72,56 +72,155 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#000000"
-        android:orientation="horizontal"
-        android:padding="1dp" >
+        android:baselineAligned="false"
+        android:orientation="horizontal" >
 
-        <Button
-            android:id="@+id/openBtn"
+        <LinearLayout
+            android:id="@+id/openActionLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:focusable="false"
-            android:singleLine="true"
-            android:text="Open"
-            android:textSize="12sp" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginLeft="3dp"
+            android:layout_weight="1"
+            android:background="@drawable/user_applist_action_bg"
+            android:orientation="vertical" >
 
-        <Button
-            android:id="@+id/GPBtn"
+            <ImageView
+                android:id="@+id/openImageView"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="centerInside"
+                android:src="@drawable/open" />
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="Open"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/infoActionLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:focusable="false"
-            android:singleLine="true"
-            android:text="Google Play"
-            android:textSize="12sp" />
-        
-        <Button
-            android:id="@+id/AppDetailsBtn"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="3dp"
+            android:layout_weight="1"
+            android:background="@drawable/user_applist_action_bg"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/infoImageView"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="centerInside"
+                android:src="@drawable/info" />
+
+            <TextView
+                android:id="@+id/infoTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="Info"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/backupActionLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:focusable="false"
-            android:singleLine="true"
-            android:text="Details"
-            android:textSize="12sp" />
-        <Button
-            android:id="@+id/BackUpBtn"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="3dp"
+            android:layout_weight="1"
+            android:background="@drawable/user_applist_action_bg"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/backupImageView"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="centerInside"
+                android:src="@drawable/backup" />
+
+            <TextView
+                android:id="@+id/backupTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="Backup"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/uninstallActionLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:focusable="false"
-            android:singleLine="true"
-            android:text="BackUp"
-            android:textSize="12sp" />
-        <Button
-            android:id="@+id/UninstallBtn"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="3dp"
+            android:layout_weight="1"
+            android:background="@drawable/user_applist_action_bg"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/uninstallImageView"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="centerInside"
+                android:src="@drawable/delete" />
+
+            <TextView
+                android:id="@+id/uninstallTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="Uninstall"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/moreActionLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:focusable="false"
-            android:singleLine="true"
-            android:text="Uninstall"
-            android:textSize="12sp" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_weight="1"
+            android:background="@drawable/user_applist_action_bg"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/moreImageView"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="centerInside"
+                android:src="@drawable/more" />
+
+            <TextView
+                android:id="@+id/MoreTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="More"
+                android:textColor="#ffffff" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
