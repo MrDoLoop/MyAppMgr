@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -72,6 +73,8 @@ import com.doloop.www.util.ViewPagerAdapter;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
+@SuppressLint("InlinedApi")
+@SuppressWarnings("deprecation")
 public class MainActivity extends SlidingFragmentActivity implements
 		OnSysAppListItemSelectedListener, OnUserAppListItemSelectedListener,
 		OnUserAppListItemActionClickListener,UserAppListFilterResultListener,
@@ -139,7 +142,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 	
 	private boolean SendAfterBackUp = false;
 	
-	@SuppressWarnings("deprecation")
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -533,7 +536,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 		protected void onPreExecute() {
 			unregisterReceiver(mAppUpdateReceiver);
 			unregisterReceiver(LangUpdateReceiver);
-			progDialog = new ProgressDialog(MainActivity.this);
+			progDialog = new ProgressDialog(thisActivityCtx);
 			progDialog.setCancelable(false);
 			progDialog.setMessage("Saving Apps");
 			progDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -611,13 +614,14 @@ public class MainActivity extends SlidingFragmentActivity implements
 				
 				if(SendAfterBackUp)
 				{
-					Intent sendIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
-					sendIntent.setType("application/vnd.android.package-archive");   
-		            sendIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, SnedApkUris);//添加附件
-		            sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Share apps");//主题
-		            sendIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Enjoy apps, thanks"); //邮件主体
-		            sendIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		            startActivity(Intent.createChooser(sendIntent, "Send by"));//Chooser的标题
+		            if(SnedApkUris.size() > 1)
+		            {
+		            	Utilities.chooseSendByApp(thisActivityCtx, SnedApkUris);
+		            }
+		            else
+		            {
+		            	Utilities.chooseSendByApp(thisActivityCtx, SnedApkUris.get(0));
+		            }
 				}
 			}
 			else
@@ -968,14 +972,6 @@ public class MainActivity extends SlidingFragmentActivity implements
 			startActivity(uninstallIntent);
 			break;
 		case R.id.moreActionLayout:
-//			Uri packageUri = Uri.parse("package:"+ targetpackageName);
-//			Intent uninstallIntent;
-//			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-//				uninstallIntent = new Intent(Intent.ACTION_DELETE, packageUri);
-//			} else {
-//				uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE,packageUri);
-//			}
-//			startActivity(uninstallIntent);
 			UserAppListMoreActionDialogFragment dialog = new UserAppListMoreActionDialogFragment(selectItem);
 //			Bundle bundle = new Bundle();
 //			bundle.putString(UserAppListMoreActionDialogFragment.SELECTED_ITEM, targetpackageName);
@@ -1306,13 +1302,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			BACK_UP_FOLDER = Utilities.getBackUpAPKfileDir(thisActivityCtx);
 			if(Utilities.copyFile(appInfo.apkFilePath,BACK_UP_FOLDER+backAPKfileName))
 			{
-				Intent sendIntent = new Intent(Intent.ACTION_SEND);
-				sendIntent.setType("application/vnd.android.package-archive");   
-	            sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + BACK_UP_FOLDER+backAPKfileName));//添加附件
-	            sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Share apps");//主题
-	            sendIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Enjoy apps, thanks"); //邮件主体
-	            sendIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-	            startActivity(Intent.createChooser(sendIntent, "Send by"));//Chooser的标题
+	            Utilities.chooseSendByApp(thisActivityCtx, Uri.parse("file://" + BACK_UP_FOLDER+backAPKfileName));
 			}
 			else
 			{
