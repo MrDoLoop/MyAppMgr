@@ -18,6 +18,7 @@
             android:logo="@drawable/menu"
             android:label="@string/app_name" 
             android:launchMode="singleTask"
+            android:stateNotNeeded="true"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:windowSoftInputMode="adjustNothing"
             android:screenOrientation="portrait">
