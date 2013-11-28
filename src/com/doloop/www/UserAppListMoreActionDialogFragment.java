@@ -39,6 +39,12 @@ public class UserAppListMoreActionDialogFragment extends DialogFragment {
 		this.mAppinfo = appInfo;
 	}
 	
+	public AppInfo getCurrentAppInfo()
+	{
+		return this.mAppinfo;
+	}
+	
+	
 	 @Override
 	 public void onAttach(Activity activity) {
 		 super.onAttach(activity);

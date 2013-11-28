@@ -29,6 +29,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -142,6 +143,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 	
 	private boolean SendAfterBackUp = false;
 	
+	private SortTypeDialogFragment SortTypeDialog;
+	private UserAppListMoreActionDialogFragment UserAppListMoreActionDialog;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -510,11 +513,11 @@ public class MainActivity extends SlidingFragmentActivity implements
 			return true;
 		case SORT_MENU:
 			
-			SortTypeDialogFragment dialog = new SortTypeDialogFragment();
+			SortTypeDialog = new SortTypeDialogFragment();
 			Bundle bundle = new Bundle();
 			bundle.putInt(SortTypeDialogFragment.SELECTED_ITEM, usrAppsFrg.getListSortType());
-			dialog.setArguments(bundle);
-			dialog.show(getSupportFragmentManager(), "SortTypeDialog");
+			SortTypeDialog.setArguments(bundle);
+			SortTypeDialog.show(getSupportFragmentManager(), "SortTypeDialog");
 			
 			return true;
 		}
@@ -629,12 +632,18 @@ public class MainActivity extends SlidingFragmentActivity implements
 				toast.setText("error");
 				toast.show();
 				finish();
-			}
-			
+			}	
 		}
-		
-		
 	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		DismissDialog(SortTypeDialog);
+		DismissDialog(UserAppListMoreActionDialog);
+		super.onSaveInstanceState(savedInstanceState);
+	}
+	
 	
 	private class GetApps extends AsyncTask<Void, String, Void> {
 		private List<PackageInfo> packages;
@@ -651,6 +660,9 @@ public class MainActivity extends SlidingFragmentActivity implements
 		protected void onPreExecute() {
 			unregisterReceiver(mAppUpdateReceiver);
 			unregisterReceiver(LangUpdateReceiver);
+			
+			DismissDialog(SortTypeDialog);
+			DismissDialog(UserAppListMoreActionDialog);
 			
 			pManager = getPackageManager();
 			packages = pManager.getInstalledPackages(0);
@@ -972,11 +984,11 @@ public class MainActivity extends SlidingFragmentActivity implements
 			startActivity(uninstallIntent);
 			break;
 		case R.id.moreActionLayout:
-			UserAppListMoreActionDialogFragment dialog = new UserAppListMoreActionDialogFragment(selectItem);
+			UserAppListMoreActionDialog = new UserAppListMoreActionDialogFragment(selectItem);
 //			Bundle bundle = new Bundle();
 //			bundle.putString(UserAppListMoreActionDialogFragment.SELECTED_ITEM, targetpackageName);
 //			dialog.setArguments(bundle);
-			dialog.show(getSupportFragmentManager(), "UserAppListMoreActionDialog");
+			UserAppListMoreActionDialog.show(getSupportFragmentManager(), "UserAppListMoreActionDialog");
 			break;
 		}
 	}
@@ -1227,6 +1239,13 @@ public class MainActivity extends SlidingFragmentActivity implements
 								 mActionMode.setTitle(""+UserAppActionModeSelectCnt);
 							 } 
 						 }
+						 
+						 if(UserAppListMoreActionDialog != null && 
+							UserAppListMoreActionDialog.getCurrentAppInfo().packageName.equals(RemovedPkgName))
+						 {
+							 UserAppListMoreActionDialog.dismiss();
+						 }
+						 
 						 toast.setText("App Removed: "+UserAppFullList.get(i).appName);
 						 UserAppFullList.remove(i); 
 					 }
@@ -1319,5 +1338,14 @@ public class MainActivity extends SlidingFragmentActivity implements
 			}
 		}
 		
+	}
+	
+	
+	private void DismissDialog(DialogFragment D_fragment)
+	{
+		if(D_fragment != null && D_fragment.getDialog() !=null && D_fragment.getDialog().isShowing())
+		{
+			D_fragment.dismiss();
+		}
 	}
 }
