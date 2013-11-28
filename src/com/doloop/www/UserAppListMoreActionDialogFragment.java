@@ -20,7 +20,7 @@ public class UserAppListMoreActionDialogFragment extends DialogFragment {
 	private AppInfo mAppinfo;
 	
 	private static final String[] moreActionOpt = {"Google Play","Send"};
-	private static final Integer[] moreActionOptIcon = {R.drawable.google_paly_80x80,R.drawable.send_80x80};
+	private static final Integer[] moreActionOptIcon = {R.drawable.google_paly_80x80,R.drawable.send1_80x80};
 
 	public UserAppMoreActionListItemClickListener mUserAppMoreActionListItemClickListener;
 
