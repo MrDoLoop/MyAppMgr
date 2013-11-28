@@ -31,6 +31,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -180,6 +181,17 @@ public class MainActivity extends SlidingFragmentActivity implements
 		
 		LangUpdateReceiver = new LangUpdateReceiver();
 		registerReceiver(LangUpdateReceiver , LangIntentFilter);
+		
+		if(savedInstanceState != null)
+		{
+			FragmentManager mFragmentManager = getSupportFragmentManager();
+			SortTypeDialog = (SortTypeDialogFragment) mFragmentManager.getFragment(savedInstanceState, SortTypeDialogFragment.DialogTag);
+			UserAppListMoreActionDialog = (UserAppListMoreActionDialogFragment) mFragmentManager.getFragment(savedInstanceState, UserAppListMoreActionDialogFragment.DialogTag);
+			if(SortTypeDialog != null)
+				mFragmentManager.beginTransaction().remove(SortTypeDialog).commit();
+			if(UserAppListMoreActionDialog != null)
+				mFragmentManager.beginTransaction().remove(UserAppListMoreActionDialog).commit();
+		}
 		
 		new GetApps().execute();
 	}
@@ -517,7 +529,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			Bundle bundle = new Bundle();
 			bundle.putInt(SortTypeDialogFragment.SELECTED_ITEM, usrAppsFrg.getListSortType());
 			SortTypeDialog.setArguments(bundle);
-			SortTypeDialog.show(getSupportFragmentManager(), "SortTypeDialog");
+			SortTypeDialog.show(getSupportFragmentManager(), SortTypeDialogFragment.DialogTag);
 			
 			return true;
 		}
@@ -639,9 +651,22 @@ public class MainActivity extends SlidingFragmentActivity implements
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		DismissDialog(SortTypeDialog);
-		DismissDialog(UserAppListMoreActionDialog);
+		//DismissDialog(SortTypeDialog);
+		//DismissDialog(UserAppListMoreActionDialog);
 		super.onSaveInstanceState(savedInstanceState);
+		
+		if(SortTypeDialog != null && 
+			SortTypeDialog.getDialog() != null && 
+			SortTypeDialog.getDialog().isShowing())
+		{
+			getSupportFragmentManager().putFragment(savedInstanceState, SortTypeDialogFragment.DialogTag, SortTypeDialog);
+		}
+		if(UserAppListMoreActionDialog != null && 
+			UserAppListMoreActionDialog.getDialog() != null && 
+			UserAppListMoreActionDialog.getDialog().isShowing())
+		{
+			getSupportFragmentManager().putFragment(savedInstanceState, UserAppListMoreActionDialogFragment.DialogTag, UserAppListMoreActionDialog);
+		}
 	}
 	
 	
@@ -949,15 +974,6 @@ public class MainActivity extends SlidingFragmentActivity implements
 			}
 			break;
 		case R.id.infoActionLayout:
-//			if (isAnyStoreInstalled) {
-//				startActivity(new Intent(Intent.ACTION_VIEW,
-//						Uri.parse("market://details?id="+ targetpackageName)));
-//			} else {
-//				startActivity(new Intent(
-//						Intent.ACTION_VIEW,
-//						Uri.parse("http://play.google.com/store/apps/details?id="
-//								+ targetpackageName)));
-//			}
 			Utilities.showInstalledAppDetails(thisActivityCtx, targetpackageName);
 			break;
 		case R.id.backupActionLayout:
@@ -988,7 +1004,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 //			Bundle bundle = new Bundle();
 //			bundle.putString(UserAppListMoreActionDialogFragment.SELECTED_ITEM, targetpackageName);
 //			dialog.setArguments(bundle);
-			UserAppListMoreActionDialog.show(getSupportFragmentManager(), "UserAppListMoreActionDialog");
+			UserAppListMoreActionDialog.show(getSupportFragmentManager(), UserAppListMoreActionDialogFragment.DialogTag);
 			break;
 		}
 	}
@@ -1157,7 +1173,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 							startActivity(uninstallIntent);
 						}
 					}
-					mActionMode.finish();
+					//mActionMode.finish();
 				}
 				else
 				{
@@ -1166,9 +1182,6 @@ public class MainActivity extends SlidingFragmentActivity implements
 				}
 				break;
 			}
-			
-//			toast.setText("MenuItemID: "+item.getItemId()+" Title: "+item.getTitle());
-//			toast.show();
 			return true;
 		}
 

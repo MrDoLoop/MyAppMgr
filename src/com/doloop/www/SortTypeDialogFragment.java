@@ -9,7 +9,9 @@ import android.support.v4.app.DialogFragment;
 
 public class SortTypeDialogFragment extends DialogFragment {
 	
-	private static final String[] sortTypeStr = {"Name ASC","Name DES","Size ASC","Size DES","LastModified Time ASC","LastModified Time DES"};
+	public final static String DialogTag = "SortTypeDialogFragment";
+	
+	private final static String[] sortTypeStr = {"Name ASC","Name DES","Size ASC","Size DES","LastModified Time ASC","LastModified Time DES"};
 	
 	public final static int LIST_SORT_TYPE_NAME_ASC = 0;
 	public final static int LIST_SORT_TYPE_NAME_DES = 1;

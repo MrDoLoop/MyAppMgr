@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 public class UserAppListMoreActionDialogFragment extends DialogFragment {
 	
+	public final static String DialogTag = "UserAppListMoreActionDialogFragment";
+	
 	private AppInfo mAppinfo;
 	
 	private static final String[] moreActionOpt = {"Google Play","Send"};
