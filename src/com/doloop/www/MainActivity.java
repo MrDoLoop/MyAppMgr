@@ -1127,9 +1127,9 @@ public class MainActivity extends SlidingFragmentActivity implements
 				}
 				else
 				{//¶¼²»Ñ¡
-					for(AppInfo appInfo : UserAppFullList)
+					for(int i = 0;i<mUserAppListAdapter.getCount();i++)
 					{
-						appInfo.selected = false;
+						mUserAppListAdapter.getItem(i).selected = false;
 					}
 					UserAppActionModeSelectCnt = 0;
 					item.setTitle("Select All");
