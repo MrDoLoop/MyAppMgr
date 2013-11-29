@@ -53,6 +53,8 @@ public class SortTypeDialogFragment extends DialogFragment {
 					mSortTypeListItemClickListener.onSortTypeListItemClick(dialog, which);
 					dialog.dismiss();
 				}});
-	        return builder.create();
+	        AlertDialog dialog = builder.create();
+	        dialog.setCanceledOnTouchOutside(true);
+	        return dialog;
 	    }
 }

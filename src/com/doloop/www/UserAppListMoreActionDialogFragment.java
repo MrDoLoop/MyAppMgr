@@ -70,7 +70,9 @@ public class UserAppListMoreActionDialogFragment extends DialogFragment {
                 	dialog.dismiss();
                 }
             });
-	        return builder.create();
+	        AlertDialog dialog = builder.create();
+	        dialog.setCanceledOnTouchOutside(true);
+	        return dialog;
 	    }
 	    
 	    

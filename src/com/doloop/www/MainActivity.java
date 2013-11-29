@@ -624,9 +624,6 @@ public class MainActivity extends SlidingFragmentActivity implements
 			
 			if(saveSucc)
 			{
-				toast.setText("Backup success");
-				toast.show();
-				
 				if(SendAfterBackUp)
 				{
 		            if(SnedApkUris.size() > 1)
@@ -637,6 +634,11 @@ public class MainActivity extends SlidingFragmentActivity implements
 		            {
 		            	Utilities.chooseSendByApp(thisActivityCtx, SnedApkUris.get(0));
 		            }
+				}
+				else
+				{
+					toast.setText("Backup success");
+					toast.show();
 				}
 			}
 			else
