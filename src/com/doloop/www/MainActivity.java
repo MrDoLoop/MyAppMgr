@@ -1118,7 +1118,6 @@ public class MainActivity extends SlidingFragmentActivity implements
 				if(UserAppActionModeSelectCnt < mUserAppListAdapter.getCount())
 				{//Ñ¡ÔñÈ«²¿
 					for(int i = 0;i<mUserAppListAdapter.getCount();i++)
-					//for(AppInfo appInfo : UserAppFullList)
 					{
 						mUserAppListAdapter.getItem(i).selected = true;
 					}
