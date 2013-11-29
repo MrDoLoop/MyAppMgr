@@ -436,14 +436,34 @@ public class MainActivity extends SlidingFragmentActivity implements
 			}});
 
 		 SortMenuItem = menu.add(Menu.NONE, SORT_MENU, Menu.NONE, "Sort");
-		 SortMenuItem.setIcon(R.drawable.ic_action_sort_by_size);
-		 SortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		 
-		 searchMenuItem = menu.add(Menu.NONE, SEARCH_MENU, Menu.NONE, "Search");
-		 searchMenuItem.setIcon(R.drawable.ic_action_search);
-		 searchMenuItem.setActionView(searchView);
-		 searchMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-		 searchMenuItem.setOnActionExpandListener(new OnActionExpandListener(){
+		 switch (Utilities.getUserAppListSortType(thisActivityCtx))
+		 {
+			case SortTypeDialogFragment.LIST_SORT_TYPE_NAME_ASC:
+				SortMenuItem.setIcon(R.drawable.name_asc);
+				break;
+			case SortTypeDialogFragment.LIST_SORT_TYPE_NAME_DES:
+				SortMenuItem.setIcon(R.drawable.name_des);
+				break;
+			case SortTypeDialogFragment.LIST_SORT_TYPE_SIZE_ASC:
+				SortMenuItem.setIcon(R.drawable.size_asc);
+				break;
+			case SortTypeDialogFragment.LIST_SORT_TYPE_SIZE_DES:
+				SortMenuItem.setIcon(R.drawable.size_des);
+				break;
+			case SortTypeDialogFragment.LIST_SORT_TYPE_LAST_MOD_TIME_ASC:
+				SortMenuItem.setIcon(R.drawable.time_asc);
+				break;
+			case SortTypeDialogFragment.LIST_SORT_TYPE_LAST_MOD_TIME_DES:
+				SortMenuItem.setIcon(R.drawable.time_des);
+				break;
+		}
+		SortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		
+		searchMenuItem = menu.add(Menu.NONE, SEARCH_MENU, Menu.NONE, "Search");
+		searchMenuItem.setIcon(R.drawable.ic_action_search);
+		searchMenuItem.setActionView(searchView);
+		searchMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+		searchMenuItem.setOnActionExpandListener(new OnActionExpandListener(){
 
 			@Override
 			public boolean onMenuItemActionExpand(MenuItem item) {
@@ -1302,21 +1322,27 @@ public class MainActivity extends SlidingFragmentActivity implements
 		{
 		case SortTypeDialogFragment.LIST_SORT_TYPE_NAME_ASC:
 			Collections.sort(UserAppFullList, new AppNameComparator(true));
+			SortMenuItem.setIcon(R.drawable.name_asc);
 			break;
 		case SortTypeDialogFragment.LIST_SORT_TYPE_NAME_DES:
 			Collections.sort(UserAppFullList, new AppNameComparator(false));
+			SortMenuItem.setIcon(R.drawable.name_des);
 			break;
 		case SortTypeDialogFragment.LIST_SORT_TYPE_SIZE_ASC:
 			Collections.sort(UserAppFullList, new AppSizeComparator(true));
+			SortMenuItem.setIcon(R.drawable.size_asc);
 			break;
 		case SortTypeDialogFragment.LIST_SORT_TYPE_SIZE_DES:
 			Collections.sort(UserAppFullList, new AppSizeComparator(false));
+			SortMenuItem.setIcon(R.drawable.size_des);
 			break;
 		case SortTypeDialogFragment.LIST_SORT_TYPE_LAST_MOD_TIME_ASC:
 			Collections.sort(UserAppFullList, new LastModifiedComparator(true));
+			SortMenuItem.setIcon(R.drawable.time_asc);
 			break;
 		case SortTypeDialogFragment.LIST_SORT_TYPE_LAST_MOD_TIME_DES:
 			Collections.sort(UserAppFullList, new LastModifiedComparator(false));
+			SortMenuItem.setIcon(R.drawable.time_des);
 			break;
 		}
 		
