@@ -21,8 +21,8 @@ public class UserAppListMoreActionDialogFragment extends DialogFragment {
 	
 	private AppInfo mAppinfo;
 	
-	private static final String[] moreActionOpt = {"Google Play","Send"};
-	private static final Integer[] moreActionOptIcon = {R.drawable.google_paly_80x80,R.drawable.send1_80x80};
+	private static String[] moreActionOpt;// = {"Google Play","Send"};
+	private final static Integer[] moreActionOptIcon = {R.drawable.google_paly_80x80,R.drawable.send1_80x80};
 
 	public UserAppMoreActionListItemClickListener mUserAppMoreActionListItemClickListener;
 
@@ -60,10 +60,11 @@ public class UserAppListMoreActionDialogFragment extends DialogFragment {
 	    @Override
 	    public Dialog onCreateDialog(Bundle savedInstanceState) {
 	        // Build the dialog and set up the button click handlers
+	    	moreActionOpt = new String[] {getActivity().getString(R.string.google_play), getActivity().getString(R.string.send)};
 	    	ArrayAdapterWithIcon adapter = new ArrayAdapterWithIcon(getActivity(), moreActionOpt, moreActionOptIcon);
 
 	        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-	        builder.setTitle("More actions")
+	        builder.setTitle(R.string.more_actions)
             .setAdapter(adapter, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int item ) {
                 	mUserAppMoreActionListItemClickListener.onUserAppMoreActionListItemClickListener(dialog, item, mAppinfo);

@@ -11,7 +11,7 @@ public class SortTypeDialogFragment extends DialogFragment {
 	
 	public final static String DialogTag = "SortTypeDialogFragment";
 	
-	private final static String[] sortTypeStr = {"Name ASC","Name DES","Size ASC","Size DES","LastModified Time ASC","LastModified Time DES"};
+	private static String[] sortTypeStr = {"Name ASC","Name DES","Size ASC","Size DES","LastModified Time ASC","LastModified Time DES"};
 	
 	public final static int LIST_SORT_TYPE_NAME_ASC = 0;
 	public final static int LIST_SORT_TYPE_NAME_DES = 1;
@@ -43,9 +43,10 @@ public class SortTypeDialogFragment extends DialogFragment {
 	    @Override
 	    public Dialog onCreateDialog(Bundle savedInstanceState) {
 	        // Build the dialog and set up the button click handlers
+	    	sortTypeStr = getActivity().getResources().getStringArray(R.array.sort_type); 
 	    	int checkedItem = getArguments().getInt(SELECTED_ITEM, 0); 
 	        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-	        builder.setTitle("Sort Type").setSingleChoiceItems(sortTypeStr, checkedItem, new DialogInterface.OnClickListener(){
+	        builder.setTitle(R.string.sort_type).setSingleChoiceItems(sortTypeStr, checkedItem, new DialogInterface.OnClickListener(){
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {

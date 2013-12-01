@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.doloop.www.R;
+
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
@@ -37,10 +39,10 @@ public class Utilities {
 		Intent sendIntent = new Intent(Intent.ACTION_SEND);
 		sendIntent.setType("application/vnd.android.package-archive");   
         sendIntent.putExtra(Intent.EXTRA_STREAM, uri);//添加附件
-        sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Share apps");//主题
-        sendIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Enjoy apps, thanks"); //邮件主体
+        sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, ctx.getString(R.string.share_apps));//主题
+        sendIntent.putExtra(android.content.Intent.EXTRA_TEXT, ctx.getString(R.string.email_body)); //邮件主体
         sendIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        ctx.startActivity(Intent.createChooser(sendIntent, "Send by"));//Chooser的标题
+        ctx.startActivity(Intent.createChooser(sendIntent, ctx.getString(R.string.send_by)));//Chooser的标题
 	}
 	
 	public static void chooseSendByApp(Context ctx, ArrayList<Uri> Uris)

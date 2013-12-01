@@ -272,7 +272,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 		Fragmentlist.add(sysAppsFrg);
 		//Fragmentlist.add(allAppsFrg);
 		
-		String[] tabs = { "USER APPs", "SYS APPs"};//, "ALL APPs" 
+		String[] tabs = { getString(R.string.user_apps), getString(R.string.sys_apps)};//, "ALL APPs" 
 		for (String tabTitle : tabs) {
 			ActionBar.Tab tab = actionBar.newTab().setText(tabTitle)
 					.setTabListener(tabListener);
@@ -406,7 +406,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 		 
 		 
 		 SearchView searchView = new SearchView(actionBar.getThemedContext());
-		 searchView.setQueryHint("key words");
+		 searchView.setQueryHint(getString(R.string.key_words));
 		 searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
 
 			@Override
@@ -435,7 +435,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 				return true;
 			}});
 
-		 SortMenuItem = menu.add(Menu.NONE, SORT_MENU, Menu.NONE, "Sort");
+		 SortMenuItem = menu.add(Menu.NONE, SORT_MENU, Menu.NONE, R.string.sort);
 		 switch (Utilities.getUserAppListSortType(thisActivityCtx))
 		 {
 			case SortTypeDialogFragment.LIST_SORT_TYPE_NAME_ASC:
@@ -459,7 +459,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 		}
 		SortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		
-		searchMenuItem = menu.add(Menu.NONE, SEARCH_MENU, Menu.NONE, "Search");
+		searchMenuItem = menu.add(Menu.NONE, SEARCH_MENU, Menu.NONE, R.string.search);
 		searchMenuItem.setIcon(R.drawable.ic_action_search);
 		searchMenuItem.setActionView(searchView);
 		searchMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
@@ -532,7 +532,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			super.onBackPressed();
 		} else {
 			back_pressed = System.currentTimeMillis();
-			toast.setText("press BACK again to exit");
+			toast.setText(R.string.press_back_again_to_exit);
 			toast.show();
 		}
 	}
@@ -564,7 +564,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			// TODO Auto-generated method stub
 			super.onProgressUpdate(values);
 			progDialog.setProgress(Integer.valueOf(values[0]));
-			progDialog.setMessage("Saving App: "+values[1]);
+			progDialog.setMessage(getString(R.string.saving_app)+values[1]);
 		}
 		
 		@Override
@@ -573,7 +573,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			unregisterReceiver(LangUpdateReceiver);
 			progDialog = new ProgressDialog(thisActivityCtx);
 			progDialog.setCancelable(false);
-			progDialog.setMessage("Saving Apps");
+			progDialog.setMessage(getString(R.string.saving_apps));
 			progDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			progDialog.setProgress(0);
 			progDialog.setMax(UserAppActionModeSelectCnt);
@@ -657,13 +657,13 @@ public class MainActivity extends SlidingFragmentActivity implements
 				}
 				else
 				{
-					toast.setText("Backup success");
+					toast.setText(R.string.backup_success);
 					toast.show();
 				}
 			}
 			else
 			{
-				toast.setText("error");
+				toast.setText(R.string.error);
 				toast.show();
 				finish();
 			}	
@@ -719,7 +719,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			progDialog.setProgress(0);
 			progDialog.setMax(packages.size());
 			progDialog.setCancelable(false);
-			progDialog.setMessage("Loading Apps");
+			progDialog.setMessage(getString(R.string.loading_apps));
 			progDialog.setOnCancelListener(new OnCancelListener() {
 
 				@Override
@@ -870,10 +870,10 @@ public class MainActivity extends SlidingFragmentActivity implements
 				progDialog.dismiss();
 			}
 			// 设置tab 标题
-			actionBar.getTabAt(USR_APPS_TAB_POS).setText(
-					"USER APPS (" + UserAppFullList.size() + ")");
-			actionBar.getTabAt(SYS_APPS_TAB_POS).setText(
-					"SYS APPS (" + SysAppFullList.size() + ")");
+			actionBar.getTabAt(USR_APPS_TAB_POS).setText(getString(R.string.user_apps)
+					+" (" + UserAppFullList.size() + ")");
+			actionBar.getTabAt(SYS_APPS_TAB_POS).setText(getString(R.string.sys_apps)
+					+" (" + SysAppFullList.size() + ")");
 //			actionBar.getTabAt(ALL_APPS_TAB_POS).setText(
 //					"ALL APPS (" + AllAppList.size() + ")");
 
@@ -913,12 +913,12 @@ public class MainActivity extends SlidingFragmentActivity implements
 		
 		if(UserAppActionModeSelectCnt < mUserAppListAdapter.getCount())
 		{
-			mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setTitle("Select All");
+			mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setTitle(R.string.select_all);
 			mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setIcon(R.drawable.ic_action_select_all);
 		}
 		else
 		{
-			mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setTitle("Deselect All");
+			mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setTitle(R.string.deselect_all);
 			mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setIcon(R.drawable.ic_action_deselect_all);
 		}
 		
@@ -949,12 +949,12 @@ public class MainActivity extends SlidingFragmentActivity implements
 			
 			if(UserAppActionModeSelectCnt < mUserAppListAdapter.getCount())
 			{
-				mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setTitle("Select All");
+				mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setTitle(R.string.select_all);
 				mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setIcon(R.drawable.ic_action_select_all);
 			}
 			else
 			{
-				mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setTitle("Deselect All");
+				mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setTitle(R.string.deselect_all);
 				mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setIcon(R.drawable.ic_action_deselect_all);
 			}
 			
@@ -985,7 +985,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 		case R.id.openActionLayout:
 			if(thisAppPackageName.equals(targetpackageName))//避免再次启动自己app
 			{
-				toast.setText("You catch me!!NAN Made app");
+				toast.setText("You catch me!! NAN Made app");
 				toast.show();
 			} 
 			else
@@ -994,7 +994,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 				if (intent != null) {
 					startActivity(intent);
 				} else {
-					toast.setText("error");
+					toast.setText(R.string.error);
 					toast.show();
 				}
 			}
@@ -1007,11 +1007,11 @@ public class MainActivity extends SlidingFragmentActivity implements
 			BACK_UP_FOLDER = Utilities.getBackUpAPKfileDir(thisActivityCtx);
 			if(Utilities.copyFile(selectItem.apkFilePath,BACK_UP_FOLDER+backAPKfileName))
 			{
-				toast.setText("BackUp success");
+				toast.setText(R.string.backup_success);
 			}
 			else
 			{
-				toast.setText("error");
+				toast.setText(R.string.error);
 			}
 			toast.show();
 			break;
@@ -1040,7 +1040,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 	public void onUserAppListFilterResultPublish(ArrayList<AppInfo> resultsList) {
 		// TODO Auto-generated method stub
 		((ActionSlideExpandableListView)usrAppsFrg.getListView()).collapse(false);
-		String newTitle = "USER APPS (" + resultsList.size() + ")";
+		String newTitle = getString(R.string.user_apps)+" (" + resultsList.size() + ")";
 		actionBar.getTabAt(USR_APPS_TAB_POS).setText(newTitle);
 	}
 	
@@ -1078,7 +1078,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 		sectionTextList = ResultSectionTextList;
 		sectionItemsMap = ResultSectionItemsMap;
 		
-		String newTitle = "SYS APPS (" + mSysAppListAdapter.getItemsCount() + ")";
+		String newTitle = getString(R.string.sys_apps)+" (" + mSysAppListAdapter.getItemsCount() + ")";
 		actionBar.getTabAt(SYS_APPS_TAB_POS).setText(newTitle);
 	}
 	
@@ -1115,10 +1115,10 @@ public class MainActivity extends SlidingFragmentActivity implements
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			// TODO Auto-generated method stub
-			menu.add(Menu.NONE, ACTIONMODE_MENU_SELECT, Menu.NONE,"Select All").setIcon(R.drawable.ic_action_select_all).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-			menu.add(Menu.NONE, ACTIONMODE_MENU_BACKUP, Menu.NONE,"Backup").setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-			menu.add(Menu.NONE, ACTIONMODE_MENU_SEND, Menu.NONE,"Send").setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-			menu.add(Menu.NONE, ACTIONMODE_MENU_UNINSTALL, Menu.NONE,"Uninstall").setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+			menu.add(Menu.NONE, ACTIONMODE_MENU_SELECT, Menu.NONE,R.string.select_all).setIcon(R.drawable.ic_action_select_all).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			menu.add(Menu.NONE, ACTIONMODE_MENU_BACKUP, Menu.NONE,R.string.backup).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+			menu.add(Menu.NONE, ACTIONMODE_MENU_SEND, Menu.NONE,R.string.send).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+			menu.add(Menu.NONE, ACTIONMODE_MENU_UNINSTALL, Menu.NONE,R.string.uninstall).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 			return true;
 		}
 
@@ -1142,7 +1142,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 						mUserAppListAdapter.getItem(i).selected = true;
 					}
 					UserAppActionModeSelectCnt = mUserAppListAdapter.getCount();	
-					item.setTitle("Deselect All");
+					item.setTitle(R.string.deselect_all);
 					item.setIcon(R.drawable.ic_action_deselect_all);
 				}
 				else
@@ -1152,7 +1152,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 						mUserAppListAdapter.getItem(i).selected = false;
 					}
 					UserAppActionModeSelectCnt = 0;
-					item.setTitle("Select All");
+					item.setTitle(R.string.select_all);
 					item.setIcon(R.drawable.ic_action_select_all);
 				}
 				mActionMode.setTitle(""+UserAppActionModeSelectCnt);
@@ -1166,7 +1166,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 				}
 				else
 				{
-					toast.setText("Nothing selected");
+					toast.setText(R.string.nothing_selected);
 					toast.show();
 				}
 				break;
@@ -1178,7 +1178,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 				}
 				else
 				{
-					toast.setText("Nothing selected");
+					toast.setText(R.string.nothing_selected);
 					toast.show();
 				}
 				break;
@@ -1205,7 +1205,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 				}
 				else
 				{
-					toast.setText("Nothing selected");
+					toast.setText(R.string.nothing_selected);
 					toast.show();
 				}
 				break;
@@ -1259,13 +1259,13 @@ public class MainActivity extends SlidingFragmentActivity implements
 				     ai = null;
 				 }
 				 String NewAppName = (String) (ai != null ? pm.getApplicationLabel(ai) : "(unknown)");
-				 toast.setText("New App Installed: "+ NewAppName);
+				 toast.setText(getString(R.string.new_app_installed)+ NewAppName);
 				 toast.show();
 				 new GetApps().execute();
 			 }
 			 else if(intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) 
 			 {
-				 toast.setText("App Removed.");
+				 toast.setText(R.string.app_removed);
 				 String RemovedPkgName = intent.getDataString().substring(8); 
 				 ArrayList<AppInfo> tmpUserDisplayList = mUserAppListAdapter.getDisplayList();
 				 for(int i = 0;i<UserAppFullList.size();i++)
@@ -1287,7 +1287,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 							 UserAppListMoreActionDialog.dismiss();
 						 }
 						 
-						 toast.setText("App Removed: "+UserAppFullList.get(i).appName);
+						 toast.setText(getString(R.string.app_removed_name)+UserAppFullList.get(i).appName);
 						 UserAppFullList.remove(i); 
 					 }
 					 if(i<tmpUserDisplayList.size())
@@ -1302,7 +1302,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 				 toast.show();
 				 mUserAppListAdapter.notifyDataSetChanged();
 				 ((ActionSlideExpandableListView)usrAppsFrg.getListView()).collapse(false);
-				 actionBar.getTabAt(USR_APPS_TAB_POS).setText("USER APPS (" + tmpUserDisplayList.size() + ")");
+				 actionBar.getTabAt(USR_APPS_TAB_POS).setText(getString(R.string.user_apps)+" (" + tmpUserDisplayList.size() + ")");
 				 //new GetApps().execute();
 			 }
 			 else if(intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)) 
@@ -1380,7 +1380,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			}
 			else
 			{
-				toast.setText("error");
+				toast.setText(R.string.error);
 				toast.show();
 			}
 		}
