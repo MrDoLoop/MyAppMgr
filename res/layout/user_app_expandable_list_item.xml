@@ -101,7 +101,7 @@
                 android:layout_gravity="center_horizontal"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="Open"
+                android:text="@string/open"
                 android:textSize="12sp"
                 android:textColor="#ffffff" />
         </LinearLayout>
@@ -131,7 +131,7 @@
                 android:layout_gravity="center_horizontal"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="Info"
+                android:text="@string/info"
                 android:textSize="12sp"
                 android:textColor="#ffffff" />
         </LinearLayout>
@@ -161,7 +161,7 @@
                 android:layout_gravity="center_horizontal"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="Backup"
+                android:text="@string/backup"
                 android:textSize="12sp"
                 android:textColor="#ffffff" />
         </LinearLayout>
@@ -191,7 +191,7 @@
                 android:layout_gravity="center_horizontal"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="Uninstall"
+                android:text="@string/uninstall"
                 android:textSize="12sp"
                 android:textColor="#ffffff" />
         </LinearLayout>
@@ -222,7 +222,7 @@
                 android:layout_gravity="center_horizontal"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="More"
+                android:text="@string/more"
                 android:textSize="12sp"
                 android:textColor="#ffffff" />
         </LinearLayout>
