@@ -564,7 +564,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			// TODO Auto-generated method stub
 			super.onProgressUpdate(values);
 			progDialog.setProgress(Integer.valueOf(values[0]));
-			progDialog.setMessage(getString(R.string.saving_app)+values[1]);
+			progDialog.setMessage(getString(R.string.saving_app)+" "+values[1]);
 		}
 		
 		@Override
@@ -965,7 +965,6 @@ public class MainActivity extends SlidingFragmentActivity implements
 		else
 		{
 			((ActionSlideExpandableListView)usrAppsFrg.getListView()).collapse(true);
-			
 			toast.setText("user AppList " + position);
 			toast.show();
 		}
@@ -1259,7 +1258,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 				     ai = null;
 				 }
 				 String NewAppName = (String) (ai != null ? pm.getApplicationLabel(ai) : "(unknown)");
-				 toast.setText(getString(R.string.new_app_installed)+ NewAppName);
+				 toast.setText(getString(R.string.new_app_installed)+" "+NewAppName);
 				 toast.show();
 				 new GetApps().execute();
 			 }
@@ -1287,7 +1286,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 							 UserAppListMoreActionDialog.dismiss();
 						 }
 						 
-						 toast.setText(getString(R.string.app_removed_name)+UserAppFullList.get(i).appName);
+						 toast.setText(getString(R.string.app_removed_name)+" "+UserAppFullList.get(i).appName);
 						 UserAppFullList.remove(i); 
 					 }
 					 if(i<tmpUserDisplayList.size())
