@@ -1,6 +1,5 @@
 package com.doloop.slideexpandable.library;
 
-import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
