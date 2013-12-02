@@ -150,7 +150,6 @@ public class UserAppsTabFragment extends SherlockListFragment implements
 		View contentView = inflater.inflate(R.layout.user_app_slide_expandable_list,
 				container, false);
 		mActionSlideExpandableListView = (ActionSlideExpandableListView) contentView.findViewById(android.R.id.list);
-		ActionSlideExpandableListView mActionSlideExpandableListView=(ActionSlideExpandableListView)contentView.findViewById(android.R.id.list);
 		mActionSlideExpandableListView.setItemActionListener(
 				new ActionSlideExpandableListView.OnActionClickListener() {
 				@Override
