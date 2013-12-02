@@ -332,4 +332,15 @@ public class UserAppsTabFragment extends SherlockListFragment implements
 		mItemLongClickListener.onUserAppItemLongClick(parent, view, position, id);
 		return true;
 	}
+	
+	public static void ExpandAnimationFinsh(int ExpandableViewBtm)
+	{
+		int[] loc = new int[2];
+		mActionSlideExpandableListView.getLocationOnScreen(loc);
+		int moveHeight = ExpandableViewBtm - (loc[1]+mActionSlideExpandableListView.getMeasuredHeight());
+		if(moveHeight > 0)
+		{
+			mActionSlideExpandableListView.smoothScrollBy(moveHeight, 800);
+		}
+	}
 }

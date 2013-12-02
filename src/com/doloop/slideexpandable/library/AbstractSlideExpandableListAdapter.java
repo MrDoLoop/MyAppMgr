@@ -2,14 +2,18 @@ package com.doloop.slideexpandable.library;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 
 import java.util.BitSet;
+
+import com.doloop.www.UserAppsTabFragment;
 
 /**
  * Wraps a ListAdapter to give it expandable list view functionality.
@@ -240,6 +244,35 @@ public abstract class AbstractSlideExpandableListAdapter extends WrapperListAdap
 				target,
 				type
 		);
+		if(type == ExpandCollapseAnimation.EXPAND)
+		{
+			anim.setAnimationListener(new AnimationListener(){
+
+				@Override
+				public void onAnimationEnd(Animation animation) {
+					// TODO Auto-generated method stub
+					int[] loc = new int[2];
+					target.getLocationOnScreen(loc);
+					int ExpandableViewBtm = loc[1]+target.getMeasuredHeight();
+					UserAppsTabFragment.ExpandAnimationFinsh(ExpandableViewBtm);
+					Log.i("ttt", "ExpandableViewBtm "+ExpandableViewBtm);
+				}
+
+				@Override
+				public void onAnimationRepeat(Animation animation) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void onAnimationStart(Animation animation) {
+					// TODO Auto-generated method stub
+					
+				}});
+		}
+		
+		
+		
 		anim.setDuration(getAnimationDuration());
 		target.startAnimation(anim);
 	}
