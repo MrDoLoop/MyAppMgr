@@ -21,11 +21,11 @@
 	<string name="more_actions">更多操作</string>
 	<string name="select_all">全选</string>
 	<string name="deselect_all">取消全选</string>
-	<string name="press_back_again_to_exit">再次点击\"后退\"以退出</string>
+	<string name="press_back_again_to_exit">再次点击 \"后退\" 以退出</string>
 	<string name="saving_app">保存程序:</string>
 	<string name="saving_apps">保存程序</string>
 	<string name="error">错误</string>
-	<string name="loading_apps">加载程序&#8230;</string>
+	<string name="loading_apps">正在加载程序&#8230;</string>
 	<string name="new_app_installed">新程序安装:</string>
 	<string name="app_removed">程序移除.</string>
 	<string name="app_removed_name">程序移除:</string>
