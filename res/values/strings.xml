@@ -7,7 +7,7 @@
 	<string name="sys_apps">SYS APPs</string>
 	<string name="sort_type">Sort Type</string>
 	<string name="search">Search</string>
-	<string name="key_words">Key words</string>
+	<string name="key_words">Keywords</string>
 	<string name="open">Open</string>
 	<string name="info">Info</string>
 	<string name="backup">Backup</string>
@@ -31,8 +31,8 @@
 	<string name="app_removed_name">App Removed:</string>
 	<string name="share_apps">Share apps</string>
 	<string name="email_body">Enjoy apps, thanks</string>
-	<string name="select_all_above">Sel. all above</string>
-	<string name="deselect_all_above">Desel. all above</string>
-	<string name="select_all_below">Sel. all below</string>
-	<string name="deselect_all_below">Desel. all below</string>
+	<string name="select_all_above">Sel. All Above</string>
+	<string name="deselect_all_above">Desel. All Above</string>
+	<string name="select_all_below">Sel. All Below</string>
+	<string name="deselect_all_below">Desel. All Below</string>
 </resources>
