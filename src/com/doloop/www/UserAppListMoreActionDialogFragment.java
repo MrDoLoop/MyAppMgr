@@ -21,8 +21,8 @@ public class UserAppListMoreActionDialogFragment extends DialogFragment {
 	
 	private AppInfo mAppinfo;
 	
-	private static String[] moreActionOpt;// = {"Google Play","Send"};
-	private final static Integer[] moreActionOptIcon = {R.drawable.google_paly_80x80,R.drawable.send1_80x80};
+	private String[] moreActionOpt;// = {"Google Play","Send"};
+	private final static int[] moreActionOptIcon = {R.drawable.google_paly_80x80,R.drawable.send1_80x80};
 
 	public UserAppMoreActionListItemClickListener mUserAppMoreActionListItemClickListener;
 
@@ -87,7 +87,7 @@ public class UserAppListMoreActionDialogFragment extends DialogFragment {
 //	    	    this.images = images;
 //	    	}
 
-	    	public ArrayAdapterWithIcon(Context context, String[] items, Integer[] moreactionopticon) {
+	    	public ArrayAdapterWithIcon(Context context, String[] items, int[] moreactionopticon) {
 	    	    super(context, android.R.layout.select_dialog_item, items);
 	    	}
 

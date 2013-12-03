@@ -3,9 +3,15 @@ package com.doloop.www;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.TypedValue;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 public class SelectionDialogFragment extends DialogFragment {
 	
@@ -13,7 +19,8 @@ public class SelectionDialogFragment extends DialogFragment {
 	
 	public final static String ArgumentsTag  = "ArgumentsTag";
 	
-	private static String[] selectionOpt;// = {"Select all above","Select all below"};
+	private String[] selectionOpt;// = {"Select all above","Select all below"};
+	private int[] selectionOptIcon;// = {"Select all above","Select all below"};
 	
 	public final static int SELECT_ALL_ABOVE = 0;
 	public final static int DESELECT_ALL_ABOVE = 1;
@@ -50,12 +57,20 @@ public class SelectionDialogFragment extends DialogFragment {
 	    		selectionOpt = new String[2];
 	    		selectionOpt[0] = getActivity().getString(R.string.select_all_below);
 	    		selectionOpt[1] = getActivity().getString(R.string.deselect_all_below);
+	    		
+	    		selectionOptIcon = new int[2];
+	    		selectionOptIcon[0] = R.drawable.select_all_below;
+	    		selectionOptIcon[1] = R.drawable.deselect_all_below;
 	    	}
 	    	else if(curPos == listTotleSize-1)//列表最后一项
 	    	{
 	    		selectionOpt = new String[2];
 	    		selectionOpt[0] = getActivity().getString(R.string.select_all_above);
 	    		selectionOpt[1] = getActivity().getString(R.string.deselect_all_above);
+	    		
+	    		selectionOptIcon = new int[2];
+	    		selectionOptIcon[0] = R.drawable.select_all_above;
+	    		selectionOptIcon[1] = R.drawable.deselect_all_above;
 	    	}
 	    	else 
 	    	{
@@ -64,10 +79,18 @@ public class SelectionDialogFragment extends DialogFragment {
 	    		selectionOpt[1] = getActivity().getString(R.string.deselect_all_above);
 	    		selectionOpt[2] = getActivity().getString(R.string.select_all_below);
 	    		selectionOpt[3] = getActivity().getString(R.string.deselect_all_below);
+	    		
+	    		selectionOptIcon = new int[4];
+	    		selectionOptIcon[0] = R.drawable.select_all_above;
+	    		selectionOptIcon[1] = R.drawable.deselect_all_above;
+	    		selectionOptIcon[2] = R.drawable.select_all_below;
+	    		selectionOptIcon[3] = R.drawable.deselect_all_below;
 	    	}
 
+	    	ArrayAdapterWithIcon adapter = new ArrayAdapterWithIcon(getActivity(), selectionOpt, selectionOptIcon);
+
 	        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-	        builder.setTitle(dialogTitle).setItems(selectionOpt, new DialogInterface.OnClickListener(){
+	        builder.setTitle(dialogTitle).setAdapter(adapter, new DialogInterface.OnClickListener(){
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					// TODO Auto-generated method stub
@@ -108,4 +131,25 @@ public class SelectionDialogFragment extends DialogFragment {
 	        dialog.setCanceledOnTouchOutside(true);
 	        return dialog;
 	    }
+	    
+	    
+	    private class ArrayAdapterWithIcon extends ArrayAdapter<String> 
+	    {
+	    	public ArrayAdapterWithIcon(Context context, String[] items, int[] moreactionopticon) {
+	    	    super(context, android.R.layout.simple_list_item_1, items);
+	    	}
+
+	    	@Override
+	    	public View getView(int position, View convertView, ViewGroup parent) {
+	    	    View view = super.getView(position, convertView, parent);
+	    	    TextView textView = (TextView) view.findViewById(android.R.id.text1);
+	    	    textView.setCompoundDrawablesWithIntrinsicBounds(selectionOptIcon[position], 0, 0, 0);
+	    	    textView.setCompoundDrawablePadding(
+	    	            (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, getContext().getResources().getDisplayMetrics()));
+	    	    return view;
+	    	}
+	    }
+	    
+	    
+	    
 }
