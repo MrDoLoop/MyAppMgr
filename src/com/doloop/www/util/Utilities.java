@@ -27,12 +27,36 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
+import android.util.TypedValue;
 
 public class Utilities {
+	
+	public static Drawable ZoomDrawable(Drawable drawable, Context ctx) {
+		int width = drawable.getIntrinsicWidth();
+		int height = drawable.getIntrinsicHeight();
+		int scale = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 42, ctx.getResources().getDisplayMetrics());
+		// drawable转换成bitmap
+		Bitmap oldbmp = ((BitmapDrawable)drawable).getBitmap(); 
+		// 创建操作图片用的Matrix对象
+		Matrix matrix = new Matrix();
+		// 计算缩放比例
+		float scaleWidth = ((float) scale / width);
+		float scaleHeight  = ((float) scale / height);
+		// 设置缩放比例
+		matrix.postScale(scaleWidth, scaleHeight);
+		// 建立新的bitmap，其内容是对原bitmap的缩放后的图
+		Bitmap newbmp = Bitmap.createBitmap(oldbmp, 0, 0, width, height,
+				matrix, true);
+		return new BitmapDrawable(ctx.getResources(),newbmp);
+	}
 
 	public static void chooseSendByApp(Context ctx, Uri uri)
 	{
