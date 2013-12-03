@@ -7,6 +7,9 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.TypedValue;
@@ -24,11 +27,18 @@ public class UserAppListMoreActionDialogFragment extends DialogFragment {
 	private String[] moreActionOpt;// = {"Google Play","Send"};
 	private final static int[] moreActionOptIcon = {R.drawable.google_paly_80x80,R.drawable.send1_80x80};
 
+	public final static String ArgumentsTag = "ArgumentsTag";
+	
 	public UserAppMoreActionListItemClickListener mUserAppMoreActionListItemClickListener;
 
 	// Container Activity must implement this interface
 	public interface UserAppMoreActionListItemClickListener {
 		public void onUserAppMoreActionListItemClickListener(DialogInterface dialog, int item, AppInfo appInfo);
+	}
+
+	public AppInfo getCurrentAppInfo()
+	{
+		return this.mAppinfo;
 	}
 	
 	public UserAppListMoreActionDialogFragment()
@@ -40,12 +50,6 @@ public class UserAppListMoreActionDialogFragment extends DialogFragment {
 	{
 		this.mAppinfo = appInfo;
 	}
-	
-	public AppInfo getCurrentAppInfo()
-	{
-		return this.mAppinfo;
-	}
-	
 	
 	 @Override
 	 public void onAttach(Activity activity) {
@@ -62,9 +66,10 @@ public class UserAppListMoreActionDialogFragment extends DialogFragment {
 	        // Build the dialog and set up the button click handlers
 	    	moreActionOpt = new String[] {getActivity().getString(R.string.google_play), getActivity().getString(R.string.send)};
 	    	ArrayAdapterWithIcon adapter = new ArrayAdapterWithIcon(getActivity(), moreActionOpt, moreActionOptIcon);
-
-	        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-	        builder.setTitle(mAppinfo.appName)
+	    	//mAppinfo = getArguments().getParcelable(ArgumentsTag); 
+	        
+	    	AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+	        builder.setTitle(mAppinfo.appName)//.setIcon(mAppinfo.appIcon)
             .setAdapter(adapter, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int item ) {
                 	mUserAppMoreActionListItemClickListener.onUserAppMoreActionListItemClickListener(dialog, item, mAppinfo);
@@ -76,17 +81,21 @@ public class UserAppListMoreActionDialogFragment extends DialogFragment {
 	        return dialog;
 	    }
 	    
+//	    private Drawable resizeIcon(Drawable image) {
+//	        Bitmap bitmap = ((BitmapDrawable)image).getBitmap();
+//	        int width = bitmap.getWidth();
+//	        int height = bitmap.getHeight();
+//	        if(width > 80) width = 80;
+//	        if(height > 80) height = 80;
+//	        
+//	        
+//	        Bitmap bitmapResized = Bitmap.createBitmap(bitmap, 0, 0, width, height);// Bitmap.createScaledBitmap(b, 48, 48, false);
+//	        return new BitmapDrawable(bitmapResized);
+//	    }
+	    
 	    
 	    private class ArrayAdapterWithIcon extends ArrayAdapter<String> 
 	    {
-
-	    	//private ArrayList<Integer> images;
-
-//	    	public ArrayAdapterWithIcon(Context context, List<String> items, List<Integer> images) {
-//	    	    super(context, android.R.layout.select_dialog_item, items);
-//	    	    this.images = images;
-//	    	}
-
 	    	public ArrayAdapterWithIcon(Context context, String[] items, int[] moreactionopticon) {
 	    	    super(context, android.R.layout.select_dialog_item, items);
 	    	}

@@ -1062,10 +1062,13 @@ public class MainActivity extends SlidingFragmentActivity implements
 			startActivity(uninstallIntent);
 			break;
 		case R.id.moreActionLayout:
-			UserAppListMoreActionDialog = new UserAppListMoreActionDialogFragment(selectItem);
+//			UserAppListMoreActionDialog = new UserAppListMoreActionDialogFragment();
 //			Bundle bundle = new Bundle();
-//			bundle.putString(UserAppListMoreActionDialogFragment.SELECTED_ITEM, targetpackageName);
-//			dialog.setArguments(bundle);
+//			bundle.putParcelable(UserAppListMoreActionDialogFragment.ArgumentsTag, selectItem);
+//			UserAppListMoreActionDialog.setArguments(bundle);
+//			UserAppListMoreActionDialog.show(getSupportFragmentManager(), UserAppListMoreActionDialogFragment.DialogTag);
+			
+			UserAppListMoreActionDialog = new UserAppListMoreActionDialogFragment(selectItem);
 			UserAppListMoreActionDialog.show(getSupportFragmentManager(), UserAppListMoreActionDialogFragment.DialogTag);
 			break;
 		}
