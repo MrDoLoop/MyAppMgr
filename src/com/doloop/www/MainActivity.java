@@ -951,7 +951,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			else
 			{
 				//显示选择的对话框
-				SelectionDialog = new SelectionDialogFragment();
+				SelectionDialog = new SelectionDialogFragment(selectedItem);
 				Bundle bundle = new Bundle();
 				String[] ArgumentsArray = new String[3];//0:当前位置, 1: 列表总长度, 2: appName
 				ArgumentsArray[0] = ""+position;

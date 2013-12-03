@@ -1,5 +1,9 @@
 package com.doloop.www;
 
+import com.doloop.www.util.AppInfo;
+import com.doloop.www.util.Utilities;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -13,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+@SuppressLint("ValidFragment")
 public class SelectionDialogFragment extends DialogFragment {
 	
 	public final static String DialogTag = "SelectiongDialogFragment";
@@ -32,6 +37,18 @@ public class SelectionDialogFragment extends DialogFragment {
 	// Container Activity must implement this interface
 	public interface SelectionDialogClickListener {
 		public void onSelectionDialogClick(DialogInterface dialog, int selectType, int curPos);
+	}
+	
+	private AppInfo mAppinfo;
+	
+	public SelectionDialogFragment()
+	{
+		
+	}
+	
+	public SelectionDialogFragment(AppInfo appInfo)
+	{
+		this.mAppinfo = appInfo;
 	}
 	
 	
@@ -90,7 +107,8 @@ public class SelectionDialogFragment extends DialogFragment {
 	    	ArrayAdapterWithIcon adapter = new ArrayAdapterWithIcon(getActivity(), selectionOpt, selectionOptIcon);
 
 	        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-	        builder.setTitle(dialogTitle).setAdapter(adapter, new DialogInterface.OnClickListener(){
+	        builder.setTitle(dialogTitle).setIcon(Utilities.ZoomDrawable(mAppinfo.appIcon,getActivity()))
+	        .setAdapter(adapter, new DialogInterface.OnClickListener(){
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					// TODO Auto-generated method stub

@@ -1,15 +1,14 @@
 package com.doloop.www;
 
 import com.doloop.www.util.AppInfo;
+import com.doloop.www.util.Utilities;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.TypedValue;
@@ -18,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+@SuppressLint("ValidFragment")
 public class UserAppListMoreActionDialogFragment extends DialogFragment {
 	
 	public final static String DialogTag = "UserAppListMoreActionDialogFragment";
@@ -67,9 +67,9 @@ public class UserAppListMoreActionDialogFragment extends DialogFragment {
 	    	moreActionOpt = new String[] {getActivity().getString(R.string.google_play), getActivity().getString(R.string.send)};
 	    	ArrayAdapterWithIcon adapter = new ArrayAdapterWithIcon(getActivity(), moreActionOpt, moreActionOptIcon);
 	    	//mAppinfo = getArguments().getParcelable(ArgumentsTag); 
-	        
+	    	
 	    	AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-	        builder.setTitle(mAppinfo.appName)//.setIcon(mAppinfo.appIcon)
+	        builder.setTitle(mAppinfo.appName).setIcon(Utilities.ZoomDrawable(mAppinfo.appIcon,getActivity()))
             .setAdapter(adapter, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int item ) {
                 	mUserAppMoreActionListItemClickListener.onUserAppMoreActionListItemClickListener(dialog, item, mAppinfo);
@@ -80,18 +80,8 @@ public class UserAppListMoreActionDialogFragment extends DialogFragment {
 	        dialog.setCanceledOnTouchOutside(true);
 	        return dialog;
 	    }
-	    
-//	    private Drawable resizeIcon(Drawable image) {
-//	        Bitmap bitmap = ((BitmapDrawable)image).getBitmap();
-//	        int width = bitmap.getWidth();
-//	        int height = bitmap.getHeight();
-//	        if(width > 80) width = 80;
-//	        if(height > 80) height = 80;
-//	        
-//	        
-//	        Bitmap bitmapResized = Bitmap.createBitmap(bitmap, 0, 0, width, height);// Bitmap.createScaledBitmap(b, 48, 48, false);
-//	        return new BitmapDrawable(bitmapResized);
-//	    }
+
+
 	    
 	    
 	    private class ArrayAdapterWithIcon extends ArrayAdapter<String> 
