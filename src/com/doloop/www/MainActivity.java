@@ -54,6 +54,7 @@ import com.actionbarsherlock.widget.SearchView;
 import com.doloop.slideexpandable.library.ActionSlideExpandableListView;
 import com.doloop.www.SampleListFragment.OnMenuListItemClickListener;
 import com.doloop.www.SampleListFragment.SampleItem;
+import com.doloop.www.SelectionDialogFragment.SelectionDialogClickListener;
 import com.doloop.www.SortTypeDialogFragment.SortTypeListItemClickListener;
 import com.doloop.www.SysAppsTabFragment.OnSysAppListItemSelectedListener;
 import com.doloop.www.UserAppListMoreActionDialogFragment.UserAppMoreActionListItemClickListener;
@@ -82,7 +83,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 		OnUserAppListItemActionClickListener,UserAppListFilterResultListener,
 		SysAppListFilterResultListener,OnMenuListItemClickListener, 
 		OnUserAppListItemLongClickListener,SortTypeListItemClickListener,
-		UserAppMoreActionListItemClickListener {
+		UserAppMoreActionListItemClickListener,SelectionDialogClickListener {
 
 	private final static int USR_APPS_TAB_POS = 0;
 	private final static int SYS_APPS_TAB_POS = 1;
@@ -146,6 +147,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 	
 	private SortTypeDialogFragment SortTypeDialog;
 	private UserAppListMoreActionDialogFragment UserAppListMoreActionDialog;
+	private SelectionDialogFragment SelectionDialog;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -187,10 +189,14 @@ public class MainActivity extends SlidingFragmentActivity implements
 			FragmentManager mFragmentManager = getSupportFragmentManager();
 			SortTypeDialog = (SortTypeDialogFragment) mFragmentManager.getFragment(savedInstanceState, SortTypeDialogFragment.DialogTag);
 			UserAppListMoreActionDialog = (UserAppListMoreActionDialogFragment) mFragmentManager.getFragment(savedInstanceState, UserAppListMoreActionDialogFragment.DialogTag);
+			SelectionDialog = (SelectionDialogFragment) mFragmentManager.getFragment(savedInstanceState, SelectionDialogFragment.DialogTag);
+			
 			if(SortTypeDialog != null)
 				mFragmentManager.beginTransaction().remove(SortTypeDialog).commit();
 			if(UserAppListMoreActionDialog != null)
 				mFragmentManager.beginTransaction().remove(UserAppListMoreActionDialog).commit();
+			if(SelectionDialog != null)
+				mFragmentManager.beginTransaction().remove(SelectionDialog).commit();
 		}
 		
 		new GetApps().execute();
@@ -689,6 +695,14 @@ public class MainActivity extends SlidingFragmentActivity implements
 		{
 			getSupportFragmentManager().putFragment(savedInstanceState, UserAppListMoreActionDialogFragment.DialogTag, UserAppListMoreActionDialog);
 		}
+		
+		if(SelectionDialog != null && 
+			SelectionDialog.getDialog() != null && 
+			SelectionDialog.getDialog().isShowing())
+		{
+			getSupportFragmentManager().putFragment(savedInstanceState, SelectionDialogFragment.DialogTag, SelectionDialog);
+		}
+		
 	}
 	
 	
@@ -710,6 +724,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			
 			DismissDialog(SortTypeDialog);
 			DismissDialog(UserAppListMoreActionDialog);
+			DismissDialog(SelectionDialog);
 			
 			pManager = getPackageManager();
 			packages = pManager.getInstalledPackages(0);
@@ -786,7 +801,6 @@ public class MainActivity extends SlidingFragmentActivity implements
 			}
 			
 			//用户程序排序
-			
 			switch (Utilities.getUserAppListSortType(thisActivityCtx))
 			{
 			case SortTypeDialogFragment.LIST_SORT_TYPE_NAME_ASC:
@@ -808,13 +822,6 @@ public class MainActivity extends SlidingFragmentActivity implements
 				Collections.sort(UserAppFullList, new LastModifiedComparator(false));
 				break;
 			}
-			
-			//Collections.sort(UserAppFullList, new AppNameComparator(true));//系统自带，默认的string排序
-			//Collections.sort(UserAppList, new AppNameComparator(false));//
-			//Collections.sort(UserAppList, new LastModifiedComparator(true));//
-			//Collections.sort(UserAppList, new LastModifiedComparator(false));//
-			//Collections.sort(UserAppList, new AppSizeComparator(true));//
-			//Collections.sort(UserAppList, new AppSizeComparator(false));//
 			
 			// build 系统applist
 			AppInfo curAppInfo;
@@ -895,36 +902,65 @@ public class MainActivity extends SlidingFragmentActivity implements
 	public void onUserAppItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
 		// TODO Auto-generated method stub
-		AppInfo selectItem = mUserAppListAdapter.getItem(position);
-		if(selectItem.selected)
-		{
-			UserAppActionModeSelectCnt--;
-			selectItem.selected = false;
-		}
-		else
-		{
-			UserAppActionModeSelectCnt++;
-			selectItem.selected = true;
-		}
+//		AppInfo selectItem = mUserAppListAdapter.getItem(position);
+//		if(selectItem.selected)
+//		{
+//			UserAppActionModeSelectCnt--;
+//			selectItem.selected = false;
+//		}
+//		else
+//		{
+//			UserAppActionModeSelectCnt++;
+//			selectItem.selected = true;
+//		}
+//		
+//		if (mActionMode == null) {	
+//			mActionMode = startActionMode(mActionModeCallback);	
+//		}
+//		
+//		if(UserAppActionModeSelectCnt < mUserAppListAdapter.getCount())
+//		{
+//			mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setTitle(R.string.select_all);
+//			mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setIcon(R.drawable.ic_action_select_all);
+//		}
+//		else
+//		{
+//			mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setTitle(R.string.deselect_all);
+//			mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setIcon(R.drawable.ic_action_deselect_all);
+//		}
+//		
+//		mActionMode.setTitle(""+UserAppActionModeSelectCnt);
+//		mUserAppListAdapter.notifyDataSetChanged();
 		
-		if (mActionMode == null) {	
+		AppInfo selectedItem = mUserAppListAdapter.getItem(position);
+		
+		if (mActionMode == null) 
+		{	
 			mActionMode = startActionMode(mActionModeCallback);	
-		}
-		
-		if(UserAppActionModeSelectCnt < mUserAppListAdapter.getCount())
-		{
-			mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setTitle(R.string.select_all);
-			mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setIcon(R.drawable.ic_action_select_all);
+			selectedItem.selected = true;
+			UserAppActionModeSelectCnt++;
+			mActionMode.setTitle(""+UserAppActionModeSelectCnt);
+			mUserAppListAdapter.notifyDataSetChanged();
 		}
 		else
 		{
-			mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setTitle(R.string.deselect_all);
-			mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setIcon(R.drawable.ic_action_deselect_all);
+			if(mUserAppListAdapter.getCount() == 1)//只有一项
+			{
+				
+			}
+			else
+			{
+				//显示选择的对话框
+				SelectionDialog = new SelectionDialogFragment();
+				Bundle bundle = new Bundle();
+				int[] ArgumentsArray = new int[2];//0:当前位置, 1: 列表总长度
+				ArgumentsArray[0] = position;
+				ArgumentsArray[1] = mUserAppListAdapter.getCount();
+				bundle.putIntArray(SelectionDialogFragment.ArgumentsTag, ArgumentsArray);
+				SelectionDialog.setArguments(bundle);
+				SelectionDialog.show(getSupportFragmentManager(), SelectionDialogFragment.DialogTag);
+			}
 		}
-		
-		mActionMode.setTitle(""+UserAppActionModeSelectCnt);
-		mUserAppListAdapter.notifyDataSetChanged();
-		
 	}
 
 
@@ -1393,5 +1429,69 @@ public class MainActivity extends SlidingFragmentActivity implements
 		{
 			D_fragment.dismiss();
 		}
+	}
+
+
+
+	@Override
+	public void onSelectionDialogClick(DialogInterface dialog, int selectType, int curPos) {
+		// TODO Auto-generated method stub
+		switch (selectType)
+		{
+		case SelectionDialogFragment.SELECT_ALL_ABOVE:
+			for(int i = 0;i<curPos;i++)
+			{
+				if(!mUserAppListAdapter.getItem(i).selected)
+				{
+					mUserAppListAdapter.getItem(i).selected = true;
+					UserAppActionModeSelectCnt++;
+				}
+			}
+			break;
+		case SelectionDialogFragment.DESELECT_ALL_ABOVE:
+			for(int i = 0;i<curPos;i++)
+			{
+				if(mUserAppListAdapter.getItem(i).selected)
+				{
+					mUserAppListAdapter.getItem(i).selected = false;
+					UserAppActionModeSelectCnt--;
+				}
+			}
+			break;
+		case SelectionDialogFragment.SELECT_ALL_BELOW:
+			for(int i = curPos+1;i<mUserAppListAdapter.getCount();i++)
+			{
+				if(!mUserAppListAdapter.getItem(i).selected)
+				{
+					mUserAppListAdapter.getItem(i).selected = true;
+					UserAppActionModeSelectCnt++;
+				}
+			}
+			break;
+		case SelectionDialogFragment.DESELECT_ALL_BELOW:
+			for(int i = curPos+1;i<mUserAppListAdapter.getCount();i++)
+			{
+				if(mUserAppListAdapter.getItem(i).selected)
+				{
+					mUserAppListAdapter.getItem(i).selected = false;
+					UserAppActionModeSelectCnt--;
+				}
+			}
+			break;
+		}
+		
+		if(UserAppActionModeSelectCnt < mUserAppListAdapter.getCount())
+		{
+			mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setTitle(R.string.select_all);
+			mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setIcon(R.drawable.ic_action_select_all);
+		}
+		else
+		{
+			mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setTitle(R.string.deselect_all);
+			mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setIcon(R.drawable.ic_action_deselect_all);
+		}
+		
+		mActionMode.setTitle(""+UserAppActionModeSelectCnt);
+		mUserAppListAdapter.notifyDataSetChanged();
 	}
 }
