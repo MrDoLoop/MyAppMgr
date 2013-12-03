@@ -78,11 +78,25 @@ public class SelectionDialogFragment extends DialogFragment {
 					{
 						if(curPos == 0)//列表第一项
 						{
-							
+							if(which == 0)
+							{
+								mSelectionDialogClickListener.onSelectionDialogClick(dialog, SELECT_ALL_BELOW, curPos);
+							}
+							else if(which == 1)
+							{
+								mSelectionDialogClickListener.onSelectionDialogClick(dialog, DESELECT_ALL_BELOW, curPos);
+							}
 						}
 						else if(curPos == listTotleSize-1)//列表最后一项
 						{
-							
+							if(which == 0)
+							{
+								mSelectionDialogClickListener.onSelectionDialogClick(dialog, SELECT_ALL_ABOVE, curPos);
+							}
+							else if(which == 1)
+							{
+								mSelectionDialogClickListener.onSelectionDialogClick(dialog, DESELECT_ALL_ABOVE, curPos);
+							}
 						}
 					}
 					dialog.dismiss();
