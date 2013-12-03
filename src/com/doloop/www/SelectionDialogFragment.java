@@ -41,9 +41,10 @@ public class SelectionDialogFragment extends DialogFragment {
 	    @Override
 	    public Dialog onCreateDialog(Bundle savedInstanceState) {
 	        // Build the dialog and set up the button click handlers
-	    	int[] arguments = getArguments().getIntArray(ArgumentsTag); //0当前位置, 1,列表长度
-	    	final int curPos = arguments[0];
-	    	final int listTotleSize = arguments[1];
+	    	String[] arguments = getArguments().getStringArray(ArgumentsTag); //0当前位置, 1,列表长度, 2: appName
+	    	final int curPos = Integer.valueOf(arguments[0]);
+	    	final int listTotleSize = Integer.valueOf(arguments[1]);
+	    	String dialogTitle = arguments[2];
 	    	if(curPos == 0)//列表第一项
 	    	{
 	    		selectionOpt = new String[2];
@@ -66,7 +67,7 @@ public class SelectionDialogFragment extends DialogFragment {
 	    	}
 
 	        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-	        builder.setItems(selectionOpt, new DialogInterface.OnClickListener(){
+	        builder.setTitle(dialogTitle).setItems(selectionOpt, new DialogInterface.OnClickListener(){
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					// TODO Auto-generated method stub

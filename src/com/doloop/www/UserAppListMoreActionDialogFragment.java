@@ -64,7 +64,7 @@ public class UserAppListMoreActionDialogFragment extends DialogFragment {
 	    	ArrayAdapterWithIcon adapter = new ArrayAdapterWithIcon(getActivity(), moreActionOpt, moreActionOptIcon);
 
 	        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-	        builder.setTitle(R.string.more_actions)
+	        builder.setTitle(mAppinfo.appName)
             .setAdapter(adapter, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int item ) {
                 	mUserAppMoreActionListItemClickListener.onUserAppMoreActionListItemClickListener(dialog, item, mAppinfo);

@@ -953,10 +953,11 @@ public class MainActivity extends SlidingFragmentActivity implements
 				//显示选择的对话框
 				SelectionDialog = new SelectionDialogFragment();
 				Bundle bundle = new Bundle();
-				int[] ArgumentsArray = new int[2];//0:当前位置, 1: 列表总长度
-				ArgumentsArray[0] = position;
-				ArgumentsArray[1] = mUserAppListAdapter.getCount();
-				bundle.putIntArray(SelectionDialogFragment.ArgumentsTag, ArgumentsArray);
+				String[] ArgumentsArray = new String[3];//0:当前位置, 1: 列表总长度, 2: appName
+				ArgumentsArray[0] = ""+position;
+				ArgumentsArray[1] = ""+mUserAppListAdapter.getCount();
+				ArgumentsArray[2] = mUserAppListAdapter.getItem(position).appName;
+				bundle.putStringArray(SelectionDialogFragment.ArgumentsTag, ArgumentsArray);
 				SelectionDialog.setArguments(bundle);
 				SelectionDialog.show(getSupportFragmentManager(), SelectionDialogFragment.DialogTag);
 			}
