@@ -4,7 +4,6 @@ import com.doloop.www.util.AppInfo;
 import com.doloop.www.util.ArrayAdapterWithIcon;
 import com.doloop.www.util.Utilities;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -12,12 +11,12 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
-@SuppressLint("ValidFragment")
+//@SuppressLint("ValidFragment")
 public class UserAppListMoreActionDialogFragment extends DialogFragment {
 	
 	public final static String DialogTag = "UserAppListMoreActionDialogFragment";
 	
-	private AppInfo mAppinfo;
+	private static AppInfo mAppinfo;
 	
 	private String[] moreActionOpt;// = {"Google Play","Send"};
 	private final static int[] moreActionOptIcon = {R.drawable.google_paly_80x80,R.drawable.send1_80x80};
@@ -36,14 +35,10 @@ public class UserAppListMoreActionDialogFragment extends DialogFragment {
 		return mAppinfo;
 	}
 	
-	public UserAppListMoreActionDialogFragment()
-	{
-		
-	}
-	
-	public UserAppListMoreActionDialogFragment(AppInfo appInfo)
-	{
+	public static UserAppListMoreActionDialogFragment newInstance(AppInfo appInfo) {
+		UserAppListMoreActionDialogFragment fragmentInstance = new UserAppListMoreActionDialogFragment();
 		mAppinfo = appInfo;
+		return fragmentInstance;
 	}
 	
 	 @Override

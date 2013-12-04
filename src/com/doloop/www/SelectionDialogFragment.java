@@ -4,7 +4,6 @@ import com.doloop.www.util.AppInfo;
 import com.doloop.www.util.ArrayAdapterWithIcon;
 import com.doloop.www.util.Utilities;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -12,7 +11,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
-@SuppressLint("ValidFragment")
+//@SuppressLint("ValidFragment")
 public class SelectionDialogFragment extends DialogFragment {
 	
 	public final static String DialogTag = "SelectiongDialogFragment";
@@ -36,15 +35,22 @@ public class SelectionDialogFragment extends DialogFragment {
 	
 	private static AppInfo mAppinfo;
 	
-	public SelectionDialogFragment()
-	{
+	public static SelectionDialogFragment newInstance(AppInfo appInfo, int curPos, int listTotleSize) {
+		SelectionDialogFragment fragmentInstance = new SelectionDialogFragment();
+		int[] ArgumentsArray = new int[2];//0:当前位置, 1: 列表总长度
+		ArgumentsArray[0] = curPos;
+		ArgumentsArray[1] = listTotleSize;
+		Bundle bundle = new Bundle();
+		bundle.putIntArray(SelectionDialogFragment.ArgumentsTag, ArgumentsArray);
+		fragmentInstance.setArguments(bundle);
 		
+		mAppinfo = appInfo;
+		
+		
+		
+		return fragmentInstance;
 	}
 	
-	public SelectionDialogFragment(AppInfo appInfo)
-	{
-		mAppinfo = appInfo;
-	}
 	
 	
 	 @Override
@@ -60,10 +66,9 @@ public class SelectionDialogFragment extends DialogFragment {
 	    @Override
 	    public Dialog onCreateDialog(Bundle savedInstanceState) {
 	        // Build the dialog and set up the button click handlers
-	    	String[] arguments = getArguments().getStringArray(ArgumentsTag); //0当前位置, 1,列表长度, 2: appName
-	    	final int curPos = Integer.valueOf(arguments[0]);
-	    	final int listTotleSize = Integer.valueOf(arguments[1]);
-	    	String dialogTitle = arguments[2];
+	    	int[] arguments = getArguments().getIntArray(ArgumentsTag); //0当前位置, 1,列表长度
+	    	final int curPos = arguments[0];
+	    	final int listTotleSize = arguments[1];
 	    	if(curPos == 0)//列表第一项
 	    	{
 	    		selectionOpt = new String[2];
@@ -105,7 +110,7 @@ public class SelectionDialogFragment extends DialogFragment {
 	        
 	        if(mAppinfo != null)
 	    	{
-	        	 builder.setTitle(dialogTitle).setIcon(Utilities.ZoomDrawable(mAppinfo.appIcon,getActivity()))
+	        	 builder.setTitle(mAppinfo.appName).setIcon(Utilities.ZoomDrawable(mAppinfo.appIcon,getActivity()))
 	 	        .setAdapter(adapter, new DialogInterface.OnClickListener(){
 	 				@Override
 	 				public void onClick(DialogInterface dialog, int which) {
