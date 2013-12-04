@@ -39,7 +39,7 @@ public class SelectionDialogFragment extends DialogFragment {
 		public void onSelectionDialogClick(DialogInterface dialog, int selectType, int curPos);
 	}
 	
-	private AppInfo mAppinfo;
+	private static AppInfo mAppinfo;
 	
 	public SelectionDialogFragment()
 	{
@@ -48,7 +48,7 @@ public class SelectionDialogFragment extends DialogFragment {
 	
 	public SelectionDialogFragment(AppInfo appInfo)
 	{
-		this.mAppinfo = appInfo;
+		mAppinfo = appInfo;
 	}
 	
 	
