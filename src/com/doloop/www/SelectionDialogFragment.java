@@ -1,21 +1,16 @@
 package com.doloop.www;
 
 import com.doloop.www.util.AppInfo;
+import com.doloop.www.util.ArrayAdapterWithIcon;
 import com.doloop.www.util.Utilities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.util.TypedValue;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 @SuppressLint("ValidFragment")
 public class SelectionDialogFragment extends DialogFragment {
@@ -107,67 +102,51 @@ public class SelectionDialogFragment extends DialogFragment {
 	    	ArrayAdapterWithIcon adapter = new ArrayAdapterWithIcon(getActivity(), selectionOpt, selectionOptIcon);
 
 	        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-	        builder.setTitle(dialogTitle).setIcon(Utilities.ZoomDrawable(mAppinfo.appIcon,getActivity()))
-	        .setAdapter(adapter, new DialogInterface.OnClickListener(){
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
-					if(selectionOpt.length == 4)
-					{
-						mSelectionDialogClickListener.onSelectionDialogClick(dialog, which, curPos);
-					}
-					else if(selectionOpt.length == 2)
-					{
-						if(curPos == 0)//列表第一项
-						{
-							if(which == 0)
-							{
-								mSelectionDialogClickListener.onSelectionDialogClick(dialog, SELECT_ALL_BELOW, curPos);
-							}
-							else if(which == 1)
-							{
-								mSelectionDialogClickListener.onSelectionDialogClick(dialog, DESELECT_ALL_BELOW, curPos);
-							}
-						}
-						else if(curPos == listTotleSize-1)//列表最后一项
-						{
-							if(which == 0)
-							{
-								mSelectionDialogClickListener.onSelectionDialogClick(dialog, SELECT_ALL_ABOVE, curPos);
-							}
-							else if(which == 1)
-							{
-								mSelectionDialogClickListener.onSelectionDialogClick(dialog, DESELECT_ALL_ABOVE, curPos);
-							}
-						}
-					}
-					dialog.dismiss();
-				}
+	        
+	        if(mAppinfo != null)
+	    	{
+	        	 builder.setTitle(dialogTitle).setIcon(Utilities.ZoomDrawable(mAppinfo.appIcon,getActivity()))
+	 	        .setAdapter(adapter, new DialogInterface.OnClickListener(){
+	 				@Override
+	 				public void onClick(DialogInterface dialog, int which) {
+	 					// TODO Auto-generated method stub
+	 					if(selectionOpt.length == 4)
+	 					{
+	 						mSelectionDialogClickListener.onSelectionDialogClick(dialog, which, curPos);
+	 					}
+	 					else if(selectionOpt.length == 2)
+	 					{
+	 						if(curPos == 0)//列表第一项
+	 						{
+	 							if(which == 0)
+	 							{
+	 								mSelectionDialogClickListener.onSelectionDialogClick(dialog, SELECT_ALL_BELOW, curPos);
+	 							}
+	 							else if(which == 1)
+	 							{
+	 								mSelectionDialogClickListener.onSelectionDialogClick(dialog, DESELECT_ALL_BELOW, curPos);
+	 							}
+	 						}
+	 						else if(curPos == listTotleSize-1)//列表最后一项
+	 						{
+	 							if(which == 0)
+	 							{
+	 								mSelectionDialogClickListener.onSelectionDialogClick(dialog, SELECT_ALL_ABOVE, curPos);
+	 							}
+	 							else if(which == 1)
+	 							{
+	 								mSelectionDialogClickListener.onSelectionDialogClick(dialog, DESELECT_ALL_ABOVE, curPos);
+	 							}
+	 						}
+	 					}
+	 					dialog.dismiss();
+	 				}
 
-			});
+	 			});
+	    	}
+
 	        AlertDialog dialog = builder.create();
 	        dialog.setCanceledOnTouchOutside(true);
 	        return dialog;
-	    }
-	    
-	    
-	    private class ArrayAdapterWithIcon extends ArrayAdapter<String> 
-	    {
-	    	public ArrayAdapterWithIcon(Context context, String[] items, int[] moreactionopticon) {
-	    	    super(context, android.R.layout.simple_list_item_1, items);
-	    	}
-
-	    	@Override
-	    	public View getView(int position, View convertView, ViewGroup parent) {
-	    	    View view = super.getView(position, convertView, parent);
-	    	    TextView textView = (TextView) view.findViewById(android.R.id.text1);
-	    	    textView.setCompoundDrawablesWithIntrinsicBounds(selectionOptIcon[position], 0, 0, 0);
-	    	    textView.setCompoundDrawablePadding(
-	    	            (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, getContext().getResources().getDisplayMetrics()));
-	    	    return view;
-	    	}
-	    }
-	    
-	    
-	    
+	    }    
 }
