@@ -66,6 +66,7 @@ import com.doloop.www.util.AppNameComparator;
 import com.doloop.www.util.AppPinYinComparator;
 import com.doloop.www.util.AppSizeComparator;
 import com.doloop.www.util.LastModifiedComparator;
+import com.doloop.www.util.MyViewPager;
 import com.doloop.www.util.StringComparator;
 import com.doloop.www.util.SysAppListAdapter;
 import com.doloop.www.util.SysAppListAdapter.SysAppListFilterResultListener;
@@ -101,7 +102,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 	private ActionMode mActionMode;
 	private int UserAppActionModeSelectCnt = 0;
 	
-	private ViewPager viewPager;
+	private MyViewPager viewPager;
 	private static long back_pressed = 0;
 	private Toast toast;
 	private Context thisActivityCtx;
@@ -166,7 +167,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 		
 		addActionBarTabs();
 		
-		viewPager = (ViewPager) findViewById(R.id.pager);
+		viewPager = (MyViewPager) findViewById(R.id.pager);
 		viewPager.setOnPageChangeListener(onPageChangeListener);
 		viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager(),Fragmentlist));
 		
@@ -290,6 +291,16 @@ public class MainActivity extends SlidingFragmentActivity implements
 	private ActionBar.TabListener tabListener = new ActionBar.TabListener() {
 		@Override
 		public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+			//在actionMode中什么都不做
+			if(mActionMode != null)
+			{
+				if(tab.getPosition() != USR_APPS_TAB_POS)
+				{
+					actionBar.setSelectedNavigationItem(USR_APPS_TAB_POS);
+				}
+				return;
+			}
+			
 			if(switchCaseStr.equals("initDummy"))
 			{
 				switchCaseStr = "";
@@ -1148,6 +1159,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			// TODO Auto-generated method stub
+			viewPager.setPagingEnabled(false);
 			menu.add(Menu.NONE, ACTIONMODE_MENU_SELECT, Menu.NONE,R.string.select_all).setIcon(R.drawable.ic_action_select_all).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 			menu.add(Menu.NONE, ACTIONMODE_MENU_BACKUP, Menu.NONE,R.string.backup).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 			menu.add(Menu.NONE, ACTIONMODE_MENU_SEND, Menu.NONE,R.string.send).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
@@ -1257,6 +1269,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			UserAppActionModeSelectCnt = 0;
 			mUserAppListAdapter.notifyDataSetChanged();
 			mActionMode = null;
+			viewPager.setPagingEnabled(true);
 		}
 	};
 	
