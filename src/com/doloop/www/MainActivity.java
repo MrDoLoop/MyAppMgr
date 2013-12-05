@@ -292,6 +292,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 		@Override
 		public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
 			//在actionMode中什么都不做
+			
 			if(mActionMode != null)
 			{
 				if(tab.getPosition() != USR_APPS_TAB_POS)
@@ -300,7 +301,9 @@ public class MainActivity extends SlidingFragmentActivity implements
 				}
 				return;
 			}
-			
+			//
+			//tab.setText(Html.fromHtml("<b><font color=#993399>你好吗，什么颜色</font></b>"));
+			tab.setIcon(R.drawable.blue_ball);
 			if(switchCaseStr.equals("initDummy"))
 			{
 				switchCaseStr = "";
@@ -345,6 +348,10 @@ public class MainActivity extends SlidingFragmentActivity implements
 //			{
 //				sysAppsFrg.ResetIndexBar();
 //			}
+			if(mActionMode == null)
+			{
+				tab.setIcon(null);
+			}
 		}
 
 		@Override
