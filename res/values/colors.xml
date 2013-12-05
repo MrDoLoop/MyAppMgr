@@ -7,6 +7,7 @@
     <color name="green_blue">#ff003344</color>
     <color name="gray">#ff888888</color>
     <color name="lt_gray">#ffc9c3c3</color>
+    <drawable name="theme_blue_light">#ff33b5e5</drawable>
     
     <!-- Went to: $android-sdk > Android:v14 > res > values > colors.xml and copied the colors-->
     
