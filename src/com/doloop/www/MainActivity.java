@@ -641,7 +641,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 						}
 					}
 					else
-					{//第二次
+					{//第二次，备份尝试2次，先用appName，如果失败就用pkgName
 						backAPKfileName = tmpAppInfo.getBackupFileName_pkgName();
 						if(Utilities.copyFile(tmpAppInfo.apkFilePath,BACK_UP_FOLDER+backAPKfileName))
 						{
@@ -1080,7 +1080,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 				toast.setText(R.string.backup_success);
 			}
 			else
-			{
+			{//第二次，备份尝试2次，先用appName，如果失败就用pkgName
 				backAPKfileName = selectItem.getBackupFileName_pkgName();
 				if(Utilities.copyFile(selectItem.apkFilePath,BACK_UP_FOLDER+backAPKfileName))
 				{
@@ -1463,7 +1463,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 	            Utilities.chooseSendByApp(thisActivityCtx, Uri.parse("file://" + BACK_UP_FOLDER+backAPKfileName));
 			}
 			else
-			{
+			{//第二次，备份尝试2次，先用appName，如果失败就用pkgName
 				backAPKfileName = appInfo.getBackupFileName_pkgName();
 				if(Utilities.copyFile(appInfo.apkFilePath,BACK_UP_FOLDER+backAPKfileName))
 				{
