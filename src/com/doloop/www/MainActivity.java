@@ -670,12 +670,14 @@ public class MainActivity extends SlidingFragmentActivity implements
 			if(errorHappened)
 			{//ÓÐ´íÎó·¢Éú
 				String ErrorApp = "";
-				for(String appName: FailedApp)
+				for(int i = 0;i<FailedApp.size();i++)
 				{
-					ErrorApp += appName + "\n"; 
+					ErrorApp += FailedApp.get(i) + "\n";
 				}
 				
-				toast.setText(getString(R.string.error)+"\n"+ErrorApp);
+				ErrorApp = ErrorApp.substring(0, ErrorApp.lastIndexOf("\n"));
+				
+				toast.setText(getString(R.string.error)+":\n"+ErrorApp);
 				toast.show();
 			}
 			else
@@ -699,7 +701,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			}
 			
 			registerReceiver(mAppUpdateReceiver, AppIntentFilter);
-			registerReceiver(LangUpdateReceiver , LangIntentFilter);
+			registerReceiver(LangUpdateReceiver, LangIntentFilter);
 		}
 	}
 	
