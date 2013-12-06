@@ -27,6 +27,16 @@ public class AppInfo implements Parcelable {
 		Log.v("app", "Name:" + appName + " versionCode:" + versionCode);
 	}
 
+	public String getBackupFileName_pkgName()
+	{
+		return packageName+"_v"+versionName+".apk";
+	}
+	
+	public String getBackupFileName_AppName()
+	{
+		return appName+"_v"+versionName+".apk";
+	}
+	
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub
