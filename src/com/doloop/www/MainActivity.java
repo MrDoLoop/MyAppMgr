@@ -631,7 +631,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 					dialogInfo[1] = tmpAppInfo.appName;		
 					publishProgress(dialogInfo);
 							
-					String backAPKfileName = tmpAppInfo.appName+"_v"+tmpAppInfo.versionName+".apk";
+					String backAPKfileName = tmpAppInfo.getBackupFileName_AppName();//.appName+"_v"+tmpAppInfo.versionName+".apk";
 					if(Utilities.copyFile(tmpAppInfo.apkFilePath,BACK_UP_FOLDER+backAPKfileName))
 					{//复制成功
 						Log.i("ttt", "appBackup succ: "+tmpAppInfo.appName);
@@ -641,10 +641,22 @@ public class MainActivity extends SlidingFragmentActivity implements
 						}
 					}
 					else
-					{//复制失败
-						errorHappened = true;
-						FailedApp.add(tmpAppInfo.appName);
-						Log.i("ttt", "appBackup Fail: "+tmpAppInfo.appName);
+					{//第二次
+						backAPKfileName = tmpAppInfo.getBackupFileName_pkgName();
+						if(Utilities.copyFile(tmpAppInfo.apkFilePath,BACK_UP_FOLDER+backAPKfileName))
+						{
+							Log.i("ttt", "appBackup succ: "+tmpAppInfo.appName);
+							if(SendAfterBackUp)
+							{
+								SnedApkUris.add(Uri.parse("file://" + BACK_UP_FOLDER+backAPKfileName));
+							}
+						}
+						else
+						{//复制失败
+							errorHappened = true;
+							FailedApp.add(tmpAppInfo.appName);
+							Log.i("ttt", "appBackup Fail: "+tmpAppInfo.appName);
+						}
 					}
 					
 					if(counter == UserAppActionModeSelectCnt)
@@ -1061,7 +1073,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			Utilities.showInstalledAppDetails(thisActivityCtx, targetpackageName);
 			break;
 		case R.id.backupActionLayout:
-			String backAPKfileName = selectItem.appName+"_v"+selectItem.versionName+".apk";
+			String backAPKfileName = selectItem.getBackupFileName_AppName();//.appName+"_v"+selectItem.versionName+".apk";
 			BACK_UP_FOLDER = Utilities.getBackUpAPKfileDir(thisActivityCtx);
 			if(Utilities.copyFile(selectItem.apkFilePath,BACK_UP_FOLDER+backAPKfileName))
 			{
@@ -1069,7 +1081,15 @@ public class MainActivity extends SlidingFragmentActivity implements
 			}
 			else
 			{
-				toast.setText(R.string.error);
+				backAPKfileName = selectItem.getBackupFileName_pkgName();
+				if(Utilities.copyFile(selectItem.apkFilePath,BACK_UP_FOLDER+backAPKfileName))
+				{
+					toast.setText(R.string.backup_success);
+				}
+				else
+				{
+					toast.setText(R.string.error);
+				}
 			}
 			toast.show();
 			break;
@@ -1436,7 +1456,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 		}
 		else if(item == 1) //send
 		{
-			String backAPKfileName = appInfo.appName+"_v"+appInfo.versionName+".apk";
+			String backAPKfileName = appInfo.getBackupFileName_AppName();//.appName+"_v"+appInfo.versionName+".apk";
 			BACK_UP_FOLDER = Utilities.getBackUpAPKfileDir(thisActivityCtx);
 			if(Utilities.copyFile(appInfo.apkFilePath,BACK_UP_FOLDER+backAPKfileName))
 			{
@@ -1444,11 +1464,18 @@ public class MainActivity extends SlidingFragmentActivity implements
 			}
 			else
 			{
-				toast.setText(R.string.error);
-				toast.show();
+				backAPKfileName = appInfo.getBackupFileName_pkgName();
+				if(Utilities.copyFile(appInfo.apkFilePath,BACK_UP_FOLDER+backAPKfileName))
+				{
+					Utilities.chooseSendByApp(thisActivityCtx, Uri.parse("file://" + BACK_UP_FOLDER+backAPKfileName));
+				}
+				else
+				{
+					toast.setText(R.string.error);
+					toast.show();
+				}
 			}
 		}
-		
 	}
 	
 	
