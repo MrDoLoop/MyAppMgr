@@ -43,9 +43,18 @@ public class UserAppsTabFragment extends SherlockListFragment implements
 		case SortTypeDialogFragment.LIST_SORT_TYPE_NAME_DES:
             //mDialogText = nameText;
 			int size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, mContext.getResources().getDisplayMetrics());
+			//放在list的中间
 			LayoutParams paramsFixSize = new LayoutParams(size,size); 
 			paramsFixSize.alignWithParent = true;
 			paramsFixSize.addRule(RelativeLayout.CENTER_IN_PARENT);
+			mDialogText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 40);
+			
+//			int padding2 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, mContext.getResources().getDisplayMetrics());
+//			paramsFixSize.addRule(RelativeLayout.CENTER_HORIZONTAL);
+//			paramsFixSize.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+//			paramsFixSize.setMargins(0, padding2, 0, 0);
+//			mDialogText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 40);
+			
 			mDialogText.setPadding(0, 0, 0, 0);
 			mDialogText.setLayoutParams(paramsFixSize);
 			break;
@@ -53,10 +62,16 @@ public class UserAppsTabFragment extends SherlockListFragment implements
 		case SortTypeDialogFragment.LIST_SORT_TYPE_SIZE_DES:
 		case SortTypeDialogFragment.LIST_SORT_TYPE_LAST_MOD_TIME_ASC:
 		case SortTypeDialogFragment.LIST_SORT_TYPE_LAST_MOD_TIME_DES:
+			int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, mContext.getResources().getDisplayMetrics());
 			LayoutParams paramsWrapContent = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);  
 			paramsWrapContent.alignWithParent = true;
-			paramsWrapContent.addRule(RelativeLayout.CENTER_IN_PARENT);
-			int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, mContext.getResources().getDisplayMetrics());
+			//paramsWrapContent.addRule(RelativeLayout.CENTER_IN_PARENT);
+			//放在list的top
+			paramsWrapContent.addRule(RelativeLayout.CENTER_HORIZONTAL);
+			paramsWrapContent.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+			paramsWrapContent.setMargins(0, padding, 0, 0);
+			mDialogText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+			
 			mDialogText.setPadding(padding, 0, padding, 0);
 			mDialogText.setLayoutParams(paramsWrapContent);
 			break;
