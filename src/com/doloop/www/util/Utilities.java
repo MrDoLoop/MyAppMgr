@@ -93,7 +93,27 @@ public class Utilities {
 		shPrefEdit.putInt("UserAppListSortType", sortType);
 		shPrefEdit.commit();
 	}
-	
+	/**
+	 * 
+	 * @param appInfo
+	 * @param destFilePath sd卡文件存储目录(/sd/MyAppMgr/)
+	 * @return 成功返回备份的文件位置(/sd/MyAppMgr/XXX.apk),失败返回null
+	 */
+	public static String BackupApp(AppInfo appInfo, String destFilePath)
+	{
+		if(copyFile(appInfo.apkFilePath,destFilePath+appInfo.getBackupFileName_AppName()))
+		{
+			return destFilePath+appInfo.getBackupFileName_AppName();
+		}
+		else if(copyFile(appInfo.apkFilePath,destFilePath+appInfo.getBackupFileName_pkgName()))
+		{
+			return destFilePath+appInfo.getBackupFileName_pkgName();
+		}
+		else
+		{
+			return null;
+		}
+	}
 	
 	public static String getBackUpAPKfileDir(Context ctx)
 	{
@@ -105,12 +125,17 @@ public class Utilities {
 		}
 		return path;
 	}
-	
-	public static boolean copyFile(String srcFilePath, String destFilePath) {
+	/**
+	 * 
+	 * @param SrcFile 源文件 (/sd/MyAppMgr/source.apk)
+	 * @param DestFile 目标文件 (/sd/MyAppMgr/dest.apk)
+	 * @return
+	 */
+	public static boolean copyFile(String SrcFile, String DestFile) {
 		boolean success = false;
 
-		File srcFile = new File(srcFilePath);
-		File destFile = new File(destFilePath);
+		File srcFile = new File(SrcFile);
+		File destFile = new File(DestFile);
 		
 		try {
 			FileInputStream fcin = new FileInputStream(srcFile);
