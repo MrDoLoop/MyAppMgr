@@ -581,8 +581,9 @@ public class MainActivity extends SlidingFragmentActivity implements
 	}
 
 	private class BackUpApps extends AsyncTask<Void, String, Void> {
-		boolean saveSucc = false;
+		boolean errorHappened = false;
 		private ArrayList<Uri> SnedApkUris = new ArrayList<Uri>();
+		private ArrayList<String> FailedApp = new ArrayList<String>();
 		@Override
 		protected void onProgressUpdate(String... values) {
 			// TODO Auto-generated method stub
@@ -618,38 +619,42 @@ public class MainActivity extends SlidingFragmentActivity implements
 			// TODO Auto-generated method stub
 			BACK_UP_FOLDER = Utilities.getBackUpAPKfileDir(thisActivityCtx);
 			String[] dialogInfo = new String[2];
-			int counter = 1;
-			AppInfo  tmpAppInfo = null;
+			int counter = 0;
+			AppInfo tmpAppInfo = null;
 			for(int i = 0;i<mUserAppListAdapter.getCount();i++)
 			{
 				tmpAppInfo = mUserAppListAdapter.getItem(i);
 				if(tmpAppInfo.selected)
 				{
+					counter++;
 					dialogInfo[0] = ""+counter;
 					dialogInfo[1] = tmpAppInfo.appName;		
 					publishProgress(dialogInfo);
 							
 					String backAPKfileName = tmpAppInfo.appName+"_v"+tmpAppInfo.versionName+".apk";
-					if(!Utilities.copyFile(tmpAppInfo.apkFilePath,BACK_UP_FOLDER+backAPKfileName))
-					{
-						saveSucc = false;
-						return null;
+					if(Utilities.copyFile(tmpAppInfo.apkFilePath,BACK_UP_FOLDER+backAPKfileName))
+					{//复制成功
+						Log.i("ttt", "appBackup succ: "+tmpAppInfo.appName);
+						if(SendAfterBackUp)
+						{
+							SnedApkUris.add(Uri.parse("file://" + BACK_UP_FOLDER+backAPKfileName));
+						}
 					}
-							
-					if(SendAfterBackUp)
-					{
-						SnedApkUris.add(Uri.parse("file://" + BACK_UP_FOLDER+backAPKfileName));
+					else
+					{//复制失败
+						errorHappened = true;
+						FailedApp.add(tmpAppInfo.appName);
+						Log.i("ttt", "appBackup Fail: "+tmpAppInfo.appName);
+						
 					}
-							
+					
 					if(counter == UserAppActionModeSelectCnt)
 					{
 						break;
-					}	
-					counter++;
+					}
 				}
 			}		
-							
-			saveSucc = true;
+			
 			return null;
 		}
 		
@@ -663,11 +668,19 @@ public class MainActivity extends SlidingFragmentActivity implements
 				progDialog.dismiss();
 			}
 			
-			registerReceiver(mAppUpdateReceiver, AppIntentFilter);
-			registerReceiver(LangUpdateReceiver , LangIntentFilter);
-			
-			if(saveSucc)
-			{
+			if(errorHappened)
+			{//有错误发生
+				String ErrorApp = "";
+				for(String appName: FailedApp)
+				{
+					ErrorApp += appName + "\n"; 
+				}
+				
+				toast.setText(getString(R.string.error)+"\n"+ErrorApp);
+				toast.show();
+			}
+			else
+			{//没有错误发生
 				if(SendAfterBackUp)
 				{
 		            if(SnedApkUris.size() > 1)
@@ -685,12 +698,9 @@ public class MainActivity extends SlidingFragmentActivity implements
 					toast.show();
 				}
 			}
-			else
-			{
-				toast.setText(R.string.error);
-				toast.show();
-				finish();
-			}	
+			
+			registerReceiver(mAppUpdateReceiver, AppIntentFilter);
+			registerReceiver(LangUpdateReceiver , LangIntentFilter);
 		}
 	}
 	
