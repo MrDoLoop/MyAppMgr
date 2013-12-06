@@ -645,7 +645,6 @@ public class MainActivity extends SlidingFragmentActivity implements
 						errorHappened = true;
 						FailedApp.add(tmpAppInfo.appName);
 						Log.i("ttt", "appBackup Fail: "+tmpAppInfo.appName);
-						
 					}
 					
 					if(counter == UserAppActionModeSelectCnt)
