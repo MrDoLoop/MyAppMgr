@@ -70,7 +70,7 @@ public class UserAppsTabFragment extends SherlockListFragment implements
 			paramsWrapContent.addRule(RelativeLayout.CENTER_HORIZONTAL);
 			paramsWrapContent.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 			paramsWrapContent.setMargins(0, padding, 0, 0);
-			mDialogText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+			mDialogText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
 			
 			mDialogText.setPadding(padding, 0, padding, 0);
 			mDialogText.setLayoutParams(paramsWrapContent);
