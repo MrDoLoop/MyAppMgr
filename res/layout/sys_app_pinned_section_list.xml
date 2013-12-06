@@ -8,6 +8,8 @@
         android:scrollbars="none"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:dividerHeight="1dp"
+        android:divider="#d8d8d8"
         android:fadingEdgeLength="0dp" />
 
     <com.doloop.www.util.IndexBarView
