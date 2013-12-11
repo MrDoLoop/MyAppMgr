@@ -10,7 +10,7 @@
         android:fadingEdgeLength="0dp"
         android:dividerHeight="1dp"
         android:divider="#d8d8d8"
-        android:fastScrollEnabled="true" />
+        android:scrollbars="none"/>
 
     <TextView
         android:id="@+id/popTextView"
