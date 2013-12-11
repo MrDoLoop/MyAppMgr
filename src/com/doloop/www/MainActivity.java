@@ -43,6 +43,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -1113,6 +1114,14 @@ public class MainActivity extends SlidingFragmentActivity implements
 		String viewContentDesStr = v.getContentDescription().toString();
 		if (viewContentDesStr.contains("-"))// app view "section-position"
 		{
+			//¹ö¶¯text
+			TextView appVersion = (TextView)v.findViewById(R.id.app_version);
+			if(appVersion.isSelected())
+			{
+				appVersion.setSelected(false);
+			}
+			appVersion.setSelected(true);
+
 			String[] DesStr = viewContentDesStr.split("-");
 			String section = DesStr[0];
 			int pos = Integer.parseInt(DesStr[1]);
