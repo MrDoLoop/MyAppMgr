@@ -138,6 +138,7 @@ public class SysAppListAdapter extends SectionedBaseAdapter implements Filterabl
 		
 		appViewHolder.AppNameTextView.setText(appInfo.appName);
 		appViewHolder.AppVersionTextView.setText("v" + appInfo.versionName + " | "+ appInfo.appSizeStr + " | "+ appInfo.lastModifiedTimeStr);
+		appViewHolder.AppVersionTextView.setSelected(false);
 		appViewHolder.AppIconImageView.setImageDrawable(appInfo.appIcon);
 
 		return convertView;
