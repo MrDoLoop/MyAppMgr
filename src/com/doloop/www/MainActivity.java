@@ -1025,6 +1025,13 @@ public class MainActivity extends SlidingFragmentActivity implements
 		else
 		{
 			((ActionSlideExpandableListView)usrAppsFrg.getListView()).collapse(true);
+			//¹ö¶¯text
+			TextView appVersion = (TextView)v.findViewById(R.id.app_version);
+			if(appVersion.isSelected())
+			{
+				appVersion.setSelected(false);
+			}
+			appVersion.setSelected(true);
 			toast.setText("user AppList " + position);
 			toast.show();
 		}
