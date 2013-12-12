@@ -42,6 +42,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -120,9 +121,6 @@ public class MainActivity extends SlidingFragmentActivity implements
 	private ArrayList<String> sectionTextList = new ArrayList<String>();
 	private HashMap<String, ArrayList<AppInfo>> sectionItemsMap = new HashMap<String, ArrayList<AppInfo>>();
 
-//	private Fragment allAppsFrg;
-//	private ArrayList<AppInfo> AllAppList = new ArrayList<AppInfo>();
-
 	private ProgressDialog progDialog;
 	private SlidingMenu mSlidingMenu;
 
@@ -146,6 +144,9 @@ public class MainActivity extends SlidingFragmentActivity implements
 	private MenuItem searchMenuItem = null ;
 	
 	private boolean SendAfterBackUp = false;
+	
+	private TextView UserAppTabTitle = null;
+	private TextView SysAppTabTitle = null;
 	
 	private SortTypeDialogFragment SortTypeDialog;
 	private UserAppListMoreActionDialogFragment UserAppListMoreActionDialog;
@@ -280,12 +281,31 @@ public class MainActivity extends SlidingFragmentActivity implements
 		Fragmentlist.add(sysAppsFrg);
 		//Fragmentlist.add(allAppsFrg);
 		
-		String[] tabs = { getString(R.string.user_apps), getString(R.string.sys_apps)};//, "ALL APPs" 
-		for (String tabTitle : tabs) {
-			ActionBar.Tab tab = actionBar.newTab().setText(tabTitle)
-					.setTabListener(tabListener);
-			actionBar.addTab(tab);
-		}
+		//User app tab
+		ActionBar.Tab userAppTab = actionBar.newTab().setText(R.string.user_apps).setCustomView(R.layout.my_tab_title)
+				.setTabListener(tabListener);
+		View UserAppTabCustomView = userAppTab.getCustomView();
+		UserAppTabTitle = (TextView)UserAppTabCustomView.findViewById(R.id.titleTxt);
+		UserAppTabTitle.setText(userAppTab.getText());
+		actionBar.addTab(userAppTab);
+		//Sys app tab
+		ActionBar.Tab sysAppTab = actionBar.newTab().setText(R.string.sys_apps).setCustomView(R.layout.my_tab_title)
+				.setTabListener(tabListener);
+		View SysAppTabCustomView = sysAppTab.getCustomView();
+		SysAppTabTitle = (TextView)SysAppTabCustomView.findViewById(R.id.titleTxt);
+		SysAppTabTitle.setText(sysAppTab.getText());
+		actionBar.addTab(sysAppTab);
+		
+		
+//		String[] tabs = { getString(R.string.user_apps), getString(R.string.sys_apps)};//, "ALL APPs" 
+//		for (String tabTitle : tabs) {
+//			ActionBar.Tab tab = actionBar.newTab().setText(tabTitle).setCustomView(R.layout.my_tab_title)
+//					.setTabListener(tabListener);
+//			View tabView = tab.getCustomView();
+//			TextView titleTxt = (TextView)tabView.findViewById(R.id.titleTxt);
+//			titleTxt.setText(tab.getText());
+//			actionBar.addTab(tab);
+//		}
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 	}
 
@@ -302,9 +322,12 @@ public class MainActivity extends SlidingFragmentActivity implements
 				}
 				return;
 			}
-			//
-			//tab.setText(Html.fromHtml("<b><font color=#993399>你好吗，什么颜色</font></b>"));
-			tab.setIcon(R.drawable.blue_ball);
+
+			//改变tabstrip的颜色
+			View tabView = tab.getCustomView();
+			LinearLayout stripLinear = (LinearLayout)tabView.findViewById(R.id.strip);
+			stripLinear.setBackgroundResource(R.color.theme_blue_light);
+			
 			if(switchCaseStr.equals("initDummy"))
 			{
 				switchCaseStr = "";
@@ -345,13 +368,16 @@ public class MainActivity extends SlidingFragmentActivity implements
 
 		@Override
 		public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-//			if(tab.getPosition()==SYS_APPS_TAB_POS)
+//			if(mActionMode == null)
 //			{
-//				sysAppsFrg.ResetIndexBar();
+//				tab.setIcon(null);
 //			}
 			if(mActionMode == null)
 			{
-				tab.setIcon(null);
+				//改变tabstrip的颜色
+				View tabView = tab.getCustomView();
+				LinearLayout stripLinear = (LinearLayout)tabView.findViewById(R.id.strip);
+				stripLinear.setBackgroundResource(android.R.color.transparent);
 			}
 		}
 
@@ -709,8 +735,6 @@ public class MainActivity extends SlidingFragmentActivity implements
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		//DismissDialog(SortTypeDialog);
-		//DismissDialog(UserAppListMoreActionDialog);
 		super.onSaveInstanceState(savedInstanceState);
 		
 		if(SortTypeDialog != null && 
@@ -743,7 +767,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 		protected void onProgressUpdate(String... values) {
 			// TODO Auto-generated method stub
 			super.onProgressUpdate(values);
-			//progDialog.setMessage("Loading Apps " + values[0]);
+
 			progDialog.setProgress(Integer.valueOf(values[0]));
 		}
 
@@ -909,7 +933,11 @@ public class MainActivity extends SlidingFragmentActivity implements
 			// 设置tab 标题
 			actionBar.getTabAt(USR_APPS_TAB_POS).setText(getString(R.string.user_apps)
 					+" (" + UserAppFullList.size() + ")");
+			UserAppTabTitle.setText(getString(R.string.user_apps)
+					+" (" + UserAppFullList.size() + ")");
 			actionBar.getTabAt(SYS_APPS_TAB_POS).setText(getString(R.string.sys_apps)
+					+" (" + SysAppFullList.size() + ")");
+			SysAppTabTitle.setText(getString(R.string.sys_apps)
 					+" (" + SysAppFullList.size() + ")");
 //			actionBar.getTabAt(ALL_APPS_TAB_POS).setText(
 //					"ALL APPS (" + AllAppList.size() + ")");
@@ -932,36 +960,6 @@ public class MainActivity extends SlidingFragmentActivity implements
 	public void onUserAppItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
 		// TODO Auto-generated method stub
-//		AppInfo selectItem = mUserAppListAdapter.getItem(position);
-//		if(selectItem.selected)
-//		{
-//			UserAppActionModeSelectCnt--;
-//			selectItem.selected = false;
-//		}
-//		else
-//		{
-//			UserAppActionModeSelectCnt++;
-//			selectItem.selected = true;
-//		}
-//		
-//		if (mActionMode == null) {	
-//			mActionMode = startActionMode(mActionModeCallback);	
-//		}
-//		
-//		if(UserAppActionModeSelectCnt < mUserAppListAdapter.getCount())
-//		{
-//			mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setTitle(R.string.select_all);
-//			mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setIcon(R.drawable.ic_action_select_all);
-//		}
-//		else
-//		{
-//			mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setTitle(R.string.deselect_all);
-//			mActionMode.getMenu().getItem(ACTIONMODE_MENU_SELECT).setIcon(R.drawable.ic_action_deselect_all);
-//		}
-//		
-//		mActionMode.setTitle(""+UserAppActionModeSelectCnt);
-//		mUserAppListAdapter.notifyDataSetChanged();
-		
 		AppInfo selectedItem = mUserAppListAdapter.getItem(position);
 		
 		if (mActionMode == null) 
@@ -1112,6 +1110,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 		((ActionSlideExpandableListView)usrAppsFrg.getListView()).collapse(false);
 		String newTitle = getString(R.string.user_apps)+" (" + resultsList.size() + ")";
 		actionBar.getTabAt(USR_APPS_TAB_POS).setText(newTitle);
+		UserAppTabTitle.setText(newTitle);
 	}
 	
 	// 系统app list点击事件
@@ -1158,6 +1157,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 		
 		String newTitle = getString(R.string.sys_apps)+" (" + mSysAppListAdapter.getItemsCount() + ")";
 		actionBar.getTabAt(SYS_APPS_TAB_POS).setText(newTitle);
+		SysAppTabTitle.setText(newTitle);
 	}
 	
 	//菜单点击事件
@@ -1280,7 +1280,6 @@ public class MainActivity extends SlidingFragmentActivity implements
 							startActivity(uninstallIntent);
 						}
 					}
-					//mActionMode.finish();
 				}
 				else
 				{
@@ -1383,7 +1382,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 				 mUserAppListAdapter.notifyDataSetChanged();
 				 ((ActionSlideExpandableListView)usrAppsFrg.getListView()).collapse(false);
 				 actionBar.getTabAt(USR_APPS_TAB_POS).setText(getString(R.string.user_apps)+" (" + tmpUserDisplayList.size() + ")");
-				 //new GetApps().execute();
+				 UserAppTabTitle.setText(getString(R.string.user_apps)+" (" + tmpUserDisplayList.size() + ")");
 			 }
 			 else if(intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)) 
 			 {
