@@ -47,14 +47,8 @@ public class UserAppsTabFragment extends SherlockListFragment implements
 			LayoutParams paramsFixSize = new LayoutParams(size,size); 
 			paramsFixSize.alignWithParent = true;
 			paramsFixSize.addRule(RelativeLayout.CENTER_IN_PARENT);
+			
 			mDialogText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 40);
-			
-//			int padding2 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, mContext.getResources().getDisplayMetrics());
-//			paramsFixSize.addRule(RelativeLayout.CENTER_HORIZONTAL);
-//			paramsFixSize.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-//			paramsFixSize.setMargins(0, padding2, 0, 0);
-//			mDialogText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 40);
-			
 			mDialogText.setPadding(0, 0, 0, 0);
 			mDialogText.setLayoutParams(paramsFixSize);
 			break;
@@ -70,8 +64,8 @@ public class UserAppsTabFragment extends SherlockListFragment implements
 			paramsWrapContent.addRule(RelativeLayout.CENTER_HORIZONTAL);
 			paramsWrapContent.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 			paramsWrapContent.setMargins(0, padding, 0, 0);
-			mDialogText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
 			
+			mDialogText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
 			mDialogText.setPadding(padding, 0, padding, 0);
 			mDialogText.setLayoutParams(paramsWrapContent);
 			break;
