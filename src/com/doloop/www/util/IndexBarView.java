@@ -12,6 +12,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -111,6 +112,7 @@ public class IndexBarView extends LinearLayout {
 					invalidate();
 				}
 			}
+			Log.i("ttt", "DOWN");
 			break;
 		case MotionEvent.ACTION_MOVE:
 			if (oldChoose != c) {
@@ -123,12 +125,15 @@ public class IndexBarView extends LinearLayout {
 					invalidate();
 				}
 			}
+			Log.i("ttt", "MOVE");
 			break;
 		case MotionEvent.ACTION_UP:
-			setBackgroundColor(Color.TRANSPARENT);
-			clearIndexListItemBG(Color.GRAY,false);
-			choose = -1;
-			dismissPopup();
+//			setBackgroundColor(Color.TRANSPARENT);
+//			clearIndexListItemBG(Color.GRAY,false);
+//			choose = -1;
+//			dismissPopup();
+			reset();
+			Log.i("ttt", "UP");
 			break;
 		}
 		return true;
@@ -219,6 +224,12 @@ public class IndexBarView extends LinearLayout {
 	}
 	
 	
-	
+	public void reset()
+	{
+		setBackgroundColor(Color.TRANSPARENT);
+		clearIndexListItemBG(Color.GRAY,false);
+		choose = -1;
+		dismissPopup();
+	}
 	
 }
