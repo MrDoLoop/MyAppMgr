@@ -170,6 +170,18 @@ public class MainActivity extends SlidingFragmentActivity implements
 		addActionBarTabs();
 		
 		viewPager = (MyViewPager) findViewById(R.id.pager);
+		viewPager.setOnTouchListener(new View.OnTouchListener(){
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				Log.i("ttt", "viewPager onTouch");
+				if(actionBar.getSelectedNavigationIndex() == SYS_APPS_TAB_POS)
+				{
+					sysAppsFrg.resetIndexBarView();
+				}
+				return false;
+			}});
 		viewPager.setOnPageChangeListener(onPageChangeListener);
 		viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager(),Fragmentlist));
 		
