@@ -49,6 +49,7 @@ public class IndexBarView extends LinearLayout {
 	private Handler handler = new Handler();
 	int choose = -1;
 	private int singleIndexHeight = 0;
+	private boolean doReset = false;
 	
 	
 	public IndexBarView(Context context) {
@@ -99,7 +100,7 @@ public class IndexBarView extends LinearLayout {
 		int c = (int)(TouchEventYpos/singleIndexHeight);
 		switch (action) {
 		case MotionEvent.ACTION_DOWN:
-			
+			doReset = true;
 			//setBackgroundColor(Color.LTGRAY);
 			setBackgroundResource(R.drawable.rounded_rectangle_shape);
 			if (oldChoose != c) {
@@ -154,8 +155,9 @@ public class IndexBarView extends LinearLayout {
 	}
 	
 	private void showPopup(int item) {
-		if(mPopView != null)
+		if(mPopView != null)//如果设定了显示用的view就不用popupwindow显示
 		{
+			handler.removeCallbacks(dismissRunnable);
 			mPopView.setVisibility(View.VISIBLE);
 			((TextView)mPopView).setText(mIndexArray[item]);
 			return;
@@ -226,10 +228,15 @@ public class IndexBarView extends LinearLayout {
 	
 	public void reset()
 	{
-		setBackgroundColor(Color.TRANSPARENT);
-		clearIndexListItemBG(Color.GRAY,false);
-		choose = -1;
-		dismissPopup();
+		if(doReset)
+		{
+			setBackgroundColor(Color.TRANSPARENT);
+			clearIndexListItemBG(Color.GRAY,false);
+			choose = -1;
+			dismissPopup();
+			doReset = false;
+			Log.i("ttt", "IndexBar reset done");
+		}
 	}
 	
 }
