@@ -98,37 +98,37 @@ public class IndexBarView extends LinearLayout {
 		final int oldChoose = choose;
 		singleIndexHeight = getHeight()/mIndexArray.length;	
 		int c = (int)(TouchEventYpos/singleIndexHeight);
+		if(c < 0)
+		{
+			c = 0;
+		} 
+		else if(c >= mIndexArray.length)
+		{
+			c = mIndexArray.length - 1;
+		}
 		switch (action) {
 		case MotionEvent.ACTION_DOWN:
 			doReset = true;
 			//setBackgroundColor(Color.LTGRAY);
 			setBackgroundResource(R.drawable.rounded_rectangle_shape);
 			clearIndexListItemBG(Color.BLACK,true);
-			if (oldChoose != c) {
-				if (c >= 0 && c < mIndexArray.length) {
-					//clearIndexListItemBG(Color.BLACK,true);
-					//mIndexTextViewList.get(c).setBackgroundColor(Color.RED);
-					mIndexTextViewList.get(c).setBackgroundResource(R.drawable.rounded_rectangle_shape_index_selected);
-					performItemClicked(c);
-					choose = c;
-					invalidate();
-				}
+			if (oldChoose != c) 
+			{
+				//clearIndexListItemBG(Color.BLACK,true);
+				//mIndexTextViewList.get(c).setBackgroundColor(Color.RED);
+				mIndexTextViewList.get(c).setBackgroundResource(R.drawable.rounded_rectangle_shape_index_selected);
+				performItemClicked(c);
+				choose = c;
+				invalidate();
 			}
 			Log.i("ttt", "DOWN");
 			break;
 		case MotionEvent.ACTION_MOVE:
-			if (oldChoose != c) {
+			if (oldChoose != c) 
+			{
 				if (oldChoose >= 0)// && oldChoose < mIndexArray.length
 				{
 					mIndexTextViewList.get(oldChoose).setBackgroundResource(Color.TRANSPARENT);
-				}
-				if(c < 0)
-				{
-					c = 0;
-				} 
-				else if(c >= mIndexArray.length)
-				{
-					c = mIndexArray.length - 1;
 				}
 				mIndexTextViewList.get(c).setBackgroundResource(R.drawable.rounded_rectangle_shape_index_selected);
 				performItemClicked(c);
