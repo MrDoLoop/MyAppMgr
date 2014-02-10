@@ -122,14 +122,18 @@ public class IndexBarView extends LinearLayout {
 				{
 					mIndexTextViewList.get(oldChoose).setBackgroundResource(Color.TRANSPARENT);
 				}
-				if (c >= 0 && c < mIndexArray.length) {
-					//clearIndexListItemBG(Color.BLACK,true);
-					//mIndexTextViewList.get(c).setBackgroundColor(Color.RED);
-					mIndexTextViewList.get(c).setBackgroundResource(R.drawable.rounded_rectangle_shape_index_selected);
-					performItemClicked(c);
-					choose = c;
-					invalidate();
+				if(c < 0)
+				{
+					c = 0;
+				} 
+				else if(c >= mIndexArray.length)
+				{
+					c = mIndexArray.length - 1;
 				}
+				mIndexTextViewList.get(c).setBackgroundResource(R.drawable.rounded_rectangle_shape_index_selected);
+				performItemClicked(c);
+				choose = c;
+				invalidate();
 			}
 			Log.i("ttt", "MOVE");
 			break;
