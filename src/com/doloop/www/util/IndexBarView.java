@@ -117,8 +117,9 @@ public class IndexBarView extends LinearLayout {
 			break;
 		case MotionEvent.ACTION_MOVE:
 			if (oldChoose != c) {
+				mIndexTextViewList.get(oldChoose).setBackgroundResource(Color.TRANSPARENT);
 				if (c >= 0 && c < mIndexArray.length) {
-					clearIndexListItemBG(Color.BLACK,true);
+					//clearIndexListItemBG(Color.BLACK,true);
 					//mIndexTextViewList.get(c).setBackgroundColor(Color.RED);
 					mIndexTextViewList.get(c).setBackgroundResource(R.drawable.rounded_rectangle_shape_index_selected);
 					performItemClicked(c);
